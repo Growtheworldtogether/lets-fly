@@ -114,7 +114,7 @@ a.btn.solid{display:inline-flex;width:auto}
 /* ===== Layout: sticky header, mobile drawer, full-size controls ===== */
 html{scroll-behavior:smooth}[hidden]{display:none!important}
 body.menu-open{overflow:hidden}
-.bar{position:sticky;top:0;z-index:30;background:#000;border-bottom:0}
+.bar{position:relative;z-index:30;background:#000;border-bottom:0}
 .btn{height:48px}.btn.ghost{height:44px}
 .btn.solid::after{width:48px}
 .inline-form .btn{height:48px}
@@ -393,7 +393,7 @@ main.bleed{display:block;padding:0;min-height:0}
 body.showroom.scrolled .bar{background:#000;transition:background .25s}
 
 /* The header never moves or changes: pinned to the top, solid black, on every page and every width */
-body .bar,body.showroom .bar,body.showroom.scrolled .bar{position:sticky;top:0;left:auto;right:auto;z-index:30;background:#000;transition:none}
+body .bar,body.showroom .bar,body.showroom.scrolled .bar{position:relative;top:auto;left:auto;right:auto;z-index:30;background:#000;transition:none}
 
 /* every carousel card has its picture on top, in line with the others */
 .v-card,.v-card:nth-child(even){flex-direction:column}
@@ -524,7 +524,6 @@ input[type=checkbox]{accent-color:#d7a970;width:18px;height:18px;margin:0}
   .w-page .btn{width:100%}
 }
 
-/* welcome page: no menu, and the header scrolls away with the page instead of staying fixed */
-body.welcome-page .bar,body.welcome-page.scrolled .bar{position:relative;top:auto}
+/* welcome page extras */
 .w-why{margin:0 0 32px;padding:4px 0 4px 20px;border-left:1px solid #d7a970;font-size:17px;line-height:28px;font-weight:300;color:#d0d1d2}
 .w-why b{display:block;margin-bottom:4px;font-weight:400;font-size:14px;letter-spacing:.7px;text-transform:uppercase;color:#fff}
