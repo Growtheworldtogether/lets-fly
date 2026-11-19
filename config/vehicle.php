@@ -215,6 +215,12 @@ T,
             'body' => <<<'T'
 Every figure for the pioneer edition. Specifications are targets and may change before delivery.
 
+## Exterior
+- Construction: Carbon-fibre monocoque
+- Finish: 7-layer aerospace paint, 6 colours
+- Lighting: Integrated LED navigation and landing lights
+- Doors: Two gull-wing, hands-free
+
 ## Dimensions
 - Length: 6.1 m
 - Wingspan: 9.2 m
@@ -236,24 +242,72 @@ Every figure for the pioneer edition. Specifications are targets and may change 
 - Service ceiling: 3,000 m
 - Vertical climb: 4 m/s
 - Forward climb: 8 m/s
+- Sound in hover: 62 dBA at 150 m
+- Sound in cruise: 48 dBA at 300 m
+
+## Flight
+- Takeoff and landing: Vertical, 12 m pad
+- Transition: Automatic, about 25 seconds
+- Control: Single stick and throttle
+- Hands-off hold: Heading, altitude and speed
+- Assisted landing: Pad recognition by camera
+- Wind limit: 35 km/h gusting
+
+## Avionics
+- Display: 15-inch main, 7-inch backup
+- Flight computers: 3, voting
+- Traffic: Broadcast and receive, with alerts
+- Navigation: Dual satellite receivers with inertial backup
+- Route planning: In-cabin and on your phone
+- Geofencing: Keeps you out of restricted airspace
+- Return to pad: One press, automatic
+- Updates: Over the air, only while on the ground
 
 ## Power
 - Battery: 120 kWh usable, two packs
+- Motors: 9, one per rotor and one for the propeller
 - Lift rotors: 8
 - Propeller: 1, rear
 - Fast charge, 10 to 80%: 35 min
 - Home charge: 22 kW, 6 hours
+- Charger included: 22 kW home unit
+- Battery monitoring: Cell by cell, live in the app
+
+## Cabin
+- Seats: 2, side by side, heated and adjustable
+- Canopy: Wide, with UV-filtering glass
+- Climate: Dual-zone, with canopy demisting
+- Audio: Active noise cancellation, 6 speakers
+- Connectivity: Phone pairing and charging
+- Controls: Single stick, throttle and touch display
 
 ## Safety
-- Rotor redundancy: Any 2 of 8
-- Flight computers: 3, voting
-- Parachute: Whole-aircraft
-- Traffic: Broadcast and receive
+- Rotor redundancy: Any 2 of 8 can fail
+- Flight computers: Triple, with voting
+- Batteries: Two independent packs
+- Parachute: Whole-aircraft, deploys above 60 m
+- Safety cell: Carbon-fibre cabin, tested to crash loads
+- Detect and avoid: Radar and camera, plus traffic broadcast
+- Fire protection: Cell-level isolation and cabin sensors
+- Automatic landing: Triggers on low battery or pilot incapacity
+
+## Training
+- Ground school: 20 hours, online and in person
+- Simulator: 10 hours
+- Dual flight: 15 hours with an instructor
+- Supervised solo: 5 hours
+- Medical: Standard aviation medical required
+- Programme length: About 8 weeks, part-time
+- Included: Pioneer owners only, at no extra charge
 
 ## Ownership
-- Warranty: 4 years
+- Estimated delivery: 18 to 24 months from reservation
+- Handover: At the delivery centre, with a first flight
+- Warranty: 4 years, unlimited hours
 - Battery warranty: 8 years
-- Delivery: 18 to 24 months
+- Service: Mobile team, at your location
+- Insurance: We arrange cover quotes for you
+- Included: Home charger, cover, training programme
 - Price: Pioneer allocation, see your dashboard
 T,
         ],
