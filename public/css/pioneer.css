@@ -554,3 +554,24 @@ body.menu-open .totop{display:none}
 .font-name small{display:block;font-size:13px;color:#8e8f93}
 .font-list form{margin:0}
 .font-list .btn{min-width:0;height:36px;margin:0}
+
+/* ===== Uploaded logos ===== */
+.mark.has-logo{display:flex;align-items:center;letter-spacing:0;max-width:calc(100vw - 100px)}
+.mark-img{display:block;height:28px;width:auto;max-width:220px;object-fit:contain}
+.v-hero h1.has-logo,.v-name.has-logo{background:none;-webkit-background-clip:border-box;background-clip:border-box;color:inherit;transform:none;filter:none;padding:0;letter-spacing:0;line-height:0}
+.v-hero h1.has-logo::after,.v-name.has-logo::after{display:none!important}
+.v-logo{display:block;height:clamp(40px,5.2vw,76px);width:auto;max-width:min(100%,560px);object-fit:contain;object-position:left center}
+.w-page .v-logo{height:clamp(36px,4vw,60px)}
+.v-end .v-name.has-logo{display:block}
+.v-end .v-logo{margin:0 auto;object-position:center}
+@media(max-width:860px){
+  .mark-img{height:24px;max-width:calc(100vw - 110px)}
+  .v-logo{height:clamp(32px,9vw,48px)}
+}
+/* Settings > Logos */
+.logos{margin-bottom:40px}
+.logo-card{padding:20px 0;border-top:1px solid #222}
+.logo-card form{margin:0 0 12px}
+.logo-preview{display:inline-block;max-width:100%;padding:20px 24px;margin:0 0 16px;background:#0b0b0d;border:1px solid #222}
+.logo-preview img{display:block;height:48px;width:auto;max-width:100%}
+.logo-card input[type=file]{height:auto;padding:10px 14px}

@@ -22,6 +22,21 @@ class MediaController extends Controller
         ]);
     }
 
+    /** The two logos load on the code page too, so they are public, but only while they are set as a logo. */
+    public function logo(string $filename)
+    {
+        abort_unless(\App\Services\Logos::isLogoFile($filename), 404);
+        $media = Media::where('filename', $filename)->firstOrFail();
+        abort_unless(Storage::disk('local')->exists('media/'.$filename), 404);
+
+        return response(Storage::disk('local')->get('media/'.$filename), 200, [
+            'Content-Type' => $media->mime,
+            'Cache-Control' => 'public, max-age=86400',
+            'X-Content-Type-Options' => 'nosniff',
+            'Content-Security-Policy' => "default-src 'none'; sandbox",
+        ]);
+    }
+
     public function font(string $filename)
     {
         \App\Models\Font::where('filename', $filename)->firstOrFail();

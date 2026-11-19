@@ -15,7 +15,7 @@
 <section class="v-hero" id="top">
   <div class="v-bg">@php($s = $hero)@include('member._bg', ['eager' => true])</div>
   <div class="v-hero-in">
-    <h1>{{ $hero->title }}</h1>
+    @include('member._vname', ['tag' => 'h1', 'text' => $hero->title])
     <div class="v-cta">
       <a class="btn solid" href="{{ route('dashboard') }}">Reserve now</a>
       <a class="btn" href="#specs">Specifications</a>
@@ -129,7 +129,7 @@
 <section class="v-end">
   @if ($hero)<div class="v-bg">@php($s = $hero)@include('member._bg')</div>@endif
   <div class="v-end-in">
-    <p class="v-name">{{ $hero?->title }}</p>
+    @include('member._vname', ['tag' => 'p', 'class' => 'v-name', 'text' => $hero?->title])
     <a class="btn solid" href="{{ route('dashboard') }}">Reserve now</a>
   </div>
   <p class="v-note">Specifications are targets for the pioneer edition and may change before delivery. Where and how you may fly depends on the aviation rules of your country.</p>

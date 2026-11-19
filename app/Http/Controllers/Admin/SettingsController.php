@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Font;
 use App\Models\Setting;
 use App\Services\Fonts;
+use App\Services\Logos;
 use App\Services\Audit;
 use Illuminate\Http\Request;
 
@@ -62,6 +63,23 @@ class SettingsController extends Controller
         Audit::record('settings.updated', null, null, ['keys' => array_keys($d)], $request->user()->id);
 
         return back()->with('toast', 'Settings saved.');
+    }
+
+    public function uploadLogo(Request $request, string $role, Logos $logos)
+    {
+        $request->validate(['logo' => ['required', 'file']]);
+        $logos->store($role, $request->file('logo'), $request->user());
+        Audit::record('logo.uploaded', null, null, ['role' => $role], $request->user()->id);
+
+        return back()->with('toast', Logos::ROLES[$role].' saved.');
+    }
+
+    public function removeLogo(Request $request, string $role, Logos $logos)
+    {
+        $logos->remove($role);
+        Audit::record('logo.removed', null, null, ['role' => $role], $request->user()->id);
+
+        return back()->with('toast', Logos::ROLES[$role].' removed. The name shows as text again.');
     }
 
     public function uploadFont(Request $request, Fonts $fonts)

@@ -9,3 +9,11 @@ if (! function_exists('brand')) {
         return $key === null ? Brand::all() : Brand::get($key);
     }
 }
+
+if (! function_exists('brand_logo')) {
+    /** URL of the uploaded site logo ('site') or vehicle-name logo ('vehicle'), or null when none has been uploaded. */
+    function brand_logo(string $role): ?string
+    {
+        return \App\Services\Logos::url($role);
+    }
+}

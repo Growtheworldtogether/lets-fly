@@ -3,6 +3,24 @@
 @section('content')
 <div class="page">@include('admin._nav')
   <h1>Settings</h1>
+  <section class="stack logos" id="logos">
+    <h2>Logos</h2>
+    <p class="hint">PNG, WebP or JPG up to 4 MB. A transparent PNG about three times wider than tall looks best on the dark background. SVG files are not accepted.</p>
+    @foreach (\App\Services\Logos::ROLES as $role => $name)
+      @php($logo = brand_logo($role))
+      <div class="logo-card">
+        <p class="eyebrow">{{ $name }}</p>
+        <p class="hint">{{ $role === 'site' ? 'Replaces the company name in the header on every page.' : 'Replaces the vehicle name title in two places on the vehicle page, and on the welcome page.' }}</p>
+        @if ($logo)<div class="logo-preview"><img src="{{ $logo }}" alt="{{ $name }}"></div>@endif
+        <form method="post" action="{{ route('admin.logo.upload', $role) }}" enctype="multipart/form-data">@csrf
+          <label for="logo_{{ $role }}">{{ $logo ? 'Replace file' : 'Choose file' }}</label>
+          <input id="logo_{{ $role }}" name="logo" type="file" class="field" accept="image/png,image/jpeg,image/webp" required>
+          <button class="btn" type="submit">Upload</button>
+        </form>
+        @if ($logo)<form method="post" action="{{ route('admin.logo.remove', $role) }}">@csrf @method('DELETE')<button class="btn ghost" type="submit">Remove</button></form>@endif
+      </div>
+    @endforeach
+  </section>
   <section class="stack fonts" id="fonts">
     <h2>Fonts</h2>
     <p class="hint">Upload .woff2 font files (2 MB each), then choose where each one is used. Anything left on "Built-in" keeps the standard font.</p>

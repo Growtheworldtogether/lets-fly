@@ -465,3 +465,33 @@ it('no longer prints the agreement version line on My reservation', function () 
     $this->actingAs($u)->post('/reserve', ['agree' => 1]);
     $this->get('/dashboard')->assertOk()->assertDontSee('Agreement version')->assertSee('Pioneer allocation');
 });
+
+it('lets an admin upload a site logo and a vehicle logo that replace the text names', function () {
+    \Illuminate\Support\Facades\Storage::fake('local');
+    $admin = adminSession($this);
+    $this->actingAs($admin)->get('/vehicle')->assertDontSee('mark-img', false)->assertDontSee('v-logo', false);
+
+    $this->post('/admin/settings/logo/site', ['logo' => \Illuminate\Http\UploadedFile::fake()->image('site.png', 600, 200)])->assertSessionHasNoErrors();
+    $this->post('/admin/settings/logo/vehicle', ['logo' => \Illuminate\Http\UploadedFile::fake()->image('car.png', 900, 200)])->assertSessionHasNoErrors();
+    $this->post('/admin/settings/logo/vehicle', ['logo' => \Illuminate\Http\UploadedFile::fake()->create('x.svg', 2, 'image/svg+xml')])->assertSessionHasErrors('logo');
+    $this->post('/admin/settings/logo/other', ['logo' => \Illuminate\Http\UploadedFile::fake()->image('a.png', 600, 200)])->assertNotFound();
+
+    $html = $this->get('/vehicle')->assertOk()->getContent();
+    expect(substr_count($html, 'class="v-logo"'))->toBe(2)->and(substr_count($html, 'class="mark-img"'))->toBe(1);
+    $vehicleUrl = brand_logo('vehicle');
+    $siteUrl = brand_logo('site');
+
+    // the logos also show on the code page and are served to anyone, but other uploaded images are not
+    auth()->logout();
+    $this->get('/')->assertSee('class="mark-img"', false)->assertSee($siteUrl, false);
+    $this->get($vehicleUrl)->assertOk();
+    $this->get('/brand/'.str_repeat('b', 40).'.png')->assertNotFound();
+
+    // replacing a logo deletes the old file; removing brings the text back
+    $this->actingAs($admin)->post('/admin/settings/logo/vehicle', ['logo' => \Illuminate\Http\UploadedFile::fake()->image('car2.png', 900, 200)]);
+    expect(brand_logo('vehicle'))->not->toBe($vehicleUrl)->and(\App\Models\Media::count())->toBe(2);
+    $this->delete('/admin/settings/logo/vehicle');
+    $this->delete('/admin/settings/logo/site');
+    $this->get('/vehicle')->assertDontSee('v-logo', false)->assertDontSee('mark-img', false);
+    expect(\App\Models\Media::count())->toBe(0);
+});
