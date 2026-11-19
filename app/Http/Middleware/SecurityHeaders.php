@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Headers every response carries. The site loads nothing from other hosts, so the policy only allows itself.
+ * Headers every response carries. The site loads only Google Fonts and hosted videos from other hosts.
  * Pages use small inline scripts and styles, so those two are allowed inline; everything else is locked down.
  */
 class SecurityHeaders
@@ -26,9 +26,11 @@ class SecurityHeaders
             $h->set('Content-Security-Policy', implode('; ', [
                 "default-src 'self'",
                 "script-src 'self' 'unsafe-inline'",
-                "style-src 'self' 'unsafe-inline'",
+                "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
                 "img-src 'self' data: blob:",
-                "font-src 'self' data:",
+                "font-src 'self' data: https://fonts.gstatic.com",
+                "media-src 'self' https:",
+                "frame-src https://www.youtube-nocookie.com https://player.vimeo.com",
                 "connect-src 'self'",
                 "object-src 'none'",
                 "base-uri 'self'",

@@ -3,6 +3,8 @@
 use App\Http\Controllers\Admin;
 use App\Http\Controllers\Auth\SignInController;
 use App\Http\Controllers\GateController;
+use App\Http\Controllers\MediaController;
+use App\Http\Controllers\VehicleController;
 use Illuminate\Support\Facades\Route;
 
 // The code page is the only public page. Every other URL answers 404 until a valid code has been entered.
@@ -20,6 +22,10 @@ Route::middleware('gate')->group(function () {
 
 Route::middleware(['auth', 'throttle:portal'])->group(function () {
     Route::view('/dashboard', 'member.dashboard')->name('dashboard');
+    Route::get('/vehicle', [VehicleController::class, 'index'])->name('vehicle');
+    Route::get('/vehicle/{slug}', [VehicleController::class, 'show'])->where('slug', '[a-z-]+')->name('vehicle.show');
+    Route::get('/vehicle/{slug}/video', [MediaController::class, 'video'])->where('slug', '[a-z-]+')->name('vehicle.video');
+    Route::get('/media/{filename}', [MediaController::class, 'show'])->where('filename', '[A-Za-z0-9]{40}\.(png|jpg|webp)')->name('media.show');
     Route::post('/sign-out', [SignInController::class, 'logout'])->name('logout');
     Route::post('/admin/exit-member', [Admin\MemberController::class, 'exit'])->name('admin.exit');
 });
@@ -37,6 +43,11 @@ Route::middleware(['auth', 'staff'])->prefix('admin')->group(function () {
         Route::get('/funnel', Admin\FunnelController::class)->name('admin.funnel');
     });
     Route::post('/members/{user}/impersonate', [Admin\MemberController::class, 'impersonate'])->middleware('can:impersonate')->name('admin.impersonate');
+    Route::middleware('can:content.edit')->group(function () {
+        Route::get('/content', [Admin\ContentController::class, 'index'])->name('admin.content');
+        Route::get('/content/{section:slug}', [Admin\ContentController::class, 'edit'])->name('admin.content.edit');
+        Route::post('/content/{section:slug}', [Admin\ContentController::class, 'update'])->name('admin.content.update');
+    });
     Route::middleware('can:admin.manage')->group(function () {
         Route::get('/settings', [Admin\SettingsController::class, 'edit'])->name('admin.settings');
         Route::post('/settings', [Admin\SettingsController::class, 'update'])->name('admin.settings.save');

@@ -128,3 +128,41 @@ it('logs an admin in as a member and back out, and records it', function () {
     $this->get('/admin')->assertOk();
     expect(\App\Models\AuditLog::whereIn('action', ['impersonation.started', 'impersonation.ended'])->count())->toBe(2);
 });
+
+it('shows members the vehicle pages with placeholders, hides inactive sections, and keeps outsiders out', function () {
+    $this->get('/vehicle')->assertRedirect();
+    $m = User::create(['name' => 'Fay', 'email' => 'fay@example.com', 'password' => 'Sup3rsecret!!', 'role' => 'member', 'member_number' => 'PA-000002']);
+    $this->actingAs($m)->get('/vehicle')->assertOk()->assertSee('Pilot training')->assertSee('Image placeholder');
+    $this->get('/vehicle/flight')->assertOk()->assertSee('Flight and handling')->assertSee('Performance');
+    \App\Models\PageSection::where('slug', 'flight')->update(['active' => false]);
+    $this->get('/vehicle/flight')->assertNotFound();
+    $this->get('/vehicle/nope')->assertNotFound();
+});
+
+it('lets staff upload a picture and a video, plays the video to members only, and takes a YouTube link', function () {
+    \Illuminate\Support\Facades\Storage::fake('local');
+    $admin = adminSession($this);
+    $img = \Illuminate\Http\UploadedFile::fake()->image('car.jpg', 800, 450);
+    $mp4 = \Illuminate\Http\UploadedFile::fake()->createWithContent('clip.mp4', "\x00\x00\x00\x18ftypmp42\x00\x00\x00\x00mp42isom\x00\x00\x00\x08free");
+    $this->actingAs($admin)->get('/admin/content')->assertOk()->assertSee('Vehicle pages');
+    $this->post('/admin/content/exterior', ['title' => 'Exterior', 'sort' => 10, 'active' => 1, 'image' => $img, 'video' => $mp4])->assertSessionHasNoErrors();
+    $s = \App\Models\PageSection::where('slug', 'exterior')->first();
+    expect($s->image_id)->not->toBeNull()->and($s->video_path)->toStartWith('private/videos/');
+    \Illuminate\Support\Facades\Storage::disk('local')->assertExists($s->video_path);
+    $this->get('/vehicle/exterior')->assertOk()->assertSee('/vehicle/exterior/video', false);
+    $this->post('/admin/content/exterior', ['title' => 'Exterior', 'sort' => 10, 'active' => 1, 'video_url' => 'https://youtu.be/dQw4w9WgXcQ'])->assertSessionHasNoErrors();
+    $s->refresh();
+    expect($s->video_path)->toBeNull()->and($s->embedUrl())->toBe('https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ');
+    $this->get('/vehicle/exterior')->assertSee('youtube-nocookie.com/embed/dQw4w9WgXcQ', false);
+});
+
+it('refuses a video that is not MP4 or WebM and a non-https link', function () {
+    \Illuminate\Support\Facades\Storage::fake('local');
+    $admin = adminSession($this);
+    $bad = \Illuminate\Http\UploadedFile::fake()->createWithContent('x.mp4', 'just text pretending');
+    $this->actingAs($admin)->get('/admin/content');
+    $this->post('/admin/content/power', ['title' => 'Power', 'sort' => 1, 'video' => $bad])->assertSessionHasErrors('video');
+    $this->post('/admin/content/power', ['title' => 'Power', 'sort' => 1, 'video_url' => 'http://example.com/a.mp4'])->assertSessionHasErrors('video_url');
+    $mgr = adminSession($this, 'Manager');
+    $this->actingAs($mgr)->get('/admin/content')->assertOk();
+});
