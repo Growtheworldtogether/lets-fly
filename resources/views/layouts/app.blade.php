@@ -10,8 +10,9 @@
 <link rel="stylesheet" href="{{ asset('css/pioneer.css') }}">
 </head>
 <body>
+@if (session('impersonation'))<div class="imp">Signed in as {{ session('impersonation.member_name') }} (you are {{ session('impersonation.admin_name') }}). <form method="post" action="{{ route('admin.exit') }}">@csrf<button type="submit" class="link">Exit</button></form></div>@endif
 <header class="bar"><a class="mark" href="{{ route('gate') }}">{{ brand('name') }}</a>@auth<form method="post" action="{{ route('logout') }}">@csrf<button class="btn ghost" type="submit">Sign out</button></form>@endauth</header>
-<main>@yield('content')</main>
+<main class="@yield('mainclass')">@yield('content')</main>
 <footer class="foot">{{ brand('footer') }}</footer>
 @foreach (['status', 'sent', 'error', 'toast'] as $k)@if (session($k))<div class="toast {{ $k === 'error' ? 'bad' : '' }}" role="status">{{ session($k) }}</div>@endif @endforeach
 @if ($errors->any())<div class="toast bad" role="alert">{{ $errors->first() }}</div>@endif

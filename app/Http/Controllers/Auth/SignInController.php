@@ -92,7 +92,7 @@ class SignInController extends Controller
         $country = Country::of($request);
         $risky = ! $user->isAdmin() && (
             $user->failed_logins >= config('pioneer.code_after_failed')
-            || (config('pioneer.country_check') && $user->signup_country && $country && $country !== $user->signup_country)
+            || (\App\Models\Setting::bool('country_check', config('pioneer.country_check')) && $user->signup_country && $country && $country !== $user->signup_country)
         );
         if ($risky) {
             $request->session()->put('signin.user', $user->id);

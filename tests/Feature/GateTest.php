@@ -75,3 +75,56 @@ it('creates an admin invite from the command and can reissue a lost code', funct
     $this->artisan('invite:admin', ['name' => 'Root User', 'email' => 'root@example.com'])->assertSuccessful();
     expect($invite->fresh()->code_lookup)->not->toBe($old);
 });
+
+function adminSession($t, string $title = 'Super Admin') {
+    $u = User::create(['name' => 'Root', 'email' => 'r'.uniqid().'@example.com', 'password' => 'Sup3rsecret!!', 'role' => 'admin', 'email_verified_at' => now()]);
+    \App\Services\StaffDirectory::assign($u, $title);
+
+    return $u;
+}
+
+it('lets an admin create, revoke and regenerate invites, and the code shows once', function () {
+    $admin = adminSession($this);
+    $this->actingAs($admin)->post('/admin/invites', ['name' => 'Cy Young', 'email' => 'cy@example.com', 'kind' => 'member'])->assertRedirect('/admin/invites');
+    $code = session('new_code.code');
+    expect($code)->toMatch('/^[A-Z2-9]{4}(-[A-Z2-9]{4}){3}$/');
+    $this->get('/admin/invites')->assertSee('Cy Young')->assertSee(session('new_code.code') ?? 'x');
+    $this->get('/admin/invites')->assertDontSee($code);
+    $inv = \App\Models\Invite::first();
+    $this->post("/admin/invites/{$inv->id}/regenerate");
+    expect(app(InviteService::class)->find($code))->toBeNull();
+    $new = session('new_code.code');
+    expect(app(InviteService::class)->find($new))->not->toBeNull();
+    $this->post("/admin/invites/{$inv->id}/revoke");
+    expect(app(InviteService::class)->find($new))->toBeNull();
+    $this->get('/admin/invites/export')->assertOk()->assertHeader('content-type', 'text/csv; charset=UTF-8');
+});
+
+it('keeps a Manager out of settings and admin invites but lets them run member invites', function () {
+    $mgr = adminSession($this, 'Manager');
+    $this->actingAs($mgr)->get('/admin/settings')->assertForbidden();
+    $this->post('/admin/invites', ['name' => 'Dee', 'kind' => 'admin'])->assertForbidden();
+    $this->post('/admin/invites', ['name' => 'Dee', 'kind' => 'member'])->assertRedirect();
+    $this->get('/admin/funnel')->assertOk()->assertSee('Invite created');
+});
+
+it('saves settings and the new prefix applies to the next member', function () {
+    $admin = adminSession($this);
+    $this->actingAs($admin)->post('/admin/settings', [
+        'company_name' => 'Skyward', 'vehicle_name' => 'Aero One', 'member_prefix' => 'sk', 'member_digits' => 5, 'member_next' => 7,
+        'price' => 500000, 'public_price' => 1500000, 'deposit' => 100000, 'balance_days' => 10, 'country_check' => '1',
+    ])->assertSessionHasNoErrors();
+    expect(brand('name'))->toBe('Skyward')->and(app(InviteService::class)->nextMemberNumber())->toBe('SK-00007');
+    $this->get('/admin/settings')->assertOk()->assertSee('Skyward');
+});
+
+it('logs an admin in as a member and back out, and records it', function () {
+    $admin = adminSession($this);
+    $m = User::create(['name' => 'Eve', 'email' => 'eve@example.com', 'password' => 'Sup3rsecret!!', 'role' => 'member', 'member_number' => 'PA-000009']);
+    $this->actingAs($admin)->post("/admin/members/{$m->id}/impersonate")->assertRedirect('/dashboard');
+    $this->get('/dashboard')->assertSee('PA-000009')->assertSee('Signed in as Eve');
+    $this->get('/admin/invites')->assertForbidden();
+    $this->post('/admin/exit-member')->assertRedirect('/admin/members');
+    $this->get('/admin')->assertOk();
+    expect(\App\Models\AuditLog::whereIn('action', ['impersonation.started', 'impersonation.ended'])->count())->toBe(2);
+});
