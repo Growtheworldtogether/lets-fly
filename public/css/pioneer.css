@@ -63,3 +63,8 @@ select.field{appearance:auto}
 .pager{display:flex;justify-content:space-between;margin-top:40px;padding-top:16px;border-top:1px solid #1d1d1f}.pager a{color:#fff;text-decoration:none;font-size:14px}
 .area.tall{height:220px}.file{height:auto;padding:10px 14px}.check.inl{display:inline-flex;margin-left:8px}
 @media(max-width:800px){.cards{grid-template-columns:1fr}.hero h1{font-size:34px}.topnav{gap:16px}}
+.row{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.r{text-align:right}.sum td{border-bottom:1px solid #141415}
+.wire{background:#050505;border:1px solid #1d1d1f;border-radius:4px;padding:14px 16px;font-family:'IBM Plex Mono',monospace;font-size:13px;white-space:pre-wrap;margin:12px 0}
+.agreement p{font-size:14px;color:#d0d0d4}a.btn.solid{color:#0b0b0b;display:inline-flex;margin-top:16px;width:auto}
+.area.huge{height:420px}.wide-stack{max-width:820px}

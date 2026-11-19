@@ -166,3 +166,76 @@ it('refuses a video that is not MP4 or WebM and a non-https link', function () {
     $mgr = adminSession($this, 'Manager');
     $this->actingAs($mgr)->get('/admin/content')->assertOk();
 });
+
+function memberWithInvite(): User {
+    [$invite] = app(InviteService::class)->create('Gus', 'gus@example.com');
+    $u = User::create(['name' => 'Gus', 'email' => 'gus@example.com', 'password' => 'Sup3rsecret!!', 'role' => 'member', 'member_number' => 'PA-000010']);
+    $invite->update(['user_id' => $u->id, 'status' => 'claimed']);
+
+    return $u;
+}
+
+it('lets a member accept the agreement and get a deposit invoice with the right amounts', function () {
+    Mail::fake();
+    \App\Models\Setting::set('wire_details', "Bank: Example Bank\nAccount: 12345");
+    $u = memberWithInvite();
+    $this->actingAs($u)->get('/dashboard')->assertSee('Reserve my allocation')->assertSee('$500,000.00');
+    $this->get('/reserve')->assertOk()->assertSee('$100,000.00')->assertSee('$400,000.00')->assertSee('10 days');
+    $this->post('/reserve', [])->assertSessionHasErrors('agree');
+    $this->post('/reserve', ['agree' => 1])->assertRedirect('/dashboard');
+    $r = \App\Models\Reservation::first();
+    expect($r->deposit_cents)->toBe(10_000_000)->and($r->balance_cents)->toBe(40_000_000)->and($r->agreement_version)->toBe(1)->and($r->status)->toBe('deposit_invoiced')
+        ->and($r->invoices)->toHaveCount(1)->and($r->invoices[0]->number)->toStartWith('INV-'.now()->format('Y').'-');
+    $this->get('/dashboard')->assertSee($r->reference)->assertSee('Download PDF')->assertSee('Account: 12345');
+    $this->get('/reserve')->assertRedirect('/dashboard');
+    $this->post('/reserve', ['agree' => 1]);
+    expect(\App\Models\Reservation::count())->toBe(1);
+    expect(\App\Models\InviteEvent::whereIn('type', ['agreed', 'invoiced'])->count())->toBe(2);
+});
+
+it('sends the invoice email without links and downloads a PDF only for its owner or staff', function () {
+    $u = memberWithInvite();
+    $this->actingAs($u)->post('/reserve', ['agree' => 1]);
+    $inv = \App\Models\Invoice::first();
+    expect($inv->emailed_at)->not->toBeNull();
+    $html = view('mail.invoice', ['invoice' => $inv, 'r' => $inv->reservation, 'user' => $u, 'wire' => ''])->render();
+    expect($html)->toContain('$100,000.00')->toContain('PA-000010')->not->toContain('http://')->not->toContain('https://');
+    $res = $this->get("/invoices/{$inv->id}/pdf");
+    $res->assertOk();
+    expect($res->headers->get('content-type'))->toContain('pdf');
+    expect(substr($res->getContent(), 0, 5))->toBe('%PDF-');
+    $other = User::create(['name' => 'Hal', 'email' => 'hal@example.com', 'password' => 'Sup3rsecret!!', 'role' => 'member']);
+    $this->actingAs($other)->get("/invoices/{$inv->id}/pdf")->assertNotFound();
+    $this->actingAs(adminSession($this))->get("/invoices/{$inv->id}/pdf")->assertOk();
+});
+
+it('does not let an admin accept the agreement while acting as a member', function () {
+    $u = memberWithInvite();
+    $admin = adminSession($this);
+    $this->actingAs($admin)->post("/admin/members/{$u->id}/impersonate");
+    $this->post('/reserve', ['agree' => 1])->assertForbidden();
+    expect(\App\Models\Reservation::count())->toBe(0);
+});
+
+it('publishes a new agreement version without changing what earlier members accepted', function () {
+    Mail::fake();
+    $u = memberWithInvite();
+    $this->actingAs($u)->post('/reserve', ['agree' => 1]);
+    $admin = adminSession($this);
+    $this->actingAs($admin)->get('/admin/agreement')->assertOk()->assertSee('Version 1 is live');
+    $this->post('/admin/agreement', ['body' => str_repeat('New terms for the allocation. ', 5)])->assertSessionHasNoErrors();
+    expect(\App\Models\AgreementVersion::current()->version)->toBe(2)->and(\App\Models\Reservation::first()->agreement_version)->toBe(1);
+    $this->get('/admin/reservations')->assertOk()->assertSee(\App\Models\Reservation::first()->reference);
+    $mgr = adminSession($this, 'Manager');
+    $this->actingAs($mgr)->get('/admin/agreement')->assertForbidden();
+    $this->get('/admin/reservations')->assertOk();
+});
+
+it('shows when the balance is due on the dashboard', function () {
+    Mail::fake();
+    $u = memberWithInvite();
+    $this->actingAs($u)->post('/reserve', ['agree' => 1]);
+    $this->get('/dashboard')->assertSee('due 10 days after your deposit is verified');
+    \App\Models\Reservation::first()->update(['balance_due_at' => now()->addDays(10)]);
+    $this->get('/dashboard')->assertSee('due '.now()->addDays(10)->timezone('America/New_York')->format('M j, Y'));
+});

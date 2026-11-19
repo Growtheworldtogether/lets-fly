@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin;
 use App\Http\Controllers\Auth\SignInController;
 use App\Http\Controllers\GateController;
+use App\Http\Controllers\Portal;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\VehicleController;
 use Illuminate\Support\Facades\Route;
@@ -21,7 +22,10 @@ Route::middleware('gate')->group(function () {
 });
 
 Route::middleware(['auth', 'throttle:portal'])->group(function () {
-    Route::view('/dashboard', 'member.dashboard')->name('dashboard');
+    Route::get('/dashboard', [Portal\DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/reserve', [Portal\DashboardController::class, 'agreement'])->name('reserve');
+    Route::post('/reserve', [Portal\DashboardController::class, 'reserve'])->middleware('throttle:6,1')->name('reserve.store');
+    Route::get('/invoices/{invoice}/pdf', [Portal\DashboardController::class, 'invoicePdf'])->name('invoice.pdf');
     Route::get('/vehicle', [VehicleController::class, 'index'])->name('vehicle');
     Route::get('/vehicle/{slug}', [VehicleController::class, 'show'])->where('slug', '[a-z-]+')->name('vehicle.show');
     Route::get('/vehicle/{slug}/video', [MediaController::class, 'video'])->where('slug', '[a-z-]+')->name('vehicle.video');
@@ -41,6 +45,7 @@ Route::middleware(['auth', 'staff'])->prefix('admin')->group(function () {
         Route::post('/invites/{invite}/revoke', [Admin\InviteController::class, 'revoke'])->name('admin.invites.revoke');
         Route::get('/members', [Admin\MemberController::class, 'index'])->name('admin.members');
         Route::get('/funnel', Admin\FunnelController::class)->name('admin.funnel');
+        Route::get('/reservations', [Admin\ReservationController::class, 'index'])->name('admin.reservations');
     });
     Route::post('/members/{user}/impersonate', [Admin\MemberController::class, 'impersonate'])->middleware('can:impersonate')->name('admin.impersonate');
     Route::middleware('can:content.edit')->group(function () {
@@ -49,6 +54,8 @@ Route::middleware(['auth', 'staff'])->prefix('admin')->group(function () {
         Route::post('/content/{section:slug}', [Admin\ContentController::class, 'update'])->name('admin.content.update');
     });
     Route::middleware('can:admin.manage')->group(function () {
+        Route::get('/agreement', [Admin\AgreementController::class, 'edit'])->name('admin.agreement');
+        Route::post('/agreement', [Admin\AgreementController::class, 'publish'])->name('admin.agreement.publish');
         Route::get('/settings', [Admin\SettingsController::class, 'edit'])->name('admin.settings');
         Route::post('/settings', [Admin\SettingsController::class, 'update'])->name('admin.settings.save');
     });

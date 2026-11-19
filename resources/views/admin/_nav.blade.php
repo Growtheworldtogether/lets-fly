@@ -2,9 +2,10 @@
   <a href="{{ route('admin.home') }}" @class(['on' => request()->routeIs('admin.home')])>Overview</a>
   @can('members.manage')
     <a href="{{ route('admin.invites') }}" @class(['on' => request()->routeIs('admin.invites*')])>Invites</a>
+    <a href="{{ route('admin.reservations') }}" @class(['on' => request()->routeIs('admin.reservations')])>Reservations</a>
     <a href="{{ route('admin.members') }}" @class(['on' => request()->routeIs('admin.members')])>Members</a>
     <a href="{{ route('admin.funnel') }}" @class(['on' => request()->routeIs('admin.funnel')])>Funnel</a>
   @endcan
   @can('content.edit')<a href="{{ route('admin.content') }}" @class(['on' => request()->routeIs('admin.content*')])>Vehicle pages</a>@endcan
-  @can('admin.manage')<a href="{{ route('admin.settings') }}" @class(['on' => request()->routeIs('admin.settings')])>Settings</a>@endcan
+  @can('admin.manage')<a href="{{ route('admin.agreement') }}" @class(['on' => request()->routeIs('admin.agreement*')])>Agreement</a><a href="{{ route('admin.settings') }}" @class(['on' => request()->routeIs('admin.settings')])>Settings</a>@endcan
 </nav>
