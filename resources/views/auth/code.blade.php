@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('bodyclass', 'studio')
 @section('content')
 <section class="gate">
   <p class="eyebrow">One more step</p>

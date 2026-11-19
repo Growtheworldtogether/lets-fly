@@ -385,3 +385,9 @@ it('does not offer email reset to admin accounts', function () {
     $this->artisan('admin:password', ['email' => 'root@example.com'])->expectsQuestion('New password (at least 10 characters, letters and numbers)', 'Another-pass-77')->assertSuccessful();
     $this->post('/sign-in', ['password' => 'Another-pass-77'])->assertRedirect('/admin');
 });
+
+it('sends signed-out visitors to the code page, and has no /login page at all', function () {
+    $this->get('/dashboard')->assertRedirect('/');
+    $this->get('/login')->assertNotFound();
+    $this->get('/forgot-password')->assertNotFound();
+});
