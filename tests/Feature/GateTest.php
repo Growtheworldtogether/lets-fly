@@ -66,3 +66,12 @@ it('gives the next member number from the admin prefix setting', function () {
     \App\Models\Setting::set('member_digits', 4);
     expect(app(InviteService::class)->nextMemberNumber())->toBe('AB-0001');
 });
+
+it('creates an admin invite from the command and can reissue a lost code', function () {
+    $this->artisan('invite:admin', ['name' => 'Root User', 'email' => 'root@example.com'])->assertSuccessful();
+    $invite = \App\Models\Invite::where('email', 'root@example.com')->first();
+    expect($invite->kind)->toBe('admin');
+    $old = $invite->code_lookup;
+    $this->artisan('invite:admin', ['name' => 'Root User', 'email' => 'root@example.com'])->assertSuccessful();
+    expect($invite->fresh()->code_lookup)->not->toBe($old);
+});
