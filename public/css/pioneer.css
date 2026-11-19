@@ -71,3 +71,6 @@ select.field{appearance:auto}
 .area.huge{height:420px}.wide-stack{max-width:820px}
 .card .eyebrow{color:var(--gold)}.tbl .link{color:var(--gold)}.eyebrow{color:#9a9a9f}h1{border-bottom-color:#2a2418}
 .hero h1,.gate h1{color:#fff}
+.inv{margin-bottom:12px}.inv .acts{margin:4px 0 0}.proof-form{margin-top:8px}.proof-form .btn{width:auto;margin-top:10px}
+.warn{color:#e0b4a0;font-size:14px;margin:8px 0}.pay{border-top:1px solid #1d1d1f;margin-top:12px;padding-top:12px;font-size:14px}
+.countdown{margin:16px 0}.countdown .big{color:var(--gold);font-size:36px}

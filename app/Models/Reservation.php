@@ -35,6 +35,16 @@ class Reservation extends Model
         return $this->hasMany(Payment::class);
     }
 
+    public function reminders(): HasMany
+    {
+        return $this->hasMany(Reminder::class);
+    }
+
+    public function invite(): BelongsTo
+    {
+        return $this->belongsTo(Invite::class);
+    }
+
     public function statusLabel(): string
     {
         return self::STATUS[$this->status] ?? ucfirst(str_replace('_', ' ', $this->status));

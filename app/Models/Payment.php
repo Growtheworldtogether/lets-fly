@@ -14,6 +14,11 @@ class Payment extends Model
         return ['submitted_at' => 'datetime', 'verified_at' => 'datetime'];
     }
 
+    public function reservation(): BelongsTo
+    {
+        return $this->belongsTo(Reservation::class);
+    }
+
     public function invoice(): BelongsTo
     {
         return $this->belongsTo(Invoice::class);

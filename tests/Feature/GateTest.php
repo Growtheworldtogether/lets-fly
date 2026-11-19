@@ -239,3 +239,89 @@ it('shows when the balance is due on the dashboard', function () {
     \App\Models\Reservation::first()->update(['balance_due_at' => now()->addDays(10)]);
     $this->get('/dashboard')->assertSee('due '.now()->addDays(10)->timezone('America/New_York')->format('M j, Y'));
 });
+
+function reservedMember(): array {
+    Mail::fake();
+    $u = memberWithInvite();
+    test()->actingAs($u)->post('/reserve', ['agree' => 1]);
+
+    return [$u, \App\Models\Invoice::first()];
+}
+
+function proofFile() {
+    return \Illuminate\Http\UploadedFile::fake()->image('wire.jpg', 600, 400);
+}
+
+it('takes proof of wire, lets staff verify it, and starts the balance clock at verification', function () {
+    \Illuminate\Support\Facades\Storage::fake('local');
+    [$u, $inv] = reservedMember();
+    $this->post("/invoices/{$inv->id}/proof", ['proof' => proofFile()])->assertSessionHasNoErrors();
+    expect(\App\Models\Reservation::first()->status)->toBe('proof_submitted')->and(\App\Models\Payment::count())->toBe(1);
+    $this->post("/invoices/{$inv->id}/proof", ['proof' => proofFile()])->assertSessionHasErrors('proof');
+    $this->get('/dashboard')->assertSee('Proof under review');
+    $pay = \App\Models\Payment::first();
+    $this->get("/payments/{$pay->id}/proof")->assertOk();
+    $other = User::create(['name' => 'Ivy', 'email' => 'ivy@example.com', 'password' => 'Sup3rsecret!!', 'role' => 'member']);
+    $this->actingAs($other)->get("/payments/{$pay->id}/proof")->assertNotFound();
+
+    $this->travelTo(now()->addDay());
+    $mgr = adminSession($this, 'Manager');
+    $this->actingAs($mgr)->post("/admin/payments/{$pay->id}/verify")->assertRedirect();
+    $r = \App\Models\Reservation::first();
+    expect($r->status)->toBe('balance_invoiced')->and($r->deposit_verified_at->isSameDay(now()))->toBeTrue()
+        ->and($r->balance_due_at->isSameDay(now()->addDays(10)))->toBeTrue()
+        ->and($r->invoices)->toHaveCount(2)->and($r->invoices[1]->kind)->toBe('balance')->and($r->invoices[1]->amount_cents)->toBe(40_000_000)
+        ->and($r->invoices[1]->emailed_at)->not->toBeNull();
+    $this->actingAs($u)->get('/dashboard')->assertSee('data-due', false)->assertSee('Balance due');
+    expect(\App\Models\InviteEvent::whereIn('type', ['proof_uploaded', 'deposit_paid'])->count())->toBe(2);
+});
+
+it('rejects a proof with a reason and lets the member send another, then completes on the balance', function () {
+    \Illuminate\Support\Facades\Storage::fake('local');
+    [$u, $inv] = reservedMember();
+    $admin = adminSession($this);
+    $this->post("/invoices/{$inv->id}/proof", ['proof' => proofFile()]);
+    $p1 = \App\Models\Payment::first();
+    $this->actingAs($admin)->post("/admin/payments/{$p1->id}/reject", [])->assertSessionHasErrors('note');
+    $this->post("/admin/payments/{$p1->id}/reject", ['note' => 'Amount does not match'])->assertRedirect();
+    $this->actingAs($u)->get('/dashboard')->assertSee('Amount does not match');
+    $this->post("/invoices/{$inv->id}/proof", ['proof' => proofFile()])->assertSessionHasNoErrors();
+    $p2 = \App\Models\Payment::latest('id')->first();
+    $this->actingAs($admin)->post("/admin/payments/{$p2->id}/verify");
+    $bal = \App\Models\Invoice::where('kind', 'balance')->first();
+    $this->actingAs($u)->post("/invoices/{$bal->id}/proof", ['proof' => proofFile()])->assertSessionHasNoErrors();
+    $p3 = \App\Models\Payment::latest('id')->first();
+    $this->actingAs($admin)->post("/admin/payments/{$p3->id}/verify");
+    expect(\App\Models\Reservation::first()->status)->toBe('completed')->and(\App\Models\InviteEvent::where('type', 'balance_paid')->count())->toBe(1);
+});
+
+it('sends the day 7 and day 9 reminders once each, and again after the due date is moved', function () {
+    \Illuminate\Support\Facades\Storage::fake('local');
+    [$u, $inv] = reservedMember();
+    $admin = adminSession($this);
+    $this->post("/invoices/{$inv->id}/proof", ['proof' => proofFile()]);
+    $this->actingAs($admin)->post('/admin/payments/'.\App\Models\Payment::first()->id.'/verify');
+    $r = \App\Models\Reservation::first();
+    $this->artisan('reminders:send');
+    expect(\App\Models\Reminder::count())->toBe(0);
+    $this->travelTo($r->balance_due_at->copy()->subDays(3)->addHour());
+    $this->artisan('reminders:send');
+    $this->artisan('reminders:send');
+    expect(\App\Models\Reminder::pluck('kind')->all())->toBe(['day7']);
+    $this->travelTo($r->balance_due_at->copy()->subDay()->addHour());
+    $this->artisan('reminders:send');
+    expect(\App\Models\Reminder::pluck('kind')->sort()->values()->all())->toBe(['day7', 'day9']);
+    $this->actingAs($admin)->post("/admin/reservations/{$r->id}/extend", ['due' => now()->addDays(20)->format('Y-m-d')])->assertSessionHasNoErrors();
+    expect(\App\Models\Reminder::count())->toBe(0)->and($r->fresh()->balance_due_at->gt($r->balance_due_at))->toBeTrue();
+});
+
+it('keeps an admin acting as a member from uploading proof, and cancels voids open invoices', function () {
+    \Illuminate\Support\Facades\Storage::fake('local');
+    [$u, $inv] = reservedMember();
+    $admin = adminSession($this);
+    $this->actingAs($admin)->post("/admin/members/{$u->id}/impersonate");
+    $this->post("/invoices/{$inv->id}/proof", ['proof' => proofFile()])->assertForbidden();
+    $this->post('/admin/exit-member');
+    $this->post('/admin/reservations/'.\App\Models\Reservation::first()->id.'/cancel')->assertRedirect();
+    expect($inv->fresh()->status)->toBe('void')->and(\App\Models\Reservation::first()->status)->toBe('cancelled');
+});

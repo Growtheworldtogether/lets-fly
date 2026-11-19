@@ -26,6 +26,8 @@ Route::middleware(['auth', 'throttle:portal'])->group(function () {
     Route::get('/reserve', [Portal\DashboardController::class, 'agreement'])->name('reserve');
     Route::post('/reserve', [Portal\DashboardController::class, 'reserve'])->middleware('throttle:6,1')->name('reserve.store');
     Route::get('/invoices/{invoice}/pdf', [Portal\DashboardController::class, 'invoicePdf'])->name('invoice.pdf');
+    Route::post('/invoices/{invoice}/proof', [Portal\DashboardController::class, 'proof'])->middleware('throttle:10,1')->name('invoice.proof');
+    Route::get('/payments/{payment}/proof', [Portal\DashboardController::class, 'proofFile'])->name('payment.proof');
     Route::get('/vehicle', [VehicleController::class, 'index'])->name('vehicle');
     Route::get('/vehicle/{slug}', [VehicleController::class, 'show'])->where('slug', '[a-z-]+')->name('vehicle.show');
     Route::get('/vehicle/{slug}/video', [MediaController::class, 'video'])->where('slug', '[a-z-]+')->name('vehicle.video');
@@ -46,6 +48,14 @@ Route::middleware(['auth', 'staff'])->prefix('admin')->group(function () {
         Route::get('/members', [Admin\MemberController::class, 'index'])->name('admin.members');
         Route::get('/funnel', Admin\FunnelController::class)->name('admin.funnel');
         Route::get('/reservations', [Admin\ReservationController::class, 'index'])->name('admin.reservations');
+    });
+    Route::middleware('can:payments.verify')->group(function () {
+        Route::get('/reservations/{reservation}', [Admin\ReservationController::class, 'show'])->name('admin.reservation');
+        Route::post('/payments/{payment}/verify', [Admin\ReservationController::class, 'verify'])->name('admin.payment.verify');
+        Route::post('/payments/{payment}/reject', [Admin\ReservationController::class, 'reject'])->name('admin.payment.reject');
+        Route::post('/reservations/{reservation}/extend', [Admin\ReservationController::class, 'extend'])->name('admin.reservation.extend');
+        Route::post('/reservations/{reservation}/cancel', [Admin\ReservationController::class, 'cancel'])->name('admin.reservation.cancel');
+        Route::post('/invoices/{invoice}/resend', [Admin\ReservationController::class, 'resend'])->name('admin.invoice.resend');
     });
     Route::post('/members/{user}/impersonate', [Admin\MemberController::class, 'impersonate'])->middleware('can:impersonate')->name('admin.impersonate');
     Route::middleware('can:content.edit')->group(function () {
