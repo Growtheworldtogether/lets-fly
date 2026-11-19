@@ -4,9 +4,9 @@
 <body style="margin:0;padding:0;background:#eeeeee;">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#eeeeee;"><tr><td align="center" style="padding:32px 12px;">
 <table role="presentation" width="640" cellpadding="0" cellspacing="0" style="width:640px;max-width:100%;background:#ffffff;border:1px solid #d8d8d8;border-radius:4px;">
-  <tr><td style="background:#000000;padding:26px 36px;border-radius:4px 4px 0 0;">
+  <tr><td style="background:#000000;padding:26px 36px;border-bottom:2px solid #d7a970;border-radius:4px 4px 0 0;">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
-      <td style="font-family:Arial,sans-serif;font-weight:700;font-size:18px;letter-spacing:6px;text-transform:uppercase;color:#d7a970;">{{ brand('name') }}</td>
+      <td style="font-family:Arial,sans-serif;font-weight:700;font-size:18px;letter-spacing:6px;text-transform:uppercase;color:#ffffff;">{{ brand('name') }}</td>
       <td align="right" style="font-family:Arial,sans-serif;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:#bbbbbb;">Pioneer allocation</td>
     </tr></table>
   </td></tr>
