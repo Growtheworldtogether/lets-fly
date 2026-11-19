@@ -302,3 +302,35 @@ main.bleed{display:block;padding:0;min-height:0}
 .slide{border-radius:0}
 .v-cta .btn,.v-end .btn{margin:0}
 .v-cta{align-items:flex-start}
+
+/* ===== Sizes measured on the Roadster page ===== */
+:root{--gutter:11vw}
+.topnav a{font-size:14px;font-weight:500;letter-spacing:0;text-transform:none;padding:4px 16px;color:#fff}
+.v-copy h2,.v-card-body h2,.v-watch h2,.v-info h1{font-size:44px;line-height:52px;font-weight:400;letter-spacing:0}
+.v-copy h2 span,.v-card-body h2 span,.v-watch h2 span{padding-bottom:4px}
+.v-copy p,.v-card-body p,.v-watch p,.v-lede{font-size:17px;line-height:28px;font-weight:300;letter-spacing:.14px;color:#d0d1d2}
+.v-over.top .v-copy p{font-size:20px;line-height:30px}
+.v-badges dt{font-size:17px;line-height:28px;letter-spacing:.14px}
+.v-card{width:min(1116px,77.5vw)}
+.v-card .v-bg{height:auto;aspect-ratio:1116/467}
+.v-card-body{padding:40px}
+.v-track{gap:24px;padding-left:48px;scroll-padding-left:48px}
+.v-track>.v-card:last-child{margin-right:48px}
+.v-card:nth-child(even){flex-direction:column-reverse}
+.v-over{min-height:min(100vw,1440px)}
+.v-stack .v-bg{height:min(100vw,1440px)}
+.v-over.bottom{align-items:flex-end}
+.v-hero{min-height:140svh}
+@media(max-width:860px){
+  :root{--gutter:24px}
+  .v-hero{min-height:100svh}
+  .v-copy h2,.v-card-body h2,.v-watch h2,.v-info h1{font-size:44px}
+  .v-over,.v-over.top,.v-over.bottom{min-height:0}
+  .v-over .v-bg,.v-stack .v-bg{height:100vw;min-height:0}
+  .v-over .v-copy,.v-over.top .v-copy,.v-stack .v-copy{padding:8px 24px 56px}
+  .v-track{gap:8px;padding-left:12px;scroll-padding-left:12px}.v-track>.v-card:last-child{margin-right:12px}
+  .v-card{width:min(560px,92vw)}.v-card .v-bg{aspect-ratio:1/1;height:auto}.v-card-body{padding:24px 20px 28px}
+  .v-badges{padding:0 24px 40px}
+}
+@media(max-width:520px){.v-card{width:92vw}.v-copy h2,.v-card-body h2,.v-watch h2,.v-info h1{font-size:36px;line-height:44px}}
+.v-cta a.btn,.v-cta a.btn.solid,.v-end a.btn,.v-end a.btn.solid{margin:0!important}
