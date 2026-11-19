@@ -352,3 +352,21 @@ main.bleed{display:block;padding:0;min-height:0}
 .bar-out .btn.ghost:hover{background:transparent;border-color:#2a2a2d}
 .v-hero h1{font-size:clamp(40px,5vw,72px)}
 @media(max-width:860px){.mark{font-size:13px;letter-spacing:5px}.v-hero h1{font-size:40px}}
+
+/* ===== Vehicle name styled like the reference wordmark: wide, slanted, cream at the top edge fading to gold, with a light streak ===== */
+.v-hero h1,.v-name{
+  position:relative;display:inline-block;margin:0 0 28px;padding:0 .08em 0 0;
+  font-size:clamp(38px,4.6vw,66px);font-weight:600;font-style:normal;letter-spacing:.09em;line-height:1.05;text-transform:uppercase;
+  color:transparent;
+  background:linear-gradient(180deg,#fffaf3 0%,#f3e4d0 24%,#d7a970 58%,#9a8159 100%);
+  -webkit-background-clip:text;background-clip:text;
+  transform:skewX(-16deg) scaleX(1.22);transform-origin:left bottom;
+  filter:drop-shadow(0 0 14px rgba(215,169,112,.18))}
+.v-hero h1::before{display:none}
+.v-hero h1::after,.v-name::after{content:'';display:block!important;position:absolute;left:100%;top:46%;width:26%;height:2px;margin-left:.2em;
+  background:linear-gradient(90deg,rgba(255,244,228,.85),transparent);filter:blur(1.5px);-webkit-text-fill-color:initial}
+.v-name{margin:0 0 56px}
+@media(max-width:860px){
+  .v-hero h1,.v-name{font-size:clamp(26px,8vw,40px);transform:skewX(-16deg) scaleX(1.05);letter-spacing:.06em}
+  .v-hero h1::after,.v-name::after{display:none!important}
+}
