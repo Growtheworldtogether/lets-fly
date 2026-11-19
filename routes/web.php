@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin;
+use App\Http\Controllers\Auth;
 use App\Http\Controllers\Auth\SignInController;
 use App\Http\Controllers\GateController;
 use App\Http\Controllers\Portal;
@@ -18,6 +19,9 @@ Route::middleware('gate')->group(function () {
     Route::post('/sign-in/claim', [SignInController::class, 'claim'])->middleware('throttle:signin')->name('signin.claim');
     Route::post('/sign-in/code', [SignInController::class, 'code'])->middleware('throttle:signin')->name('signin.code');
     Route::post('/sign-in/code/resend', [SignInController::class, 'resend'])->middleware('throttle:signin')->name('signin.resend');
+    Route::get('/sign-in/reset', [Auth\ResetController::class, 'show'])->name('reset');
+    Route::post('/sign-in/reset/send', [Auth\ResetController::class, 'send'])->middleware('throttle:signin')->name('reset.send');
+    Route::post('/sign-in/reset', [Auth\ResetController::class, 'update'])->middleware('throttle:signin')->name('reset.update');
     Route::post('/leave', [GateController::class, 'leave'])->name('gate.leave');
 });
 

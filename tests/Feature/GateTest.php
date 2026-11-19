@@ -325,3 +325,38 @@ it('keeps an admin acting as a member from uploading proof, and cancels voids op
     $this->post('/admin/reservations/'.\App\Models\Reservation::first()->id.'/cancel')->assertRedirect();
     expect($inv->fresh()->status)->toBe('void')->and(\App\Models\Reservation::first()->status)->toBe('cancelled');
 });
+
+it('lets a member reset the password with the emailed code', function () {
+    $captured = [];
+    \Illuminate\Support\Facades\Event::listen(\Illuminate\Mail\Events\MessageSent::class, function ($e) use (&$captured) {
+        if (preg_match('/<strong[^>]*>(\d{6})<\/strong>/', $e->message->getHtmlBody() ?? '', $m)) {
+            $captured[] = $m[1];
+        }
+    });
+    config(['mail.default' => 'array']);
+    $u = memberWithInvite();
+    $code = app(InviteService::class)->regenerate(\App\Models\Invite::first());
+    $this->get('/sign-in/reset')->assertNotFound();
+    $this->post('/enter', ['code' => $code]);
+    $this->post('/sign-in/reset/send')->assertRedirect('/sign-in/reset');
+    $this->get('/sign-in/reset')->assertSee('6-digit code');
+    expect($captured)->toHaveCount(1);
+    $this->post('/sign-in/reset', ['code' => '000000', 'password' => 'Brand-new-pass9', 'password_confirmation' => 'Brand-new-pass9'])->assertSessionHas('error');
+    $this->post('/sign-in/reset', ['code' => $captured[0], 'password' => 'Brand-new-pass9', 'password_confirmation' => 'Brand-new-pass9'])->assertRedirect('/sign-in');
+    $this->post('/sign-in', ['password' => 'Brand-new-pass9'])->assertRedirect('/dashboard');
+    expect(\App\Models\AuditLog::where('action', 'password.reset')->count())->toBe(1);
+});
+
+it('does not offer email reset to admin accounts', function () {
+    $this->artisan('invite:admin', ['name' => 'Root', 'email' => 'root@example.com']);
+    $inv = \App\Models\Invite::first();
+    $code = app(InviteService::class)->regenerate($inv);
+    $this->post('/enter', ['code' => $code]);
+    $this->post('/sign-in/claim', ['password' => 'Sup3rsecret!!', 'password_confirmation' => 'Sup3rsecret!!']);
+    $this->post('/sign-out');
+    $this->post('/enter', ['code' => $code]);
+    $this->get('/sign-in')->assertDontSee('Forgot your password?');
+    $this->get('/sign-in/reset')->assertNotFound();
+    $this->artisan('admin:password', ['email' => 'root@example.com'])->expectsQuestion('New password (at least 10 characters, letters and numbers)', 'Another-pass-77')->assertSuccessful();
+    $this->post('/sign-in', ['password' => 'Another-pass-77'])->assertRedirect('/admin');
+});

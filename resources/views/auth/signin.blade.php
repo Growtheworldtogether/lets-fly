@@ -7,6 +7,7 @@
     <label for="password">Password</label><input id="password" name="password" type="password" class="field" required autofocus autocomplete="current-password">
     <button class="btn solid" type="submit">Sign in</button>
   </form>
+  @if ($invite->kind === 'member')<p><a class="link" href="{{ route('reset') }}">Forgot your password?</a></p>@endif
   <form method="post" action="{{ route('gate.leave') }}">@csrf<button class="link" type="submit">Use a different code</button></form>
 </section>
 @endsection
