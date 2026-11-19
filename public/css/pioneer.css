@@ -394,3 +394,6 @@ body.showroom.scrolled .bar{background:#000;transition:background .25s}
 
 /* The header never moves or changes: pinned to the top, solid black, on every page and every width */
 body .bar,body.showroom .bar,body.showroom.scrolled .bar{position:sticky;top:0;left:auto;right:auto;z-index:30;background:#000;transition:none}
+
+/* every carousel card has its picture on top, in line with the others */
+.v-card,.v-card:nth-child(even){flex-direction:column}
