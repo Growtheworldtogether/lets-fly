@@ -1,12 +1,14 @@
 @extends('layouts.app')
 @section('title', 'Welcome · '.brand('name'))
-@section('bodyclass', 'studio')
+@section('bodyclass', 'studio welcome-page')
+@section('nomenu', '1')
 @section('content')
 <section class="w-page">
   <p class="eyebrow">Welcome{{ $user->member_number ? ' · '.$user->member_number : '' }}</p>
   <h1 class="v-name">{{ brand('vehicle') }}</h1>
   <p class="w-hello">{{ $user->name }}, you are in.</p>
   <p class="lead">Your invitation gives you early access to the {{ brand('vehicle') }}. Next you can see everything about it: the design, how it flies, the cockpit, the performance, safety, training and every specification.</p>
+  <p class="w-why"><b>Why you?</b> We kept this list small and chose each person by hand. You came to mind because we wanted the first people to see it to be people who would love it as much as we do. Thank you for being one of them.</p>
   <ol class="w-steps">
     <li><b>See the vehicle</b><span>Every detail, section by section.</span></li>
     <li><b>Reserve yours</b><span>Review the agreement and pay the deposit by wire.</span></li>

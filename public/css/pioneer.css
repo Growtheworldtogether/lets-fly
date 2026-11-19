@@ -523,3 +523,8 @@ input[type=checkbox]{accent-color:#d7a970;width:18px;height:18px;margin:0}
   .w-page .w-hello{font-size:21px;line-height:28px}
   .w-page .btn{width:100%}
 }
+
+/* welcome page: no menu, and the header scrolls away with the page instead of staying fixed */
+body.welcome-page .bar,body.welcome-page.scrolled .bar{position:relative;top:auto}
+.w-why{margin:0 0 32px;padding:4px 0 4px 20px;border-left:1px solid #d7a970;font-size:17px;line-height:28px;font-weight:300;color:#d0d1d2}
+.w-why b{display:block;margin-bottom:4px;font-weight:400;font-size:14px;letter-spacing:.7px;text-transform:uppercase;color:#fff}
