@@ -1,69 +1,136 @@
 @extends('layouts.app')
 @section('title', brand('vehicle'))
 @section('mainclass', 'bleed')
+@section('bodyclass', 'showroom')
 @section('content')
-@php($intro = $hero?->parts())
+@php
+  $by = $sections->keyBy('slug');
+  $cards = collect(['exterior', 'flight', 'avionics', 'interior', 'power'])->map(fn ($k) => $by[$k] ?? null)->filter();
+  $show = fn ($k) => $by[$k] ?? null;
+@endphp
+
+{{-- 1. Hero: the name, two buttons, feature badges --}}
 @if ($hero)
+@php($facts = $hero->parts()['facts'])
 <section class="v-hero" id="top">
   <div class="v-bg">@php($s = $hero)@include('member._bg', ['eager' => true])</div>
   <div class="v-hero-in">
-    <p class="eyebrow">{{ brand('name') }}</p>
     <h1>{{ $hero->title }}</h1>
-    @if ($hero->summary)<p class="v-lead">{{ $hero->summary }}</p>@endif
     <div class="v-cta">
-      <a class="btn solid" href="{{ route('dashboard') }}">Reserve my allocation</a>
+      <a class="btn solid" href="{{ route('dashboard') }}">Reserve now</a>
       <a class="btn" href="#specs">Specifications</a>
     </div>
   </div>
-  @if ($intro['facts'])
-    <dl class="v-stats">@foreach (array_slice($intro['facts'], 0, 4) as [$k, $v])<div><dt>{{ $k }}</dt><dd>{{ $v }}</dd></div>@endforeach</dl>
+  @if ($facts)
+  <dl class="v-badges">@foreach (array_slice($facts, 0, 4) as [$k, $v])<div><dd>{{ $v }}</dd><dt>{{ $k }}</dt></div>@endforeach</dl>
   @endif
-</section>
-
-<nav class="v-jump" aria-label="Sections"><div>@foreach ($sections as $c)<a href="#{{ $c->slug }}">{{ $c->title }}</a>@endforeach</div></nav>
-
-<section class="v-intro">
-  @if ($intro['headline'])<h2>{{ $intro['headline'] }}</h2>@endif
-  @foreach ($intro['paras'] as $p)<p>{{ $p }}</p>@endforeach
-  @php($s = $hero)@include('member._video')
 </section>
 @endif
 
-@foreach ($sections as $s)
-  @php($p = $s->parts())
-  @if ($s->slug === 'specs')
-    <section class="v-specs" id="specs">
-      <div class="v-specs-in">
-        <h2>{{ $s->title }}</h2>
-        @if ($s->summary)<p class="v-sum">{{ $s->summary }}</p>@endif
-        @foreach ($p['paras'] as $para)<p class="v-p">{{ $para }}</p>@endforeach
-        @include('member._video')
-        <div class="v-groups">
-          @foreach ($p['groups'] as [$name, $rows])
-            <div class="v-group"><h3>{{ $name }}</h3><dl>@foreach ($rows as [$k, $v])<div><dt>{{ $k }}</dt><dd>{{ $v }}</dd></div>@endforeach</dl></div>
-          @endforeach
-        </div>
-      </div>
-    </section>
-  @else
-    <section class="v-sec {{ ['left', 'right', 'center'][$loop->index % 3] }}" id="{{ $s->slug }}">
+{{-- 2. Intro: text over a full-width picture --}}
+@if ($intro = $show('intro'))
+@php($p = $intro->parts())
+<section class="v-over top" id="intro">
+  <div class="v-bg">@php($s = $intro)@include('member._bg')</div>
+  <div class="v-copy">
+    <h2><span>{{ $intro->title }}</span></h2>
+    @foreach ($p['paras'] as $para)<p>{{ $para }}</p>@endforeach
+    @include('member._video')
+  </div>
+</section>
+@endif
+
+{{-- 3. Carousel of cards: picture above, title and text below --}}
+@if ($cards->isNotEmpty())
+<section class="v-carousel" aria-label="Highlights">
+  <div class="v-track" tabindex="0">
+    @foreach ($cards as $s)
+    @php($p = $s->parts())
+    <article class="v-card" id="{{ $s->slug }}">
       <div class="v-bg">@include('member._bg')</div>
-      <div class="v-copy">
-        <p class="eyebrow">{{ str_pad((string) ($loop->iteration), 2, '0', STR_PAD_LEFT) }} · {{ $s->title }}</p>
-        <h2>{{ $p['headline'] ?? $s->title }}</h2>
+      <div class="v-card-body">
+        <h2><span>{{ $p['headline'] ?? $s->title }}</span></h2>
         @foreach ($p['paras'] as $para)<p>{{ $para }}</p>@endforeach
         @if ($p['facts'])<dl class="v-facts">@foreach ($p['facts'] as [$k, $v])<div><dt>{{ $k }}</dt><dd>{{ $v }}</dd></div>@endforeach</dl>@endif
         @include('member._video')
       </div>
-    </section>
-  @endif
+    </article>
+    @endforeach
+  </div>
+  <div class="v-ctrl"><button type="button" class="prev" aria-label="Previous">&lsaquo;</button><span class="dots">@foreach ($cards as $s)<i></i>@endforeach</span><button type="button" class="next" aria-label="Next">&rsaquo;</button></div>
+</section>
+@endif
+
+{{-- 4. Text over a full-bleed picture, text at the bottom --}}
+@if ($s = $show('performance'))
+@php($p = $s->parts())
+<section class="v-over bottom" id="{{ $s->slug }}">
+  <div class="v-bg">@include('member._bg')</div>
+  <div class="v-copy">
+    <h2><span>{{ $p['headline'] ?? $s->title }}</span></h2>
+    @foreach ($p['paras'] as $para)<p>{{ $para }}</p>@endforeach
+    @if ($p['facts'])<dl class="v-facts">@foreach ($p['facts'] as [$k, $v])<div><dt>{{ $k }}</dt><dd>{{ $v }}</dd></div>@endforeach</dl>@endif
+    @include('member._video')
+  </div>
+</section>
+@endif
+
+{{-- 5. Picture, then the text under it --}}
+@foreach (['safety', 'training'] as $slug)
+@if ($s = $show($slug))
+@php($p = $s->parts())
+<section class="v-stack" id="{{ $s->slug }}">
+  <div class="v-bg">@include('member._bg')</div>
+  <div class="v-copy">
+    <h2><span>{{ $p['headline'] ?? $s->title }}</span></h2>
+    @foreach ($p['paras'] as $para)<p>{{ $para }}</p>@endforeach
+    @if ($p['facts'])<dl class="v-facts">@foreach ($p['facts'] as [$k, $v])<div><dt>{{ $k }}</dt><dd>{{ $v }}</dd></div>@endforeach</dl>@endif
+    @include('member._video')
+  </div>
+</section>
+@endif
 @endforeach
 
+{{-- 6. Centered header, then info cards --}}
+@if ($s = $show('delivery'))
+@php($p = $s->parts())
+<section class="v-info" id="{{ $s->slug }}">
+  <h1>{{ $s->title }}</h1>
+  <p class="v-tag">{{ $p['headline'] ?? $s->summary }}</p>
+  @foreach ($p['paras'] as $para)<p class="v-lede">{{ $para }}</p>@endforeach
+  @if ($p['facts'])<dl class="v-facts v-facts-c">@foreach ($p['facts'] as [$k, $v])<div><dt>{{ $k }}</dt><dd>{{ $v }}</dd></div>@endforeach</dl>@endif
+  @include('member._video')
+  @if ($sp = $show('specs'))
+  @php($sparts = $sp->parts())
+  <p class="v-label" id="specs">{{ $sp->title }}</p>
+  @foreach ($sparts['paras'] as $para)<p class="v-lede">{{ $para }}</p>@endforeach
+  <div class="v-infocards">
+    @foreach ($sparts['groups'] as [$name, $rows])
+      <div class="v-infocard"><h2>{{ $name }}</h2><dl>@foreach ($rows as [$k, $v])<div><dt>{{ $k }}</dt><dd>{{ $v }}</dd></div>@endforeach</dl></div>
+    @endforeach
+  </div>
+  @endif
+</section>
+@endif
+
+{{-- 7. Video --}}
+@if ($hero)
+<section class="v-watch">
+  @php($s = $hero)
+  @if ($hero->hasVideo())@include('member._video')@else<div class="v-video v-vph" role="img" aria-label="Video placeholder"><span>Video placeholder</span></div>@endif
+  <h2><span>See it for yourself</span></h2>
+  <p>Watch {{ $hero->title }} in flight.</p>
+</section>
+@endif
+
+{{-- 8. End --}}
 <section class="v-end">
-  <h2>Your place in the first group</h2>
-  <p>Reserve your allocation with a deposit. The balance is due within 10 days after we verify it.</p>
-  <a class="btn solid" href="{{ route('dashboard') }}">Reserve my allocation</a>
+  @if ($hero)<div class="v-bg">@php($s = $hero)@include('member._bg')</div>@endif
+  <div class="v-end-in">
+    <p class="v-name">{{ $hero?->title }}</p>
+    <a class="btn solid" href="{{ route('dashboard') }}">Reserve now</a>
+  </div>
   <p class="v-note">Specifications are targets for the pioneer edition and may change before delivery. Where and how you may fly depends on the aviation rules of your country.</p>
 </section>
-<script>(function(){var l=document.querySelectorAll('.v-jump a');if(!('IntersectionObserver' in window)||!l.length)return;var m={};l.forEach(function(a){m[a.getAttribute('href').slice(1)]=a});var o=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){l.forEach(function(a){a.classList.remove('on')});var a=m[e.target.id];if(a){a.classList.add('on');a.scrollIntoView({block:'nearest',inline:'center'})}}})},{rootMargin:'-45% 0px -50% 0px'});document.querySelectorAll('.v-sec,.v-specs').forEach(function(x){o.observe(x)})})();</script>
+<script>(function(){var t=document.querySelector('.v-track');if(!t)return;var dots=document.querySelectorAll('.v-ctrl .dots i'),cards=t.children;function idx(){var best=0,d=1e9;[].forEach.call(cards,function(c,i){var x=Math.abs(c.offsetLeft-t.scrollLeft-parseFloat(getComputedStyle(t).paddingLeft));if(x<d){d=x;best=i}});return best}function upd(){var i=idx();dots.forEach(function(e,k){e.className=k===i?'on':''});document.querySelector('.v-ctrl .prev').disabled=i===0;document.querySelector('.v-ctrl .next').disabled=i===cards.length-1}function go(i){i=Math.max(0,Math.min(cards.length-1,i));t.scrollTo({left:cards[i].offsetLeft-parseFloat(getComputedStyle(t).paddingLeft),behavior:'smooth'})}document.querySelector('.v-ctrl .prev').addEventListener('click',function(){go(idx()-1)});document.querySelector('.v-ctrl .next').addEventListener('click',function(){go(idx()+1)});t.addEventListener('scroll',function(){clearTimeout(t._w);t._w=setTimeout(upd,60)},{passive:true});t.addEventListener('keydown',function(e){if(e.key==='ArrowRight'){go(idx()+1);e.preventDefault()}if(e.key==='ArrowLeft'){go(idx()-1);e.preventDefault()}});upd()})();</script>
 @endsection

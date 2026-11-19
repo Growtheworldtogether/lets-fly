@@ -132,8 +132,8 @@ it('logs an admin in as a member and back out, and records it', function () {
 it('shows members the vehicle pages with placeholders, hides inactive sections, and keeps outsiders out', function () {
     $this->get('/vehicle')->assertRedirect();
     $m = User::create(['name' => 'Fay', 'email' => 'fay@example.com', 'password' => 'Sup3rsecret!!', 'role' => 'member', 'member_number' => 'PA-000002']);
-    $this->actingAs($m)->get('/vehicle')->assertOk()->assertSee('Pilot training')->assertSee('Image placeholder');
-    $this->get('/vehicle')->assertSee('Flight and handling')->assertSee('Vertical takeoff, wing-borne cruise')->assertSee('Rotor redundancy')->assertSee('Specifications');
+    $this->actingAs($m)->get('/vehicle')->assertOk()->assertSee('Pilot training')->assertSee('Image placeholder')->assertSee('Reserve now');
+    $this->get('/vehicle')->assertSee('Flight and handling')->assertSee('Vertical takeoff, wing-borne cruise')->assertSee('Rotor redundancy')->assertSee('Specifications')->assertSee('Built around the pilot');
     $this->get('/vehicle/flight')->assertRedirect('/vehicle#flight');
     \App\Models\PageSection::where('slug', 'flight')->update(['active' => false]);
     $this->get('/vehicle/flight')->assertNotFound();
@@ -160,7 +160,7 @@ it('reads a section body into headline, paragraphs, facts and spec groups', func
 
 it('gives phones a menu drawer and lands members on the vehicle first', function () {
     $m = User::create(['name' => 'Gus', 'email' => 'gus@example.com', 'password' => 'Sup3rsecret!!', 'role' => 'member', 'member_number' => 'PA-000003']);
-    $this->actingAs($m)->get('/vehicle')->assertSee('class="burger"', false)->assertSee('id="drawer"', false)->assertSee('My reservation')->assertSee('Reserve my allocation');
+    $this->actingAs($m)->get('/vehicle')->assertSee('class="burger"', false)->assertSee('id="drawer"', false)->assertSee('My reservation')->assertSee('Reserve now');
     $this->get('/')->assertRedirect('/vehicle');
 });
 

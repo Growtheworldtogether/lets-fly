@@ -9,7 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{{ asset('css/pioneer.css') }}">
 </head>
-<body>
+<body class="@yield('bodyclass')">
 @if (session('impersonation'))<div class="imp">Signed in as {{ session('impersonation.member_name') }} (you are {{ session('impersonation.admin_name') }}). <form method="post" action="{{ route('admin.exit') }}">@csrf<button type="submit" class="link">Exit</button></form></div>@endif
 <header class="bar"><a class="mark" href="{{ auth()->check() ? (auth()->user()->isAdmin() && ! session('impersonation') ? route('admin.home') : route('vehicle')) : route('gate') }}">{{ brand('name') }}</a>@auth<nav class="topnav" aria-label="Main">@if (! auth()->user()->isAdmin() || session('impersonation'))<a href="{{ route('vehicle') }}">The vehicle</a><a href="{{ route('dashboard') }}">My reservation</a>@else<a href="{{ route('admin.home') }}">Admin</a><a href="{{ route('vehicle') }}">Preview</a>@endif</nav><form class="bar-out" method="post" action="{{ route('logout') }}">@csrf<button class="btn ghost" type="submit">Sign out</button></form><button class="burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="drawer"><span></span><span></span><span></span></button>@endauth</header>
 @auth

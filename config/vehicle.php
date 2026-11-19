@@ -19,16 +19,19 @@ return [
             'title' => '[Vehicle Name]', 'sort' => 0,
             'summary' => 'Secure your place among the pioneers of personal flight.',
             'body' => <<<'T'
-A vehicle built around the pilot
-
-{vehicle} is a two-seat electric aircraft that takes off and lands vertically, then flies on its wing like a conventional aircraft. It needs no runway, produces no exhaust and is designed to be flown by one owner from their own landing pad.
-
-Pioneer allocations are limited, invite-only and delivered in the order they are reserved. Everything below describes the pioneer edition.
-
 - Range: 320 km
 - Cruise speed: 240 km/h
 - Seats: 2
 - Fast charge: 35 min
+T,
+        ],
+        'intro' => [
+            'title' => 'Built around the pilot', 'sort' => 5,
+            'summary' => 'A two-seat electric aircraft for one owner and their own landing pad.',
+            'body' => <<<'T'
+{vehicle} is a two-seat electric aircraft that takes off and lands vertically, then flies on its wing like a conventional aircraft. It needs no runway, produces no exhaust and is designed to be flown by one owner from their own landing pad.
+
+Pioneer allocations are limited, invite-only and delivered in the order they are reserved. Everything on this page describes the pioneer edition.
 T,
         ],
         'exterior' => [
