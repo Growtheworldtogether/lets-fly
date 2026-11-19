@@ -1,0 +1,3 @@
+<p>Hello {{ $name }},</p>
+<p>Your sign-in code is <strong style="font-size:22px;letter-spacing:4px">{{ $code }}</strong>.</p>
+<p>It works for {{ $minutes }} minutes. If you did not try to sign in, you can ignore this email.</p>
