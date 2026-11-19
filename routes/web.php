@@ -32,6 +32,8 @@ Route::middleware(['auth', 'throttle:portal'])->group(function () {
     Route::get('/invoices/{invoice}/pdf', [Portal\DashboardController::class, 'invoicePdf'])->name('invoice.pdf');
     Route::post('/invoices/{invoice}/proof', [Portal\DashboardController::class, 'proof'])->middleware('throttle:10,1')->name('invoice.proof');
     Route::get('/payments/{payment}/proof', [Portal\DashboardController::class, 'proofFile'])->name('payment.proof');
+    Route::get('/welcome', [VehicleController::class, 'welcome'])->name('welcome');
+    Route::post('/welcome', [VehicleController::class, 'welcomed'])->name('welcome.done');
     Route::get('/vehicle', [VehicleController::class, 'index'])->name('vehicle');
     Route::get('/vehicle/{slug}', [VehicleController::class, 'show'])->where('slug', '[a-z-]+')->name('vehicle.show');
     Route::get('/vehicle/{slug}/video', [MediaController::class, 'video'])->where('slug', '[a-z-]+')->name('vehicle.video');

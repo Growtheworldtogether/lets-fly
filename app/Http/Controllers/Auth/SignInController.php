@@ -175,6 +175,11 @@ class SignInController extends Controller
         ])->saveQuietly();
         Audit::record('login.success', $user, null, null, $user->id);
 
-        return redirect()->intended($user->isAdmin() ? '/admin' : '/vehicle');
+        if ($user->isAdmin()) {
+            return redirect()->intended('/admin');
+        }
+
+        // A member's very first visit starts on the welcome page; after that they land on the vehicle.
+        return $user->intro_seen_at ? redirect()->intended('/vehicle') : redirect()->route('welcome');
     }
 }

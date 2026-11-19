@@ -3,9 +3,27 @@
 namespace App\Http\Controllers;
 
 use App\Models\PageSection;
+use Illuminate\Http\Request;
 
 class VehicleController extends Controller
 {
+    /** Shown once, right after a member first signs in; the button leads on to the vehicle. */
+    public function welcome(Request $request)
+    {
+        return view('member.welcome', ['user' => $request->user()]);
+    }
+
+    public function welcomed(Request $request)
+    {
+        $user = $request->user();
+        // An admin looking in as a member must not mark the member's welcome as seen.
+        if (! $request->session()->has('impersonation') && ! $user->intro_seen_at) {
+            $user->forceFill(['intro_seen_at' => now()])->saveQuietly();
+        }
+
+        return redirect()->route('vehicle');
+    }
+
     /** One long page, like a showroom: hero, key numbers, then each section full screen. */
     public function index()
     {

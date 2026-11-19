@@ -25,9 +25,15 @@ it('claims an invite with its preset name, then signs in with the same code', fu
     [$invite, $code] = app(InviteService::class)->create('Ada Lovelace', 'ada@example.com');
     $this->post('/enter', ['code' => $code])->assertRedirect('/sign-in');
     $this->get('/sign-in')->assertSee('Ada Lovelace')->assertSee('Create account');
-    $this->post('/sign-in/claim', ['password' => 'Sup3rsecret!!', 'password_confirmation' => 'Sup3rsecret!!'])->assertRedirect('/vehicle');
+    $this->post('/sign-in/claim', ['password' => 'Sup3rsecret!!', 'password_confirmation' => 'Sup3rsecret!!'])->assertRedirect('/welcome');
     $user = User::where('email', 'ada@example.com')->first();
     expect($user->name)->toBe('Ada Lovelace')->and($user->member_number)->toBe('PA-000001')->and($invite->fresh()->status)->toBe('claimed');
+
+    // First visit: a welcome page with a button that marks it seen and goes on to the vehicle.
+    $this->get('/welcome')->assertOk()->assertSee('Ada Lovelace')->assertSee('PA-000001')->assertSee('View the vehicle');
+    expect($user->fresh()->intro_seen_at)->toBeNull();
+    $this->post('/welcome')->assertRedirect('/vehicle');
+    expect($user->fresh()->intro_seen_at)->not->toBeNull();
 
     $this->post('/sign-out');
     $this->post('/enter', ['code' => strtolower($code)])->assertRedirect('/sign-in');
@@ -368,7 +374,7 @@ it('lets a member reset the password with the emailed code', function () {
     expect($captured)->toHaveCount(1);
     $this->post('/sign-in/reset', ['code' => '000000', 'password' => 'Brand-new-pass9', 'password_confirmation' => 'Brand-new-pass9'])->assertSessionHas('error');
     $this->post('/sign-in/reset', ['code' => $captured[0], 'password' => 'Brand-new-pass9', 'password_confirmation' => 'Brand-new-pass9'])->assertRedirect('/sign-in');
-    $this->post('/sign-in', ['password' => 'Brand-new-pass9'])->assertRedirect('/vehicle');
+    $this->post('/sign-in', ['password' => 'Brand-new-pass9'])->assertRedirect('/welcome');
     expect(\App\Models\AuditLog::where('action', 'password.reset')->count())->toBe(1);
 });
 
@@ -399,4 +405,21 @@ it('shows every section fact somewhere in the specifications, and upgrades an un
     \App\Models\PageSection::where('slug', 'specs')->update(['body' => 'Written by an admin.']);
     (require database_path('migrations/2027_01_02_000001_upgrade_specs_groups.php'))->up();
     expect(\App\Models\PageSection::where('slug', 'specs')->value('body'))->toBe('Written by an admin.');
+});
+
+it('shows the welcome page only until it has been seen, and an admin looking in does not mark it', function () {
+    $m = User::create(['name' => 'Gus', 'email' => 'gus@example.com', 'password' => 'Sup3rsecret!!', 'role' => 'member', 'member_number' => 'PA-000003']);
+    $this->get('/welcome')->assertRedirect();
+    $admin = adminSession($this);
+    $this->actingAs($admin)->post("/admin/members/{$m->id}/impersonate");
+    $this->post('/welcome')->assertRedirect('/vehicle');
+    expect($m->fresh()->intro_seen_at)->toBeNull();
+    $this->post('/admin/exit-member');
+    $this->actingAs($m)->post('/welcome');
+    expect($m->fresh()->intro_seen_at)->not->toBeNull();
+    $this->post('/sign-out');
+    [, $code] = app(InviteService::class)->create('Gus', 'gus@example.com');
+    \App\Models\Invite::first()->update(['status' => 'claimed', 'user_id' => $m->id]);
+    $this->post('/enter', ['code' => $code]);
+    $this->post('/sign-in', ['password' => 'Sup3rsecret!!'])->assertRedirect('/vehicle');
 });
