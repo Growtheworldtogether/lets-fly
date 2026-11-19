@@ -25,7 +25,7 @@ it('claims an invite with its preset name, then signs in with the same code', fu
     [$invite, $code] = app(InviteService::class)->create('Ada Lovelace', 'ada@example.com');
     $this->post('/enter', ['code' => $code])->assertRedirect('/sign-in');
     $this->get('/sign-in')->assertSee('Ada Lovelace')->assertSee('Create account');
-    $this->post('/sign-in/claim', ['password' => 'Sup3rsecret!!', 'password_confirmation' => 'Sup3rsecret!!'])->assertRedirect('/dashboard');
+    $this->post('/sign-in/claim', ['password' => 'Sup3rsecret!!', 'password_confirmation' => 'Sup3rsecret!!'])->assertRedirect('/vehicle');
     $user = User::where('email', 'ada@example.com')->first();
     expect($user->name)->toBe('Ada Lovelace')->and($user->member_number)->toBe('PA-000001')->and($invite->fresh()->status)->toBe('claimed');
 
@@ -33,7 +33,7 @@ it('claims an invite with its preset name, then signs in with the same code', fu
     $this->post('/enter', ['code' => strtolower($code)])->assertRedirect('/sign-in');
     $this->get('/sign-in')->assertSee('Welcome back')->assertDontSee('Create account');
     $this->post('/sign-in', ['password' => 'wrong'])->assertSessionHas('error');
-    $this->post('/sign-in', ['password' => 'Sup3rsecret!!'])->assertRedirect('/dashboard');
+    $this->post('/sign-in', ['password' => 'Sup3rsecret!!'])->assertRedirect('/vehicle');
     $this->get('/dashboard')->assertOk()->assertSee('PA-000001');
 });
 
@@ -133,10 +133,35 @@ it('shows members the vehicle pages with placeholders, hides inactive sections, 
     $this->get('/vehicle')->assertRedirect();
     $m = User::create(['name' => 'Fay', 'email' => 'fay@example.com', 'password' => 'Sup3rsecret!!', 'role' => 'member', 'member_number' => 'PA-000002']);
     $this->actingAs($m)->get('/vehicle')->assertOk()->assertSee('Pilot training')->assertSee('Image placeholder');
-    $this->get('/vehicle/flight')->assertOk()->assertSee('Flight and handling')->assertSee('Performance');
+    $this->get('/vehicle')->assertSee('Flight and handling')->assertSee('Vertical takeoff, wing-borne cruise')->assertSee('Rotor redundancy')->assertSee('Specifications');
+    $this->get('/vehicle/flight')->assertRedirect('/vehicle#flight');
     \App\Models\PageSection::where('slug', 'flight')->update(['active' => false]);
     $this->get('/vehicle/flight')->assertNotFound();
+    $this->get('/vehicle')->assertDontSee('Vertical takeoff, wing-borne cruise');
     $this->get('/vehicle/nope')->assertNotFound();
+});
+
+it('keeps text an admin wrote and only replaces the old placeholder text', function () {
+    \App\Models\PageSection::ensureDefaults();
+    \App\Models\PageSection::where('slug', 'flight')->update(['body' => '[Describe this section here: Admin, Vehicle pages.]']);
+    \App\Models\PageSection::where('slug', 'power')->update(['body' => 'My own words about power.']);
+    \App\Models\PageSection::ensureDefaults();
+    expect(\App\Models\PageSection::where('slug', 'flight')->value('body'))->toContain('Eight lift rotors')
+        ->and(\App\Models\PageSection::where('slug', 'power')->value('body'))->toBe('My own words about power.');
+});
+
+it('reads a section body into headline, paragraphs, facts and spec groups', function () {
+    $s = new \App\Models\PageSection(['body' => "Short headline\n\nA paragraph.\n\n- Range: 300 km\n- Seats: 2\n\n## Weights\n- Empty: 700 kg"]);
+    $p = $s->parts();
+    expect($p['headline'])->toBe('Short headline')->and($p['paras'])->toBe(['A paragraph.'])
+        ->and($p['facts'])->toBe([['Range', '300 km'], ['Seats', '2']])
+        ->and($p['groups'])->toBe([['Weights', [['Empty', '700 kg']]]]);
+});
+
+it('gives phones a menu drawer and lands members on the vehicle first', function () {
+    $m = User::create(['name' => 'Gus', 'email' => 'gus@example.com', 'password' => 'Sup3rsecret!!', 'role' => 'member', 'member_number' => 'PA-000003']);
+    $this->actingAs($m)->get('/vehicle')->assertSee('class="burger"', false)->assertSee('id="drawer"', false)->assertSee('My reservation')->assertSee('Reserve my allocation');
+    $this->get('/')->assertRedirect('/vehicle');
 });
 
 it('lets staff upload a picture and a video, plays the video to members only, and takes a YouTube link', function () {
@@ -149,11 +174,11 @@ it('lets staff upload a picture and a video, plays the video to members only, an
     $s = \App\Models\PageSection::where('slug', 'exterior')->first();
     expect($s->image_id)->not->toBeNull()->and($s->video_path)->toStartWith('private/videos/');
     \Illuminate\Support\Facades\Storage::disk('local')->assertExists($s->video_path);
-    $this->get('/vehicle/exterior')->assertOk()->assertSee('/vehicle/exterior/video', false);
+    $this->get('/vehicle')->assertOk()->assertSee('/vehicle/exterior/video', false);
     $this->post('/admin/content/exterior', ['title' => 'Exterior', 'sort' => 10, 'active' => 1, 'video_url' => 'https://youtu.be/dQw4w9WgXcQ'])->assertSessionHasNoErrors();
     $s->refresh();
     expect($s->video_path)->toBeNull()->and($s->embedUrl())->toBe('https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ');
-    $this->get('/vehicle/exterior')->assertSee('youtube-nocookie.com/embed/dQw4w9WgXcQ', false);
+    $this->get('/vehicle')->assertSee('youtube-nocookie.com/embed/dQw4w9WgXcQ', false);
 });
 
 it('refuses a video that is not MP4 or WebM and a non-https link', function () {
@@ -343,7 +368,7 @@ it('lets a member reset the password with the emailed code', function () {
     expect($captured)->toHaveCount(1);
     $this->post('/sign-in/reset', ['code' => '000000', 'password' => 'Brand-new-pass9', 'password_confirmation' => 'Brand-new-pass9'])->assertSessionHas('error');
     $this->post('/sign-in/reset', ['code' => $captured[0], 'password' => 'Brand-new-pass9', 'password_confirmation' => 'Brand-new-pass9'])->assertRedirect('/sign-in');
-    $this->post('/sign-in', ['password' => 'Brand-new-pass9'])->assertRedirect('/dashboard');
+    $this->post('/sign-in', ['password' => 'Brand-new-pass9'])->assertRedirect('/vehicle');
     expect(\App\Models\AuditLog::where('action', 'password.reset')->count())->toBe(1);
 });
 

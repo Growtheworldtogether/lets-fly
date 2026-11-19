@@ -175,6 +175,6 @@ class SignInController extends Controller
         ])->saveQuietly();
         Audit::record('login.success', $user, null, null, $user->id);
 
-        return redirect()->intended($user->isAdmin() ? '/admin' : '/dashboard');
+        return redirect()->intended($user->isAdmin() ? '/admin' : '/vehicle');
     }
 }

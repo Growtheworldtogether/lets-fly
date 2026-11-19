@@ -6,21 +6,24 @@ use App\Models\PageSection;
 
 class VehicleController extends Controller
 {
+    /** One long page, like a showroom: hero, key numbers, then each section full screen. */
     public function index()
     {
         PageSection::ensureDefaults();
-        $sections = PageSection::with(['image', 'poster'])->where('active', true)->orderBy('sort')->get();
+        $all = PageSection::with(['image', 'poster'])->where('active', true)->orderBy('sort')->get();
 
-        return view('member.vehicle', ['hero' => $sections->firstWhere('slug', 'showcase'), 'sections' => $sections->where('slug', '!=', 'showcase')->values()]);
+        return view('member.vehicle', [
+            'hero' => $all->firstWhere('slug', 'showcase'),
+            'sections' => $all->where('slug', '!=', 'showcase')->values(),
+        ]);
     }
 
+    /** Older links to a single section now jump to it on the long page. */
     public function show(string $slug)
     {
         PageSection::ensureDefaults();
-        $all = PageSection::with(['image', 'poster'])->where('active', true)->where('slug', '!=', 'showcase')->orderBy('sort')->get();
-        $i = $all->search(fn ($s) => $s->slug === $slug);
-        abort_if($i === false, 404);
+        abort_unless(PageSection::where('active', true)->where('slug', $slug)->where('slug', '!=', 'showcase')->exists(), 404);
 
-        return view('member.vehicle-section', ['s' => $all[$i], 'prev' => $all[$i - 1] ?? null, 'next' => $all[$i + 1] ?? null]);
+        return redirect(route('vehicle').'#'.$slug);
     }
 }

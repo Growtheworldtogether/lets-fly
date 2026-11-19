@@ -14,33 +14,66 @@ class PageSection extends Model
         return ['active' => 'boolean'];
     }
 
-    /** slug => [title, summary]. Facts about the vehicle are bracketed until an admin writes them. */
-    public const DEFAULTS = [
-        'showcase' => ['[Vehicle Name]', 'Secure your place among the pioneers of personal flight.'],
-        'exterior' => ['Exterior and design', 'The shape, the materials and the details you see first.'],
-        'flight' => ['Flight and handling', 'How it takes off, cruises and lands.'],
-        'performance' => ['Performance', 'Speed, climb and the numbers behind them.'],
-        'power' => ['Power and range', 'What drives it, how far it goes and how it recharges.'],
-        'interior' => ['Interior and comfort', 'The cabin, the seats and the controls.'],
-        'safety' => ['Safety systems', 'The layers of protection built into every flight.'],
-        'training' => ['Pilot training', 'What you will learn and how long it takes.'],
-        'delivery' => ['Delivery and ownership', 'From your allocation to the day it arrives, and what ownership includes.'],
-        'specs' => ['Specifications', 'Dimensions, weights and capabilities in full.'],
-    ];
+    /** Placeholder bodies written by earlier versions: these get replaced by the detailed defaults. */
+    private static function isPlaceholder(?string $body): bool
+    {
+        return $body === null || trim($body) === '' || str_starts_with(trim($body), '[Describe this section');
+    }
 
+    /** Creates missing sections and fills placeholder text from config/vehicle.php. Text an admin has written is never touched. */
     public static function ensureDefaults(): void
     {
-        if (static::count() >= count(self::DEFAULTS)) {
-            return;
-        }
-        $i = 0;
-        foreach (self::DEFAULTS as $slug => [$title, $summary]) {
-            static::firstOrCreate(['slug' => $slug], [
-                'title' => $title, 'summary' => $summary, 'sort' => $i * 10,
-                'body' => $slug === 'showcase' ? null : "[Describe this section here: Admin, Vehicle pages.]",
+        foreach (config('vehicle.sections') as $slug => $d) {
+            $row = static::firstOrCreate(['slug' => $slug], [
+                'title' => $d['title'], 'summary' => $d['summary'], 'sort' => $d['sort'], 'body' => $d['body'],
             ]);
-            $i++;
+            if (! $row->wasRecentlyCreated && static::isPlaceholder($row->body)) {
+                $row->update(['body' => $d['body']]);
+            }
         }
+    }
+
+    /**
+     * The body split into what the page shows: an optional one-line headline, paragraphs,
+     * "- Label: value" facts, and "## Group" tables (the specifications).
+     *
+     * @return array{headline: ?string, paras: list<string>, facts: list<array{0:string,1:string}>, groups: list<array{0:string,1:list<array{0:string,1:string}>}>}
+     */
+    public function parts(): array
+    {
+        $vehicle = brand('vehicle');
+        $text = str_replace('{vehicle}', $vehicle, (string) $this->body);
+        $out = ['headline' => null, 'paras' => [], 'facts' => [], 'groups' => []];
+        $group = null;
+        foreach (preg_split('/\R\s*\R/', trim($text)) as $i => $block) {
+            $lines = array_values(array_filter(array_map('trim', preg_split('/\R/', $block)), 'strlen'));
+            $paras = [];
+            foreach ($lines as $line) {
+                if (str_starts_with($line, '## ')) {
+                    $group = count($out['groups']);
+                    $out['groups'][] = [trim(substr($line, 3)), []];
+                } elseif (preg_match('/^-\s+([^:]+):\s*(.+)$/', $line, $m)) {
+                    $row = [trim($m[1]), trim($m[2])];
+                    if ($group === null) {
+                        $out['facts'][] = $row;
+                    } else {
+                        $out['groups'][$group][1][] = $row;
+                    }
+                } else {
+                    $paras[] = $line;
+                }
+            }
+            if ($paras) {
+                $joined = implode(' ', $paras);
+                if ($i === 0 && count($paras) === 1 && ! str_ends_with($joined, '.') && mb_strlen($joined) <= 70) {
+                    $out['headline'] = $joined;
+                } else {
+                    $out['paras'][] = $joined;
+                }
+            }
+        }
+
+        return $out;
     }
 
     public function image(): BelongsTo

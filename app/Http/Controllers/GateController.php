@@ -11,7 +11,7 @@ class GateController extends Controller
     public function show(Request $request)
     {
         if ($request->user()) {
-            return redirect($request->user()->isAdmin() ? '/admin' : '/dashboard');
+            return redirect($request->user()->isAdmin() ? '/admin' : '/vehicle');
         }
 
         return view('auth.gate');
