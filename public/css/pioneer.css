@@ -334,3 +334,21 @@ main.bleed{display:block;padding:0;min-height:0}
 }
 @media(max-width:520px){.v-card{width:92vw}.v-copy h2,.v-card-body h2,.v-watch h2,.v-info h1{font-size:36px;line-height:44px}}
 .v-cta a.btn,.v-cta a.btn.solid,.v-end a.btn,.v-end a.btn.solid{margin:0!important}
+
+/* ===== Stand-in pictures: a dark studio with a soft light on the floor, until real photos are uploaded ===== */
+.v-ph{position:relative;background:
+  radial-gradient(ellipse 55% 14% at 50% 88%,rgba(255,255,255,.16) 0,rgba(255,255,255,.05) 45%,transparent 75%),
+  radial-gradient(ellipse 42% 55% at 62% 38%,rgba(120,124,134,.22) 0,transparent 70%),
+  linear-gradient(180deg,#0b0b0d 0,#050506 60%,#000 100%)}
+.v-hero .v-ph::before{content:'';position:absolute;left:-10%;right:-10%;bottom:-6%;height:46%;
+  background:linear-gradient(100deg,transparent 0,transparent 18%,rgba(255,255,255,.55) 44%,rgba(255,255,255,.08) 62%,transparent 78%);
+  transform:skewY(-14deg) translateY(10%);filter:blur(26px);opacity:.75}
+.v-hero .v-ph::after{content:'';position:absolute;left:44%;top:14%;width:38%;height:40%;border-radius:50%;
+  background:radial-gradient(ellipse,rgba(190,194,204,.28) 0,transparent 70%);filter:blur(30px)}
+.v-card:nth-child(even) .v-ph,.v-stack:nth-of-type(even) .v-ph{background-position:center}
+/* header and hero name sized like the reference */
+.mark{font-size:14px;letter-spacing:7px;font-weight:600}
+.bar-out .btn.ghost{background:transparent;border-color:transparent;min-width:0;font-size:14px;font-weight:500;letter-spacing:0;text-transform:none}
+.bar-out .btn.ghost:hover{background:transparent;border-color:#2a2a2d}
+.v-hero h1{font-size:clamp(40px,5vw,72px)}
+@media(max-width:860px){.mark{font-size:13px;letter-spacing:5px}.v-hero h1{font-size:40px}}
