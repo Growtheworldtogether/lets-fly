@@ -1,0 +1,39 @@
+# Builds the upload/update zips on GitHub's servers. Run it from the Actions tab: "Build release zip", "Run workflow".
+# The zips appear on the Releases page, and every site's Admin > System page offers the newest one.
+name: Build release zip
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  zip:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: zip, mbstring, gd, curl, xml
+          tools: composer
+
+      - name: PHP packages for the live site (no testing tools)
+        run: composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
+
+      - name: Pack the zips
+        run: |
+          export RELEASE_TAG="release-$(date -u +%Y%m%d-%H%M%S)"
+          echo "RELEASE_TAG=$RELEASE_TAG" >> "$GITHUB_ENV"
+          php scripts/make-release.php
+          php scripts/make-release.php --public-html
+
+      - name: Publish on the Releases page
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$RELEASE_TAG" lets-fly-release.zip lets-fly-release-public_html.zip \
+            --title "Version $(date -u '+%Y-%m-%d %H:%M') UTC" \
+            --notes "lets-fly-release-public_html.zip: for a domain that uses public_html (extract in your home folder). lets-fly-release.zip: for a domain whose document root you can set to app/public. Built from ${GITHUB_SHA::7}."

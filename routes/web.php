@@ -70,6 +70,12 @@ Route::middleware(['auth', 'staff'])->prefix('admin')->group(function () {
     Route::middleware('can:admin.manage')->group(function () {
         Route::get('/agreement', [Admin\AgreementController::class, 'edit'])->name('admin.agreement');
         Route::post('/agreement', [Admin\AgreementController::class, 'publish'])->name('admin.agreement.publish');
+        Route::get('/system', [Admin\SystemController::class, 'show'])->name('admin.system');
+        Route::post('/system/check', [Admin\SystemController::class, 'check'])->middleware('throttle:10,1')->name('admin.system.check');
+        Route::post('/system/update', [Admin\SystemController::class, 'install'])->middleware('throttle:5,1')->name('admin.system.update');
+        Route::get('/system/progress', [Admin\SystemController::class, 'progress'])->name('admin.system.progress');
+        Route::post('/system/restore', [Admin\SystemController::class, 'restore'])->middleware('throttle:5,1')->name('admin.system.restore');
+        Route::post('/system/cancel', [Admin\SystemController::class, 'cancel'])->name('admin.system.cancel');
         Route::get('/settings', [Admin\SettingsController::class, 'edit'])->name('admin.settings');
         Route::post('/settings', [Admin\SettingsController::class, 'update'])->name('admin.settings.save');
     });
