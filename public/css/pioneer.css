@@ -527,3 +527,11 @@ input[type=checkbox]{accent-color:#d7a970;width:18px;height:18px;margin:0}
 /* welcome page extras */
 .w-why{margin:0 0 32px;padding:4px 0 4px 20px;border-left:1px solid #d7a970;font-size:17px;line-height:28px;font-weight:300;color:#d0d1d2}
 .w-why b{display:block;margin-bottom:4px;font-weight:400;font-size:14px;letter-spacing:.7px;text-transform:uppercase;color:#fff}
+
+/* back to top: appears once the header has scrolled away */
+.totop{position:fixed;right:20px;bottom:20px;z-index:35;width:44px;height:44px;display:flex;align-items:center;justify-content:center;padding:0;background:#111;color:#fff;border:1px solid #222;border-radius:0;cursor:pointer}
+.totop[hidden]{display:none}
+.totop:hover{background:#1a1a1a}
+.totop:focus-visible{outline:1px solid #d7a970;outline-offset:2px}
+.toast{bottom:76px}
+body.menu-open .totop{display:none}
