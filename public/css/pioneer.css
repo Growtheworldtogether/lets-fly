@@ -498,3 +498,9 @@ input[type=checkbox]{accent-color:#d7a970;width:18px;height:18px;margin:0}
   .tbl.stack-rows td[data-label=""]::before,.tbl.stack-rows td:not([data-label])::before{content:none}
   .tbl.stack-rows td .acts{justify-content:flex-end}
 }
+
+/* phones: the admin menu lives in the side menu, not in a scrolling row */
+.drawer-h{margin:0;padding:18px 24px 10px;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:#8e8f93}
+.drawer a.on{color:#fff;box-shadow:inset 2px 0 0 var(--gold);background:#111113}
+.drawer-admin{border-top:1px solid #1d1d1f}
+@media(max-width:860px){.subnav{display:none}}
