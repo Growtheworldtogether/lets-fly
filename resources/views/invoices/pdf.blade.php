@@ -3,7 +3,7 @@
 body{font-family:DejaVu Sans,Helvetica,Arial,sans-serif;font-size:12px;color:#111}
 h1{font-weight:normal;font-size:28px;margin:0 0 4px}.muted{color:#777}.mono{font-family:DejaVu Sans Mono,monospace}
 table{width:100%;border-collapse:collapse}th{text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#777;border-bottom:2px solid #000;padding:6px 0}
-td{padding:10px 0;border-bottom:1px solid #ddd;vertical-align:top}.r{text-align:right}.head{background:#000;color:#fff;padding:14px 18px;margin-bottom:24px;letter-spacing:4px;text-transform:uppercase;font-weight:bold}
+td{padding:10px 0;border-bottom:1px solid #ddd;vertical-align:top}.r{text-align:right}.head{background:#000;color:#d7a970;padding:14px 18px;margin-bottom:24px;letter-spacing:4px;text-transform:uppercase;font-weight:bold}
 .wire{background:#f3f3f3;padding:10px 12px;margin-top:6px}.foot{margin-top:36px;font-size:10px;color:#888;border-top:1px solid #ddd;padding-top:8px}
 </style></head><body>
 <div class="head">{{ brand('name') }}</div>
