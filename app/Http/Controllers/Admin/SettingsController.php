@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Font;
 use App\Models\Setting;
+use App\Services\Fonts;
 use App\Services\Audit;
 use Illuminate\Http\Request;
 
@@ -20,6 +22,8 @@ class SettingsController extends Controller
 
         return view('admin.settings', [
             's' => $s,
+            'fonts' => Font::orderBy('label')->get(),
+            'assigned' => Fonts::assignments(),
             'digits' => Setting::value('member_digits', config('pioneer.member_digits')),
             'next' => Setting::value('member_next', 1),
             'country' => Setting::bool('country_check', config('pioneer.country_check')),
@@ -58,5 +62,35 @@ class SettingsController extends Controller
         Audit::record('settings.updated', null, null, ['keys' => array_keys($d)], $request->user()->id);
 
         return back()->with('toast', 'Settings saved.');
+    }
+
+    public function uploadFont(Request $request, Fonts $fonts)
+    {
+        $request->validate(['label' => ['nullable', 'string', 'max:60'], 'font' => ['required', 'file']]);
+        $font = $fonts->store($request->file('font'), (string) $request->input('label'), $request->user());
+        Audit::record('font.uploaded', null, null, ['font' => $font->label], $request->user()->id);
+
+        return back()->with('toast', $font->label.' uploaded. Choose where to use it below.');
+    }
+
+    public function assignFonts(Request $request)
+    {
+        $ids = Font::pluck('id')->map(fn ($i) => (string) $i)->all();
+        foreach (array_keys(Fonts::ROLES) as $role) {
+            $v = (string) $request->input('font_'.$role, '');
+            Setting::set('font_'.$role, in_array($v, $ids, true) ? $v : '');
+        }
+        Audit::record('fonts.assigned', null, null, ['roles' => array_keys(Fonts::ROLES)], $request->user()->id);
+
+        return back()->with('toast', 'Fonts saved.');
+    }
+
+    public function deleteFont(Request $request, Font $font, Fonts $fonts)
+    {
+        $label = $font->label;
+        $fonts->delete($font);
+        Audit::record('font.deleted', null, null, ['font' => $label], $request->user()->id);
+
+        return back()->with('toast', $label.' removed.');
     }
 }

@@ -423,3 +423,45 @@ it('shows the welcome page only until it has been seen, and an admin looking in 
     $this->post('/enter', ['code' => $code]);
     $this->post('/sign-in', ['password' => 'Sup3rsecret!!'])->assertRedirect('/vehicle');
 });
+
+function woff2Upload(string $name = 'Brand.woff2', ?string $bytes = null) {
+    return \Illuminate\Http\UploadedFile::fake()->createWithContent($name, $bytes ?? ('wOF2'.str_repeat("\0", 200)));
+}
+
+it('lets an admin upload woff2 fonts, assign them to parts of the site, and refuses anything else', function () {
+    \Illuminate\Support\Facades\Storage::fake('local');
+    $admin = adminSession($this);
+    $this->actingAs($admin)->get('/admin/settings')->assertOk()->assertSee('Fonts');
+    // not a woff2: wrong signature, wrong extension
+    $this->post('/admin/settings/fonts', ['label' => 'Bad', 'font' => woff2Upload('x.woff2', 'not a font')])->assertSessionHasErrors('font');
+    $this->post('/admin/settings/fonts', ['label' => 'Bad', 'font' => woff2Upload('x.ttf')])->assertSessionHasErrors('font');
+    expect(\App\Models\Font::count())->toBe(0);
+
+    $this->post('/admin/settings/fonts', ['label' => 'Brand display', 'font' => woff2Upload()])->assertSessionHasNoErrors();
+    $font = \App\Models\Font::first();
+    expect($font->label)->toBe('Brand display');
+    \Illuminate\Support\Facades\Storage::disk('local')->assertExists('fonts/'.$font->filename);
+
+    // nothing is assigned yet, so pages carry no custom font rules
+    $this->get('/vehicle')->assertDontSee('cf-'.$font->id, false);
+    $this->post('/admin/settings/fonts/assign', ['font_vehicle' => (string) $font->id, 'font_body' => '999'])->assertSessionHasNoErrors();
+    $this->get('/vehicle')->assertSee('font-family:"cf-'.$font->id.'"', false)->assertSee('/fonts/'.$font->filename, false);
+    expect(\App\Models\Setting::find('font_body')->value)->toBe('');
+
+    // the file is served to anyone (the code page needs it), but only under its exact random name
+    auth()->logout();
+    $this->get('/fonts/'.$font->filename)->assertOk()->assertHeader('Content-Type', 'font/woff2');
+    $this->get('/fonts/'.str_repeat('a', 40).'.woff2')->assertNotFound();
+
+    // removing a font puts its parts back on the built-in one
+    $this->actingAs($admin)->delete('/admin/settings/fonts/'.$font->id)->assertSessionHasNoErrors();
+    expect(\App\Models\Font::count())->toBe(0)->and(\App\Models\Setting::find('font_vehicle')->value)->toBe('');
+    $this->get('/vehicle')->assertDontSee('cf-'.$font->id, false);
+});
+
+it('no longer prints the agreement version line on My reservation', function () {
+    Mail::fake();
+    $u = memberWithInvite();
+    $this->actingAs($u)->post('/reserve', ['agree' => 1]);
+    $this->get('/dashboard')->assertOk()->assertDontSee('Agreement version')->assertSee('Pioneer allocation');
+});

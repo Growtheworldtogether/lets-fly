@@ -22,6 +22,18 @@ class MediaController extends Controller
         ]);
     }
 
+    public function font(string $filename)
+    {
+        \App\Models\Font::where('filename', $filename)->firstOrFail();
+        abort_unless(Storage::disk('local')->exists('fonts/'.$filename), 404);
+
+        return response(Storage::disk('local')->get('fonts/'.$filename), 200, [
+            'Content-Type' => 'font/woff2',
+            'Cache-Control' => 'public, max-age=31536000, immutable',
+            'X-Content-Type-Options' => 'nosniff',
+        ]);
+    }
+
     /** Range requests are handled by the file response, so the video can be scrubbed. */
     public function video(string $slug)
     {

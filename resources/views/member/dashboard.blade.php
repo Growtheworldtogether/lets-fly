@@ -21,7 +21,6 @@
         <tr><td>Deposit</td><td class="r">{{ $money($r->deposit_cents) }}</td></tr>
         <tr><td>Balance — {{ $r->balance_due_at ? 'due '.$r->balance_due_at->timezone('America/New_York')->format('M j, Y') : 'due '.$terms['days'].' days after your deposit is verified' }}</td><td class="r">{{ $money($r->balance_cents) }}</td></tr>
       </table>
-      <p class="hint">Agreement version {{ $r->agreement_version }} accepted {{ $r->agreed_at->timezone('America/New_York')->format('M j, Y g:i a') }} ET.</p>
     </div>
 
     @if ($r->balance_due_at && in_array($r->status, ['balance_invoiced', 'balance_proof_submitted']))

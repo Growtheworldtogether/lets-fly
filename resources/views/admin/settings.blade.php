@@ -3,6 +3,31 @@
 @section('content')
 <div class="page">@include('admin._nav')
   <h1>Settings</h1>
+  <section class="stack fonts" id="fonts">
+    <h2>Fonts</h2>
+    <p class="hint">Upload .woff2 font files (2 MB each), then choose where each one is used. Anything left on "Built-in" keeps the standard font.</p>
+    <form method="post" action="{{ route('admin.fonts.upload') }}" enctype="multipart/form-data">@csrf
+      <label for="font_label">Name for this font</label><input id="font_label" name="label" class="field" maxlength="60" placeholder="e.g. Brand display">
+      <label for="font_file">Font file (.woff2)</label><input id="font_file" name="font" type="file" class="field" accept=".woff2,font/woff2" required>
+      <button class="btn" type="submit">Upload font</button>
+    </form>
+    @if ($fonts->isNotEmpty())
+      <style>{!! \App\Services\Fonts::css(true) !!}</style>
+      <ul class="font-list">
+        @foreach ($fonts as $f)
+          <li><span class="font-sample" style="font-family:'{{ $f->family() }}',sans-serif">Aa Pioneer 0123</span><span class="font-name">{{ $f->label }}<small>{{ $f->original_name }} · {{ number_format($f->size / 1024) }} KB</small></span>
+            <form method="post" action="{{ route('admin.fonts.delete', $f) }}" onsubmit="return confirm('Remove this font? Anything using it goes back to the built-in font.')">@csrf @method('DELETE')<button class="btn ghost" type="submit">Remove</button></form></li>
+        @endforeach
+      </ul>
+      <form method="post" action="{{ route('admin.fonts.assign') }}">@csrf
+        @foreach (\App\Services\Fonts::ROLES as $role => [$name])
+          <label for="font_{{ $role }}">{{ $name }}</label>
+          <select id="font_{{ $role }}" name="font_{{ $role }}" class="field"><option value="">Built-in</option>@foreach ($fonts as $f)<option value="{{ $f->id }}" @selected(($assigned[$role] ?? null) === $f->id)>{{ $f->label }}</option>@endforeach</select>
+        @endforeach
+        <button class="btn solid" type="submit">Save fonts</button>
+      </form>
+    @endif
+  </section>
   <form method="post" action="{{ route('admin.settings.save') }}" class="stack">@csrf
     <h2>Names</h2>
     <label for="company_name">Company name</label><input id="company_name" name="company_name" class="field" maxlength="80" value="{{ old('company_name', $s['company_name']) }}" placeholder="[Company Name]">

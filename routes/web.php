@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Route;
 // The code page is the only public page. Every other URL answers 404 until a valid code has been entered.
 Route::get('/', [GateController::class, 'show'])->name('gate');
 Route::post('/enter', [GateController::class, 'enter'])->middleware('throttle:gate')->name('gate.enter');
+// Uploaded fonts must load on the code page too; the file names are long random strings and anything else is a 404.
+Route::get('/fonts/{filename}', [MediaController::class, 'font'])->where('filename', '[A-Za-z0-9]{40}\.woff2')->name('font');
 
 Route::middleware('gate')->group(function () {
     Route::get('/sign-in', [SignInController::class, 'show'])->name('signin');
@@ -80,5 +82,8 @@ Route::middleware(['auth', 'staff'])->prefix('admin')->group(function () {
         Route::post('/system/cancel', [Admin\SystemController::class, 'cancel'])->name('admin.system.cancel');
         Route::get('/settings', [Admin\SettingsController::class, 'edit'])->name('admin.settings');
         Route::post('/settings', [Admin\SettingsController::class, 'update'])->name('admin.settings.save');
+        Route::post('/settings/fonts', [Admin\SettingsController::class, 'uploadFont'])->middleware('throttle:20,1')->name('admin.fonts.upload');
+        Route::post('/settings/fonts/assign', [Admin\SettingsController::class, 'assignFonts'])->name('admin.fonts.assign');
+        Route::delete('/settings/fonts/{font}', [Admin\SettingsController::class, 'deleteFont'])->name('admin.fonts.delete');
     });
 });
