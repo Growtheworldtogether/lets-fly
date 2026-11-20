@@ -599,3 +599,14 @@ body.studio[data-backdrop] .gate .eyebrow{color:#d6d6d9;text-shadow:0 0 10px #00
 /* default hero picture until one is uploaded: the car sits right of the title */
 .v-fallback{object-position:40% 40%}
 @media(max-width:700px){.v-fallback{object-position:63% 40%}}
+
+/* hero laid out like the reference page: the picture runs up behind the header, the title block is centred in the first screen */
+.v-hero{margin-top:-57px;justify-content:flex-start}
+.v-hero-in{margin:0;min-height:100svh;display:flex;flex-direction:column;justify-content:center;padding-top:57px}
+.v-hero .v-badges{margin-top:auto}
+.v-fallback{object-position:50% 40%}
+@media(max-width:860px){
+  .v-hero-in{justify-content:flex-start;padding-top:calc(57px + 53svh)}
+}
+@media(max-width:700px){.v-fallback{height:100%;transform:translateY(-125px) scale(1.15);transform-origin:50% 20%;object-position:52% 40%}}
+.v-hero h1{text-shadow:0 2px 14px rgba(0,0,0,.7)}
