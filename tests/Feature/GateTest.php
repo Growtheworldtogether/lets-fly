@@ -596,3 +596,19 @@ it('carries the escrow wording into the agreement and the footer', function () {
     $this->actingAs($u)->get('/reserve')->assertSee('held in trust by our independent escrow agent, Cynthia Poole')->assertSee('confirms your allocation milestone');
     $this->get('/dashboard')->assertSee('held in escrow by an independent escrow agent')->assertDontSee('No deposits are accepted');
 });
+
+
+it('lets an admin upload a background picture that shows on the code page and is removed again', function () {
+    \Illuminate\Support\Facades\Storage::fake('local');
+    $admin = adminSession($this);
+    $this->actingAs($admin);
+    $this->post('/admin/settings/logo/backdrop', ['logo' => \Illuminate\Http\UploadedFile::fake()->image('bg.jpg', 1600, 900)])->assertSessionHasNoErrors();
+    auth()->logout();
+    $url = brand_logo('backdrop');
+    expect($url)->not->toBeNull();
+    $this->get('/')->assertSee('data-backdrop', false)->assertSee($url, false);
+    $this->get($url)->assertOk();
+    $this->actingAs($admin)->delete('/admin/settings/logo/backdrop')->assertSessionHasNoErrors();
+    auth()->logout();
+    $this->get('/')->assertDontSee('data-backdrop', false);
+});

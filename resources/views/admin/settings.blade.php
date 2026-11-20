@@ -4,13 +4,13 @@
 <div class="page">@include('admin._nav')
   <h1>Settings</h1>
   <section class="stack logos" id="logos">
-    <h2>Logos</h2>
+    <h2>Logos and background</h2>
     <p class="hint">PNG, WebP or JPG up to 4 MB. A transparent PNG about three times wider than tall looks best on the dark background. SVG files are not accepted.</p>
     @foreach (\App\Services\Logos::ROLES as $role => $name)
       @php($logo = brand_logo($role))
       <div class="logo-card">
         <p class="eyebrow">{{ $name }}</p>
-        <p class="hint">{{ $role === 'site' ? 'Replaces the company name in the header on every page.' : 'Replaces the vehicle name title in two places on the vehicle page, and on the welcome page.' }}</p>
+        <p class="hint">{{ ['site' => 'Replaces the company name in the header on every page.', 'vehicle' => 'Replaces the vehicle name title in two places on the vehicle page, and on the welcome page.', 'backdrop' => 'A wide dark photo, behind the invite code page and the sign-in pages. A dark image works best. It is dimmed so the text stays readable. Anything up to 4 MB.'][$role] }}</p>
         @if ($logo)<div class="logo-preview"><img src="{{ $logo }}" alt="{{ $name }}"></div>@endif
         <form method="post" action="{{ route('admin.logo.upload', $role) }}" enctype="multipart/form-data">@csrf
           <label for="logo_{{ $role }}">{{ $logo ? 'Replace file' : 'Choose file' }}</label>

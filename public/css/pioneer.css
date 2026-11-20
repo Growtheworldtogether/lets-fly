@@ -585,3 +585,7 @@ body.menu-open .totop{display:none}
 @media(prefers-reduced-motion:reduce){.shake{animation:none}}
 /* header has no background of its own: the page shows through */
 body .bar,body.showroom .bar,body.showroom.scrolled .bar{background:transparent}
+
+/* uploaded background picture on the code and sign-in pages, dimmed so the text stays readable */
+body.studio[data-backdrop]{background:linear-gradient(180deg,rgba(0,0,0,.55) 0,rgba(0,0,0,.35) 45%,rgba(0,0,0,.75) 100%),var(--backdrop) center/cover no-repeat fixed,#000}
+body.studio[data-backdrop]::before{display:none}

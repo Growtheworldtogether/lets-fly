@@ -86,8 +86,8 @@ Route::middleware(['auth', 'staff'])->prefix('admin')->group(function () {
         Route::post('/system/cancel', [Admin\SystemController::class, 'cancel'])->name('admin.system.cancel');
         Route::get('/settings', [Admin\SettingsController::class, 'edit'])->name('admin.settings');
         Route::post('/settings', [Admin\SettingsController::class, 'update'])->name('admin.settings.save');
-        Route::post('/settings/logo/{role}', [Admin\SettingsController::class, 'uploadLogo'])->where('role', 'site|vehicle')->middleware('throttle:20,1')->name('admin.logo.upload');
-        Route::delete('/settings/logo/{role}', [Admin\SettingsController::class, 'removeLogo'])->where('role', 'site|vehicle')->name('admin.logo.remove');
+        Route::post('/settings/logo/{role}', [Admin\SettingsController::class, 'uploadLogo'])->where('role', 'site|vehicle|backdrop')->middleware('throttle:20,1')->name('admin.logo.upload');
+        Route::delete('/settings/logo/{role}', [Admin\SettingsController::class, 'removeLogo'])->where('role', 'site|vehicle|backdrop')->name('admin.logo.remove');
         Route::post('/settings/fonts', [Admin\SettingsController::class, 'uploadFont'])->middleware('throttle:20,1')->name('admin.fonts.upload');
         Route::post('/settings/fonts/assign', [Admin\SettingsController::class, 'assignFonts'])->name('admin.fonts.assign');
         Route::delete('/settings/fonts/{font}', [Admin\SettingsController::class, 'deleteFont'])->name('admin.fonts.delete');

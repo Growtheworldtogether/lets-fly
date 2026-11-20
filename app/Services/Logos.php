@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Storage;
 /** The two uploaded logos: 'site' (the header, on every page) and 'vehicle' (stands in for the vehicle name title). */
 final class Logos
 {
-    public const ROLES = ['site' => 'Site logo', 'vehicle' => 'Vehicle name logo'];
+    public const ROLES = ['site' => 'Site logo', 'vehicle' => 'Vehicle name logo', 'backdrop' => 'Background picture for the code and sign-in pages'];
 
     private static array $cache = [];
 
