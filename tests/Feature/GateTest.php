@@ -236,7 +236,7 @@ it('sends the invoice email without links and downloads a PDF only for its owner
     $inv = \App\Models\Invoice::first();
     expect($inv->emailed_at)->not->toBeNull();
     $html = view('mail.invoice', ['invoice' => $inv, 'r' => $inv->reservation, 'user' => $u, 'lines' => \App\Services\Escrow::lines($inv->reservation), 'notes' => ''])->render();
-    expect($html)->toContain('$100,000.00')->toContain('PA-000010')->toContain('Cynthia Poole')->toContain('#0000-1111-2222')->toContain('Allocation #'.$inv->reservation->reference)->not->toContain('http://')->not->toContain('https://');
+    expect($html)->toContain('$100,000.00')->toContain('PA-000010')->toContain('Cynthia Poole')->toContain('Allocation #'.$inv->reservation->reference)->toContain('sign in with your invite code')->not->toContain('#0000-1111-2222')->not->toContain('021000021')->not->toContain('Example Bank')->not->toContain('http://')->not->toContain('https://');
     $res = $this->get("/invoices/{$inv->id}/pdf");
     $res->assertOk();
     expect($res->headers->get('content-type'))->toContain('pdf');
