@@ -115,9 +115,9 @@ T,
             'title' => 'Power and range', 'sort' => 40,
             'summary' => 'What drives it, how far it goes and how it recharges.',
             'body' => <<<'T'
-Two batteries, one purpose
+Sprung to land, powered twice over
 
-Under the skin, the frame, the running gear and the power system are built around one rule: no single failure should leave you without a safe way down. The vehicle carries two separate battery packs. Each can power the aircraft to a safe landing on its own, so the loss of one pack is an inconvenience and not an emergency. Packs are liquid-cooled and monitored cell by cell.
+Under the skin, a sprung wheel assembly on a rigid frame absorbs touchdown on the pad, so landing feels like arriving rather than dropping. Behind it the vehicle carries two separate battery packs. Each can power the aircraft to a safe landing on its own, so the loss of one pack is an inconvenience and not an emergency. Packs are liquid-cooled and monitored cell by cell.
 
 At home, a 22 kW charger fills the packs overnight. At a public fast charger the vehicle charges from 10 to 80 percent in about 35 minutes. The charger is included with your allocation.
 
