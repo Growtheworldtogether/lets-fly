@@ -425,3 +425,9 @@ html.ts2 body[data-ts="portal"] .w-why b,html.ts2 body[data-ts="portal"] .w-step
 html.ts2 body[data-ts="portal"] .w-steps b{font-size:22px}
 html.ts2 body[data-ts="portal"] .w-steps span{font-size:20px;line-height:1.5;color:#d4d5d8}
 html.ts2 body[data-ts="portal"] .w-steps li{grid-template-columns:44px 1fr}
+
+/* Welcome page: the dusk picture of two people beside the open-door vehicle, darkened behind the text */
+body.welcome-page[data-backdrop]{background:linear-gradient(180deg,rgba(0,0,0,.6) 0,rgba(0,0,0,.55) 45%,rgba(0,0,0,.9) 100%),var(--backdrop) 25% 30%/cover no-repeat fixed,#000}
+body.welcome-page .w-page{text-shadow:0 1px 10px rgba(0,0,0,.85)}
+body.welcome-page .w-steps span,body.welcome-page .w-page .eyebrow{color:#c4c5c8}
+@media(max-width:700px){body.welcome-page[data-backdrop]{background:linear-gradient(180deg,rgba(0,0,0,.3) 0,rgba(0,0,0,.25) 30%,rgba(0,0,0,.9) 100%),var(--backdrop) 27% 40px/auto 44vh no-repeat fixed,#000}}

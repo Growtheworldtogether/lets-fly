@@ -642,4 +642,6 @@ it('offers a text size button on the vehicle page and the dashboard for signed-i
     $this->actingAs($m)->get('/dashboard')->assertSee('class="tsize"', false)->assertSee('data-ts="portal"', false);
     $this->actingAs($m)->get('/vehicle')->assertSee('data-ts="vehicle"', false);
     $this->actingAs($m)->get('/welcome')->assertSee('class="tsize"', false);
+    $this->actingAs($m)->get('/welcome')->assertSee('/vehicle-art/training-default.jpg', false);
+    $this->get('/')->assertDontSee('training-default', false);
 });
