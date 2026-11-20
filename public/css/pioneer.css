@@ -601,13 +601,17 @@ body.studio[data-backdrop] .gate .eyebrow{color:#d6d6d9;text-shadow:0 0 10px #00
 
 /* hero laid out like the reference page: the picture runs up behind the header, the title block is centred in the first screen */
 .v-hero{margin-top:-57px;justify-content:flex-start}
-.v-hero-in{margin:0;min-height:100svh;display:flex;flex-direction:column;justify-content:center;padding-top:57px}
+.v-hero-in{margin:0;min-height:100svh;display:flex;flex-direction:column;justify-content:center;padding-top:0;padding-bottom:5svh}
 .v-hero .v-badges{margin-top:auto}
 .v-fallback{object-position:50% 40%}
 @media(max-width:860px){
-  .v-hero-in{justify-content:flex-start;align-items:center;text-align:center;padding-top:calc(57px + 12svh)}
+  .v-hero-in{justify-content:flex-start;align-items:center;text-align:center;padding-top:calc(57px + 12svh);padding-bottom:0}
   .v-hero .v-cta{justify-content:center}
   /* phone: title and buttons on top, the whole car centred below them */
   .v-fallback{position:absolute;left:50%;top:25%;width:auto;max-width:none;height:68%;transform:translateX(-59%);object-position:50% 50%;-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 22%,#000 88%,transparent 100%);mask-image:linear-gradient(180deg,transparent 0,#000 22%,#000 88%,transparent 100%)}
 }
 .v-hero h1{text-shadow:0 2px 14px rgba(0,0,0,.7)}
+@media(min-width:861px){
+  .v-hero-in{padding-left:max(48px,calc((100vw - 1124px)/2));padding-right:48px}
+  .v-fallback{transform:translateY(-2.2svh)}
+}
