@@ -76,12 +76,11 @@ T,
             'title' => 'Avionics and autopilot', 'sort' => 25,
             'summary' => 'The systems that see, decide and help you fly.',
             'body' => <<<'T'
-A flight deck that looks after you
+Doors up, flight deck ready
 
-A 15-inch glass display shows your route, altitude, speed, battery state and traffic on a single screen. A second, smaller display shows the same essentials on a separate circuit, so a failure of one never leaves you without instruments.
+Two gull-wing doors lift clear of the cabin and stay open on their own, and the wide canopy lets daylight fall across the whole flight deck. A 15-inch glass display shows your route, altitude, speed, battery state and traffic on a single screen. A second, smaller display shows the same essentials on a separate circuit, so a failure of one never leaves you without instruments.
 
 Three independent flight computers vote on every control command. If one disagrees with the other two it is shut out and the flight continues. The vehicle broadcasts its position to other aircraft and receives theirs, and warns you early if another aircraft's path crosses yours.
-
 - Display: 15-inch main, 7-inch backup
 - Flight computers: 3, voting
 - Traffic: Broadcast and receive, with alerts
