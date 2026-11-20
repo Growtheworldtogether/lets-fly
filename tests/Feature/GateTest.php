@@ -513,7 +513,7 @@ it('lets an admin upload a site logo and a vehicle logo that replace the text na
 
     // the code page has no header or logo, but the logo files are served to anyone, and other uploaded images are not
     auth()->logout();
-    $this->get('/')->assertDontSee('class="mark-img"', false)->assertDontSee('class="bar"', false);
+    $this->get('/')->assertDontSee('class="mark-img"', false)->assertDontSee('class="bar"', false)->assertDontSee('class="foot"', false);
     $this->get($siteUrl)->assertOk();
     $this->get($vehicleUrl)->assertOk();
     $this->get('/brand/'.str_repeat('b', 40).'.png')->assertNotFound();

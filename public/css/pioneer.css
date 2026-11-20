@@ -591,7 +591,7 @@ body.studio[data-backdrop]{background:linear-gradient(180deg,rgba(0,0,0,.35) 0,r
 body.studio[data-backdrop]::before{display:none}
 @media(max-width:700px){body.studio[data-backdrop]{background:linear-gradient(180deg,rgba(0,0,0,.35) 0,rgba(0,0,0,.15) 30%,rgba(0,0,0,.6) 100%),var(--backdrop) 55% 40px/auto 48vh no-repeat fixed,#000}}
 
-body.nobar main{min-height:calc(100svh - 64px)}
-@media(max-width:700px){body.nobar main{min-height:calc(100svh - 80px)}}
+body.nobar main{min-height:100svh}
+@media(max-width:700px){body.nobar main{min-height:100svh}}
 @media(max-width:700px){body.nobar[data-backdrop]{background-position:0 0,55% 0,0 0}}
 body.studio[data-backdrop] .gate .eyebrow{color:#d6d6d9;text-shadow:0 0 10px #000,0 0 3px #000}

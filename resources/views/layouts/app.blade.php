@@ -23,7 +23,7 @@
 @endauth
 <main class="@yield('mainclass')">@yield('content')</main>
 <button class="totop" type="button" aria-label="Back to top" hidden><svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M4 12l6-6 6 6" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button>
-<footer class="foot">{{ brand('footer') }}</footer>
+@unless (View::hasSection('nobar'))<footer class="foot">{{ brand('footer') }}</footer>@endunless
 @foreach (['status', 'sent', 'error', 'toast'] as $k)@if (session($k))<div class="toast {{ $k === 'error' ? 'bad' : '' }}" role="status">{{ session($k) }}</div>@endif @endforeach
 @if ($errors->any())<div class="toast bad" role="alert">{{ $errors->first() }}</div>@endif
 <script>document.querySelectorAll('table.tbl').forEach(function(t){var th=[].map.call(t.querySelectorAll('thead th'),function(h){return h.textContent.trim()});if(!th.length)return;t.classList.add('stack-rows');t.querySelectorAll('tbody tr').forEach(function(r){[].forEach.call(r.children,function(c,i){if(th[i])c.setAttribute('data-label',th[i])})})});</script>
