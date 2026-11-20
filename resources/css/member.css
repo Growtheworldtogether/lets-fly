@@ -431,3 +431,7 @@ body.welcome-page[data-backdrop]{background:linear-gradient(180deg,rgba(0,0,0,.6
 body.welcome-page .w-page{text-shadow:0 1px 10px rgba(0,0,0,.85)}
 body.welcome-page .w-steps span,body.welcome-page .w-page .eyebrow{color:#c4c5c8}
 @media(max-width:700px){body.welcome-page[data-backdrop]{background:linear-gradient(180deg,rgba(0,0,0,.3) 0,rgba(0,0,0,.25) 30%,rgba(0,0,0,.9) 100%),var(--backdrop) 27% 40px/auto 44vh no-repeat fixed,#000}}
+
+/* keep the old cascade order for rules the split moved ahead of member rules */
+.btn.ghost{min-width:0;height:40px;padding:4px 20px}
+input[type=checkbox]{width:18px;height:18px;margin:0}
