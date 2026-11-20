@@ -65,7 +65,7 @@
 @if ($s = $show('performance'))
 @php($p = $s->parts())
 <section class="v-over bottom" id="{{ $s->slug }}">
-  <div class="v-bg">@include('member._bg')</div>
+  <div class="v-bg">@include('member._bg', ['fallback' => 'images/performance-default.jpg'])</div>
   <div class="v-copy">
     <h2><span>{{ $p['headline'] ?? $s->title }}</span></h2>
     @foreach ($p['paras'] as $para)<p>{{ $para }}</p>@endforeach

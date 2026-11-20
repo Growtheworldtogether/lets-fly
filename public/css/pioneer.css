@@ -668,3 +668,14 @@ body.studio[data-backdrop] .gate .eyebrow{color:#d6d6d9;text-shadow:0 0 10px #00
 @media(min-width:900px) and (max-width:1279px){.v-track{padding-left:7.5vw;scroll-padding-left:7.5vw}.v-track>.v-card:last-child{margin-right:7.5vw}}
 @media(min-width:1280px){.v-track{padding-left:11.25vw;scroll-padding-left:11.25vw}.v-track>.v-card:last-child{margin-right:11.25vw}}
 @media(min-width:1800px){.v-track{padding-left:10.5vw;scroll-padding-left:10.5vw}.v-track>.v-card:last-child{margin-right:10.5vw}}
+
+/* "performance" section laid out like the reference: full-bleed picture, the text starts low in it and runs on below the car; on phones the picture sits above the text */
+@media(max-width:600px){#performance .v-copy{padding-top:32px}}
+@media(min-width:601px){
+  #performance.v-over{display:block;min-height:0}
+  #performance .v-bg{position:relative;inset:auto;height:100svh;min-height:0}
+  #performance .v-copy{max-width:none;width:100%;margin-top:-23svh;padding:0 36px 120px}
+  #performance .v-copy>*{max-width:66vw}
+}
+@media(min-width:1025px){#performance .v-bg{height:100vw}#performance .v-copy{margin-top:-16vw}}
+@media(min-width:1280px){#performance .v-copy{padding-left:16.9vw;padding-right:16.9vw}}
