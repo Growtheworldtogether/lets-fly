@@ -24,9 +24,9 @@ Pioneer allocation agreement
 
 4. Proof of payment. After you send a wire, use your reservation code as the reference and upload proof of it in your dashboard. Your payment counts only once it is confirmed as received in escrow.
 
-5. If the balance is not paid. [Terms for a late or missed balance go here, including whether {company} may extend the deadline.]
+5. If the balance is not paid. If the balance has not been received by its due date, {company} will give you an additional due date. We will tell you the new date by email and on your dashboard.
 
-6. Cancelling and refunds. [Terms for cancelling, refunds and what happens if the milestone is not reached go here.]
+6. Cancelling and refunds. You may cancel your reservation. If you cancel, everything you have sent is refunded to you in full.
 
 7. Delivery. [Delivery timing and conditions go here.]
 
