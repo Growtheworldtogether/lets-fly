@@ -134,9 +134,9 @@ T,
             'title' => 'Interior and comfort', 'sort' => 50,
             'summary' => 'The cabin, the seats and the controls.',
             'body' => <<<'T'
-A cabin that feels like a quiet room
+A dark, quiet cabin with two pale seats
 
-Two seats sit side by side in a cabin with a wide, curved canopy and clear views up and down. The seats are heated, adjust in six directions and can be set up for each pilot with a memory profile. Wide doors open upward and stay open on their own, so getting in is easy even in tight spaces.
+Two seats sit side by side under a wide, curved canopy, facing a single central display. The seats are pale against a dark cabin, with a soft red glow running along each door. They are heated, adjust in six directions and can be set up for each pilot with a memory profile. Wide doors open upward and stay open on their own, so getting in is easy even in tight spaces.
 
 Insulation and active noise cancellation keep the cabin quiet enough to talk at a normal volume. A climate system heats and cools the cabin and keeps the canopy clear of fog and ice.
 
