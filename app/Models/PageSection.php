@@ -20,33 +20,16 @@ class PageSection extends Model
         return $body === null || trim($body) === '' || str_starts_with(trim($body), '[Describe this section');
     }
 
-    /** Wording corrected to match the vehicle. Applied to stored text too, so an update reaches existing sections without a migration. */
-    private const TEXT_FIXES = [
-        'You fly it with a single stick and a throttle lever.' => 'You fly it with a yoke and a throttle lever.',
-        '- Control: Single stick and throttle' => '- Control: Yoke and throttle',
-        '- Controls: Single stick, throttle and touch display' => '- Controls: Yoke, throttle and touch display',
-        '- Motors: 9, one per rotor and one for the propeller' => '- Motors: 12, one per lift rotor and one per rear ducted fan',
-        '- Propeller: 1, rear' => '- Rear ducted fans: 4',
-        '- Length: 6.1 m' => '- Length: 4.9 m',
-        '- Height: 2.1 m' => '- Height: 1.2 m',
-        '- Folded width: 2.4 m' => '- Folded width: 2.0 m',
-    ];
-
-    /** Headings of earlier default texts. A section that still opens with one of them has not been rewritten, so it moves to the current default. */
-    private const LEGACY_HEADINGS = [
-        'exterior' => ['Shaped by the air, finished by hand'],
-        'flight' => ['Vertical takeoff, wing-borne cruise'],
-        'avionics' => ['A flight deck that looks after you'],
-        'performance' => ['Quick to climb, efficient to cruise'],
-        'power' => ['Two batteries, one purpose'],
-        'interior' => ['A cabin that feels like a quiet room'],
-    ];
-
-    private static function isLegacyDefault(string $slug, ?string $body): bool
+    /** SHA-1 of a stored text with line endings normalised and trimmed, as listed in config/vehicle_history.php. */
+    private static function fingerprint(?string $body): string
     {
-        $first = trim((string) strtok(str_replace(["\r\n", "\r"], "\n", trim((string) $body)), "\n"));
+        return sha1(trim(str_replace(["\r\n", "\r"], "\n", (string) $body)));
+    }
 
-        return in_array($first, self::LEGACY_HEADINGS[$slug] ?? [], true);
+    /** True when the stored text is exactly one of the earlier defaults, so nobody has rewritten it. */
+    private static function isEarlierDefault(string $slug, ?string $body): bool
+    {
+        return in_array(static::fingerprint($body), config('vehicle_history.'.$slug, []), true);
     }
 
     /** Creates missing sections and fills placeholder text from config/vehicle.php. Text an admin has written is never touched. */
@@ -56,14 +39,8 @@ class PageSection extends Model
             $row = static::firstOrCreate(['slug' => $slug], [
                 'title' => $d['title'], 'summary' => $d['summary'], 'sort' => $d['sort'], 'body' => $d['body'],
             ]);
-            if (! $row->wasRecentlyCreated && (static::isPlaceholder($row->body) || static::isLegacyDefault($slug, $row->body))) {
-                $row->update(['body' => $d['body']]);
-            }
-            if (! $row->wasRecentlyCreated) {
-                $fixed = strtr((string) $row->body, self::TEXT_FIXES);
-                if ($fixed !== (string) $row->body) {
-                    $row->update(['body' => $fixed]);
-                }
+            if (! $row->wasRecentlyCreated && (static::isPlaceholder($row->body) || static::isEarlierDefault($slug, $row->body))) {
+                $row->update(['body' => $d['body'], 'summary' => $d['summary']]);
             }
         }
     }

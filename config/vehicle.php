@@ -27,9 +27,9 @@ T,
         ],
         'intro' => [
             'title' => 'Built around the pilot', 'sort' => 5,
-            'summary' => 'A two-seat electric aircraft for one owner and their own landing pad.',
+            'summary' => 'A two-seat electric vehicle that drives on the road and lifts off for short flights.',
             'body' => <<<'T'
-{vehicle} is a two-seat electric aircraft that takes off and lands vertically, then flies on its wing like a conventional aircraft. It needs no runway, produces no exhaust and is designed to be flown by one owner from their own landing pad.
+{vehicle} is a two-seat electric vehicle that drives like a sports car, then lifts off the ground on cold-gas thrusters for short, controlled flights. Active aerodynamics shape the air around it, and a multi-mode suction system keeps it planted on the road. It needs no runway and is designed to be owned and flown by one person.
 
 Pioneer allocations are limited, invite-only and delivered in the order they are reserved. Everything on this page describes the pioneer edition.
 T,
@@ -40,34 +40,35 @@ T,
             'body' => <<<'T'
 A face you know from a long way off
 
-From the front, the {vehicle} is built from flat planes and sharp creases, with no curves added for decoration. The whole airframe is one carbon-fibre monocoque, cured in a single piece, so there are no panel seams to break up the airflow.
+From the front, the {vehicle} is built from flat planes and sharp creases, with no curves added for decoration. The whole body is one carbon-fibre monocoque, cured in a single piece, so there are no panel seams to break up the airflow.
 
-Two slim lamps and a single light bar across the nose are the only detail on the face. In the air they double as navigation lights. Wide glass under a low roof gives the pilot a clear view forward, and the low, wide stance keeps the vehicle steady on the ground. With the wing folded in under a minute, it is narrow enough to roll into a standard two-car garage.
+Two slim lamps and a single light bar across the nose are the only detail on the face. Wide glass under a low roof gives the pilot a clear view forward, and the low, wide stance keeps the vehicle steady on the ground. At the tail, an active rear wing and underbody flaps move to shape the airflow at every speed and lie flat when the vehicle is parked. It is compact enough to park in a standard garage.
 
-- Construction: Carbon-fibre monocoque
 - Length: 4.9 m
-- Wingspan: 9.2 m
-- Folded width: 2.0 m
+- Width: 2.0 m
 - Height: 1.2 m
+- Construction: Carbon-fibre monocoque
+- Aerodynamics: Active rear wing and underbody flaps
 - Finish: 7-layer aerospace paint, 6 colours
-- Lighting: Integrated LED navigation and landing lights
+- Lighting: Integrated LED lights
 - Doors: Two gull-wing, hands-free
 T,
         ],
         'flight' => [
             'title' => 'Flight and handling', 'sort' => 20,
-            'summary' => 'How it takes off, cruises and lands.',
+            'summary' => 'How it drives, lifts off and lands.',
             'body' => <<<'T'
 Four ducts at the tail, one clean line above them
 
-Seen from above, the tail shows how the vehicle flies. Four ducted outlets sit under a carbon-fibre diffuser, with a single continuous light bar running above them. After a vertical takeoff from a pad about the size of a parking space, these rear ducts push the aircraft forward, the wing begins to carry the weight, and the lift rotors stop and fold away. From that point the vehicle flies on far less energy, which is where the range comes from.
+Seen from above, the tail shows how the vehicle lifts. Four thruster outlets sit under a carbon-fibre diffuser, with a single continuous light bar running above them. On the road the vehicle drives on its wheels like any electric car. To fly, you select flight mode: the cold-gas thrusters fire together and lift the vehicle clear of the ground, while the active aero surfaces trim the air flowing over the body to keep it level.
 
-You fly it with a yoke and a throttle lever. The flight computer handles the transition between hover and cruise, holds your heading and altitude when you let go, and limits the aircraft to its safe envelope. Landing is the same sequence in reverse, and an assisted landing mode can bring you down on the marked pad on its own.
+You fly it with a yoke and a throttle lever. The flight computer adjusts each thruster many times a second, holds your height and heading when you let go, and keeps the vehicle inside its safe limits. Landing is the same sequence in reverse, and the suction system settles the vehicle onto the surface before the wheels take the weight. An assisted landing mode can bring you down on a marked pad on its own.
 
-- Takeoff and landing: Vertical, 12 m pad
-- Transition: Automatic, about 25 seconds
+- Takeoff and landing: Vertical, from a flat surface
+- Flight time: Up to 8 minutes per flight
+- Flight height: Up to 30 m
 - Control: Yoke and throttle
-- Hands-off hold: Heading, altitude and speed
+- Hands-off hold: Height and heading
 - Assisted landing: Pad recognition by camera
 - Wind limit: 35 km/h gusting
 T,
@@ -78,7 +79,7 @@ T,
             'body' => <<<'T'
 Doors up, flight deck ready
 
-Two gull-wing doors lift clear of the cabin and stay open on their own, and the wide canopy lets daylight fall across the whole flight deck. A 15-inch glass display shows your route, altitude, speed, battery state and traffic on a single screen. A second, smaller display shows the same essentials on a separate circuit, so a failure of one never leaves you without instruments.
+Two gull-wing doors lift clear of the cabin and stay open on their own, and the wide canopy lets daylight fall across the whole flight deck. A 15-inch glass display shows your route, height, speed, battery state, gas pressure and traffic on a single screen. A second, smaller display shows the same essentials on a separate circuit, so a failure of one never leaves you without instruments.
 
 Three independent flight computers vote on every control command. If one disagrees with the other two it is shut out and the flight continues. The vehicle broadcasts its position to other aircraft and receives theirs, and warns you early if another aircraft's path crosses yours.
 - Display: 15-inch main, 7-inch backup
@@ -93,48 +94,48 @@ T,
         ],
         'performance' => [
             'title' => 'Performance', 'sort' => 30,
-            'summary' => 'Speed, climb and the numbers behind them.',
+            'summary' => 'Speed, lift and the numbers behind them.',
             'body' => <<<'T'
 Ready on the pad, quick to the sky
 
-Doors up, pilot in, and the vehicle lifts straight off its pad. Vertical lift is the most demanding part of any flight, so the rotors and battery are sized for it with margin to spare. Once the wing takes over, cruising needs only a fraction of that power, and the vehicle spends most of its flight in that efficient state.
+Doors up, pilot in, and the vehicle rolls out like any sports car. On the road the electric motors give instant torque, and the active aero keeps the car flat and stable at speed. Flight mode adds the thrusters for short, controlled lifts over obstacles, water or traffic, and the suction system holds the vehicle firmly to the surface at both ends of every flight.
 
-Typical trips are 30 to 150 km, which the vehicle covers with a comfortable reserve. A full 320 km is possible at cruise speed with the reserve intact.
+Typical trips are 30 to 150 km on the road, which the vehicle covers with a comfortable reserve. A full 320 km is possible at cruise speed with the reserve intact.
 
 - Top speed: 280 km/h
 - Cruise speed: 240 km/h
+- 0 to 100 km/h: 2.1 s
 - Maximum range: 320 km, with reserve
-- Vertical climb: 4 m/s
-- Forward climb: 8 m/s
-- Service ceiling: 3,000 m
-- Sound in hover: 62 dBA at 150 m
-- Sound in cruise: 48 dBA at 300 m
+- Flight time: Up to 8 minutes per flight
+- Flight height: Up to 30 m
 T,
         ],
         'gravity' => [
             'title' => 'Gravity defying', 'sort' => 35,
-            'summary' => 'How the vehicle stays steady in the air.',
+            'summary' => 'How the vehicle lifts and stays steady in the air.',
             'body' => <<<'T'
 Gravity Defying
 
-Small electric thrusters at the rear of the vehicle make precise corrections, adjusting thrust in a fraction of a second. Together with the lift rotors, they help hold the vehicle steady in a hover and through the change-over to wing-borne flight.
+Cold-gas thrusters use all-electric valves to deliver precise bursts of thrust, correcting the vehicle's attitude in a fraction of a second. Fired together they lift the vehicle clear of the ground, and fired in pairs they steer and steady it in the air.
 T,
         ],
         'power' => [
             'title' => 'Power and range', 'sort' => 40,
-            'summary' => 'What drives it, how far it goes and how it recharges.',
+            'summary' => 'What drives it, what lifts it and how it recharges.',
             'body' => <<<'T'
 Sprung to land, powered twice over
 
-Under the skin, a sprung wheel assembly on a rigid frame absorbs touchdown on the pad, so landing feels like arriving rather than dropping. Behind it the vehicle carries two separate battery packs. Each can power the aircraft to a safe landing on its own, so the loss of one pack is an inconvenience and not an emergency. Packs are liquid-cooled and monitored cell by cell.
+Under the skin, a sprung wheel assembly on a rigid frame absorbs touchdown, so landing feels like arriving rather than dropping. The vehicle carries two separate battery packs. Each can power it to a safe landing on its own, so the loss of one pack is an inconvenience and not an emergency. Packs are liquid-cooled and monitored cell by cell.
 
-At home, a 22 kW charger fills the packs overnight. At a public fast charger the vehicle charges from 10 to 80 percent in about 35 minutes. The charger is included with your allocation.
+At home, a 22 kW charger fills the packs overnight and refills the thruster gas tank. At a public fast charger the vehicle charges from 10 to 80 percent in about 35 minutes. The charger is included with your allocation.
 
-- Battery: 120 kWh usable, two packs
-- Motors: 12, one per lift rotor and one per rear ducted fan
 - Fast charge, 10 to 80%: 35 min
 - Home charge, 0 to 100%: 6 hours
 - Charger included: 22 kW home unit
+- Battery: 120 kWh usable, two packs
+- Motors: 4, one per wheel
+- Thrusters: Cold-gas, 4 rear and 4 corner
+- Thruster gas refill: About 10 minutes at home
 - Battery warranty: 8 years
 - Battery monitoring: Cell by cell, live in the app
 T,
@@ -161,22 +162,22 @@ T,
         ],
         'safety' => [
             'title' => 'Safety systems', 'sort' => 60,
-            'summary' => 'The layers of protection built into every flight.',
+            'summary' => 'The layers of protection built into every drive and flight.',
             'body' => <<<'T'
 Redundancy first, then a parachute
 
-The design assumes that parts can fail. Any two of the eight lift rotors can stop without the aircraft losing control. Power, flight computers and sensors are duplicated or tripled. The two battery packs are independent of each other.
+The design assumes that parts can fail. Any two of the eight thrusters can stop without the vehicle losing control, because the others rebalance within a fraction of a second. Power, flight computers and sensors are duplicated or tripled. The two battery packs are independent of each other.
 
-If every other measure is exhausted, a whole-aircraft parachute opens above the cabin and lowers the vehicle and its occupants to the ground. The cabin around you is a carbon-fibre safety cell designed to absorb the energy of a hard landing.
+If every other measure is exhausted, a whole-vehicle parachute opens above the cabin and lowers the vehicle and its occupants to the ground. The cabin around you is a carbon-fibre safety cell designed to absorb the energy of a hard landing.
 
-- Rotor redundancy: Any 2 of 8 can fail
+- Thruster redundancy: Any 2 of 8 can fail
 - Flight computers: Triple, with voting
 - Batteries: Two independent packs
-- Parachute: Whole-aircraft, deploys above 60 m
+- Parachute: Whole-vehicle, deploys above 60 m
 - Safety cell: Carbon-fibre cabin, tested to crash loads
 - Detect and avoid: Radar and camera, plus traffic broadcast
 - Fire protection: Cell-level isolation and cabin sensors
-- Automatic landing: Triggers on low battery or pilot incapacity
+- Automatic landing: Triggers on low battery, low gas or pilot incapacity
 T,
         ],
         'training' => [
@@ -185,7 +186,7 @@ T,
             'body' => <<<'T'
 From first lesson to first solo
 
-Training is built for people who have never flown. It starts in a simulator that matches your cockpit, moves to dual-control flights with an instructor beside you, and ends with supervised solo flights from your own pad. Most pilots complete the programme in about eight weeks of part-time study.
+Training is built for people who have never flown. It starts in a simulator that matches your cockpit, moves to dual-control flights with an instructor beside you, and ends with supervised solo flights from your own marked pad. Most pilots complete the programme in about eight weeks of part-time study.
 
 Pilot certification rules differ by country and change over time. Your instructor will tell you what is needed where you plan to fly, and we help you through the process.
 
@@ -206,7 +207,7 @@ Handed over, not just shipped
 
 Your allocation is reserved with a deposit that is held in escrow, and the balance is due within ten days after we confirm your allocation milestone. Allocations are then built in the order they were reserved. We will keep you informed at every stage, from the start of your build to final testing.
 
-On delivery day you collect the vehicle at our delivery centre, fly it with your instructor, and fly home. A mobile service team looks after maintenance at your location, and software updates arrive over the air.
+On delivery day you collect the vehicle at our delivery centre, fly it with your instructor, and drive home. A mobile service team looks after maintenance at your location, and software updates arrive over the air.
 
 - Estimated delivery: 18 to 24 months from reservation
 - Handover: At the delivery centre, with a first flight
@@ -225,41 +226,45 @@ Every figure for the pioneer edition. Specifications are targets and may change 
 
 ## Exterior
 - Construction: Carbon-fibre monocoque
+- Aerodynamics: Active rear wing and underbody flaps
 - Finish: 7-layer aerospace paint, 6 colours
-- Lighting: Integrated LED navigation and landing lights
+- Lighting: Integrated LED lights
 - Doors: Two gull-wing, hands-free
 
 ## Dimensions
 - Length: 4.9 m
-- Wingspan: 9.2 m
-- Folded width: 2.0 m
+- Width: 2.0 m
 - Height: 1.2 m
 - Cabin width: 1.25 m
 - Luggage volume: 90 litres
 
 ## Weights
-- Empty weight: 760 kg
+- Empty weight: 1,450 kg
 - Payload: 240 kg
-- Maximum takeoff weight: 1,000 kg
+- Maximum weight: 1,690 kg
 - Seats: 2
 
 ## Performance
 - Top speed: 280 km/h
 - Cruise speed: 240 km/h
+- 0 to 100 km/h: 2.1 s
 - Range: 320 km, with reserve
-- Service ceiling: 3,000 m
-- Vertical climb: 4 m/s
-- Forward climb: 8 m/s
-- Sound in hover: 62 dBA at 150 m
-- Sound in cruise: 48 dBA at 300 m
+- Flight time: Up to 8 minutes per flight
+- Flight height: Up to 30 m
 
 ## Flight
-- Takeoff and landing: Vertical, 12 m pad
-- Transition: Automatic, about 25 seconds
+- Takeoff and landing: Vertical, from a flat surface
+- Lift: Cold-gas thrusters, 4 rear and 4 corner
 - Control: Yoke and throttle
-- Hands-off hold: Heading, altitude and speed
+- Hands-off hold: Height and heading
 - Assisted landing: Pad recognition by camera
 - Wind limit: 35 km/h gusting
+
+## Active aero and suction
+- Active aero: Rear wing and underbody flaps
+- Suction system: Multi-mode, ground sealing
+- Surface hold: Firm grip at any angle, at low speed
+- Downforce modes: High downforce or low drag
 
 ## Avionics
 - Display: 15-inch main, 7-inch backup
@@ -273,9 +278,9 @@ Every figure for the pioneer edition. Specifications are targets and may change 
 
 ## Power
 - Battery: 120 kWh usable, two packs
-- Motors: 12, one per lift rotor and one per rear ducted fan
-- Lift rotors: 8
-- Rear ducted fans: 4
+- Motors: 4, one per wheel
+- Thrusters: Cold-gas, 4 rear and 4 corner
+- Thruster gas refill: About 10 minutes at home
 - Fast charge, 10 to 80%: 35 min
 - Home charge: 22 kW, 6 hours
 - Charger included: 22 kW home unit
@@ -290,14 +295,14 @@ Every figure for the pioneer edition. Specifications are targets and may change 
 - Controls: Yoke, throttle and touch display
 
 ## Safety
-- Rotor redundancy: Any 2 of 8 can fail
+- Thruster redundancy: Any 2 of 8 can fail
 - Flight computers: Triple, with voting
 - Batteries: Two independent packs
-- Parachute: Whole-aircraft, deploys above 60 m
+- Parachute: Whole-vehicle, deploys above 60 m
 - Safety cell: Carbon-fibre cabin, tested to crash loads
 - Detect and avoid: Radar and camera, plus traffic broadcast
 - Fire protection: Cell-level isolation and cabin sensors
-- Automatic landing: Triggers on low battery or pilot incapacity
+- Automatic landing: Triggers on low battery, low gas or pilot incapacity
 
 ## Training
 - Ground school: 20 hours, online and in person
