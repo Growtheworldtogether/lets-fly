@@ -1,5 +1,6 @@
 @extends('layouts.app')
-@section('bodyclass', 'studio')
+@section('bodyclass', 'studio nobar')
+@section('nobar', '1')
 @section('content')
 <section class="gate">
   <p class="eyebrow">Invitation only</p>
