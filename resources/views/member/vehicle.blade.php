@@ -80,7 +80,7 @@
 @if ($s = $show($slug))
 @php($p = $s->parts())
 <section class="v-stack" id="{{ $s->slug }}">
-  <div class="v-bg">@include('member._bg')</div>
+  <div class="v-bg">@include('member._bg', ['fallback' => 'images/'.$slug.'-default.jpg'])</div>
   <div class="v-copy">
     <h2><span>{{ $p['headline'] ?? $s->title }}</span></h2>
     @foreach ($p['paras'] as $para)<p>{{ $para }}</p>@endforeach
