@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('mainclass', 'wide')
+@section('textsize', 'portal')
 @section('content')
 @php($money = fn ($c) => \App\Support\Money::cents((int) $c)->format())
 <div class="page narrow">

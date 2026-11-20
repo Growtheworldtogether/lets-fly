@@ -406,3 +406,11 @@ html.ts2 .btn,html.ts2 .v-cta .btn,html.ts2 .bar-out .btn.ghost{font-size:16px}
 html.ts2 .topnav a{font-size:15px}
 html.ts1 #intro .v-copy p,html.ts1 .v-over.top .v-copy p{font-size:19px;line-height:1.65}
 html.ts2 #intro .v-copy p,html.ts2 .v-over.top .v-copy p{font-size:22px;line-height:1.6}
+
+/* Text size on the dashboard and the agreement page, where members read the payment details */
+html.ts1 body[data-ts="portal"] main :is(.lead,td,th,dd,dt,label,.check,li span,strong,.mono,a.link,.done span,.now span,.panel>p:not(.big):not(.eyebrow):not(.hint)){font-size:18px;line-height:1.55;font-weight:400;color:#e6e7e8}
+html.ts1 body[data-ts="portal"] main :is(.eyebrow,.hint,.tag){font-size:15px;line-height:1.5;color:#c4c5c8}
+html.ts2 body[data-ts="portal"] main :is(.lead,td,th,dd,dt,label,.check,li span,strong,.mono,a.link,.done span,.now span,.panel>p:not(.big):not(.eyebrow):not(.hint)){font-size:21px;line-height:1.55;font-weight:400;color:#f0f0f1}
+html.ts2 body[data-ts="portal"] main :is(.eyebrow,.hint,.tag){font-size:17px;line-height:1.5;color:#d4d5d8}
+html.ts1 body[data-ts="portal"] input[type=checkbox]{width:22px;height:22px}
+html.ts2 body[data-ts="portal"] input[type=checkbox]{width:28px;height:28px}

@@ -635,9 +635,10 @@ it('serves the vehicle and portal styles only to signed-in members', function ()
     $this->actingAs($m)->get('/vehicle')->assertSee('member.css', false);
 });
 
-it('offers a text size button on the vehicle page for signed-in members only', function () {
+it('offers a text size button on the vehicle page and the dashboard for signed-in members only', function () {
     $this->get('/')->assertDontSee('class="tsize"', false);
     $m = User::create(['name' => 'Lou', 'email' => 'lou@example.com', 'password' => 'Sup3rsecret!!', 'role' => 'member', 'member_number' => 'PA-000011']);
     $this->actingAs($m)->get('/vehicle')->assertSee('class="tsize"', false)->assertSee('pioneer.ts', false);
-    $this->actingAs($m)->get('/dashboard')->assertDontSee('class="tsize"', false);
+    $this->actingAs($m)->get('/dashboard')->assertSee('class="tsize"', false)->assertSee('data-ts="portal"', false);
+    $this->actingAs($m)->get('/vehicle')->assertSee('data-ts="vehicle"', false);
 });

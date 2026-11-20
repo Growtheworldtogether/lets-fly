@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('mainclass', 'wide')
+@section('textsize', 'portal')
 @section('content')
 <div class="page narrow">
   <h1>Reservation agreement</h1>
