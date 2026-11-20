@@ -10,7 +10,7 @@
       @php($logo = brand_logo($role))
       <div class="logo-card">
         <p class="eyebrow">{{ $name }}</p>
-        <p class="hint">{{ ['site' => 'Replaces the company name in the header on every page.', 'vehicle' => 'Replaces the vehicle name title in two places on the vehicle page, and on the welcome page.', 'backdrop' => 'A wide dark photo, behind the invite code page and the sign-in pages. A dark image works best. It is dimmed so the text stays readable. Anything up to 4 MB.'][$role] }}</p>
+        <p class="hint">{{ ['site' => 'Replaces the company name in the header on every page.', 'vehicle' => 'Replaces the vehicle name title in two places on the vehicle page, and on the welcome page.', 'backdrop' => 'A wide dark photo, behind the invite code page and the sign-in pages. A dark image works best. It is dimmed so the text stays readable. Anything up to 4 MB. Until you upload one, a placeholder picture is shown; Remove goes back to it.'][$role] }}</p>
         @if ($logo)<div class="logo-preview"><img src="{{ $logo }}" alt="{{ $name }}"></div>@endif
         <form method="post" action="{{ route('admin.logo.upload', $role) }}" enctype="multipart/form-data">@csrf
           <label for="logo_{{ $role }}">{{ $logo ? 'Replace file' : 'Choose file' }}</label>

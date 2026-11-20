@@ -610,5 +610,5 @@ it('lets an admin upload a background picture that shows on the code page and is
     $this->get($url)->assertOk();
     $this->actingAs($admin)->delete('/admin/settings/logo/backdrop')->assertSessionHasNoErrors();
     auth()->logout();
-    $this->get('/')->assertDontSee('data-backdrop', false);
+    $this->get('/')->assertSee('images/gate-default.png', false)->assertDontSee($url, false);
 });
