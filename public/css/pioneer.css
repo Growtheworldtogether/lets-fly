@@ -597,21 +597,40 @@ body.nobar main{min-height:100svh}
 body.studio[data-backdrop] .gate .eyebrow{color:#d6d6d9;text-shadow:0 0 10px #000,0 0 3px #000}
 
 /* default hero picture until one is uploaded: the car sits right of the title */
-.v-fallback{object-position:40% 40%}
+.v-hero .v-fallback{object-position:40% 40%}
 
 /* hero laid out like the reference page: the picture runs up behind the header, the title block is centred in the first screen */
 .v-hero{margin-top:-57px;justify-content:flex-start}
 .v-hero-in{margin:0;min-height:100svh;display:flex;flex-direction:column;justify-content:center;padding-top:0;padding-bottom:5svh}
 .v-hero .v-badges{margin-top:auto}
-.v-fallback{object-position:50% 40%}
+.v-hero .v-fallback{object-position:50% 40%}
 @media(max-width:860px){
   .v-hero-in{justify-content:flex-start;align-items:center;text-align:center;padding-top:calc(57px + 12svh);padding-bottom:0}
   .v-hero .v-cta{justify-content:center}
   /* phone: title and buttons on top, the whole car centred below them */
-  .v-fallback{position:absolute;left:50%;top:25%;width:auto;max-width:none;height:68%;transform:translateX(-59%);object-position:50% 50%;-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 22%,#000 88%,transparent 100%);mask-image:linear-gradient(180deg,transparent 0,#000 22%,#000 88%,transparent 100%)}
+  .v-hero .v-fallback{position:absolute;left:50%;top:25%;width:auto;max-width:none;height:68%;transform:translateX(-59%);object-position:50% 50%;-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 22%,#000 88%,transparent 100%);mask-image:linear-gradient(180deg,transparent 0,#000 22%,#000 88%,transparent 100%)}
 }
 .v-hero h1{text-shadow:0 2px 14px rgba(0,0,0,.7)}
 @media(min-width:861px){
   .v-hero-in{padding-left:max(48px,calc((100vw - 1124px)/2));padding-right:48px}
-  .v-fallback{transform:translateY(-2.2svh)}
+  .v-hero .v-fallback{transform:translateY(-2.2svh)}
+}
+
+/* intro section laid out like the reference: full-bleed picture, text at the top left; on phones the text sits above a square picture */
+#intro.v-over{--it:9svh;--il:max(48px,calc((100vw - 1124px)/2));min-height:100svh;display:flex;align-items:flex-start}
+#intro .v-bg{position:absolute;inset:0}
+#intro .v-bg::after{background:linear-gradient(180deg,rgba(0,0,0,.2) 0,rgba(0,0,0,0) 30%,rgba(0,0,0,0) 85%,rgba(0,0,0,.5) 100%)}
+#intro .v-copy{max-width:none;width:100%;padding:var(--it) 48px 96px var(--il)}
+#intro .v-copy h2,#intro .v-copy p{max-width:430px}
+#intro .v-copy p{font-size:17px;line-height:30px}
+@media(min-width:601px) and (max-width:860px){#intro.v-over{display:flex;--il:62px;--it:11.1svh}#intro .v-bg{position:absolute;height:auto}}
+@media(min-width:1025px){#intro.v-over{--it:12svh}}
+@media(min-width:1280px){#intro.v-over{--it:18.9svh}}
+@media(min-width:1800px){#intro.v-over{min-height:120svh;--il:211px;--it:22.3svh}}
+@media(max-width:600px){
+  #intro.v-over{display:flex;flex-direction:column;min-height:0}
+  #intro .v-copy{padding:32px 24px 0;order:0}
+  #intro .v-copy h2,#intro .v-copy p{max-width:none}
+  #intro .v-bg{position:relative;inset:auto;height:100vw;min-height:0;margin-top:24px;order:1;flex:none}
+  #intro .v-bg::after{background:linear-gradient(180deg,#000 0,rgba(0,0,0,0) 35%,rgba(0,0,0,0) 65%,#000 100%)}
 }

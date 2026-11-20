@@ -31,7 +31,7 @@
 @if ($intro = $show('intro'))
 @php($p = $intro->parts())
 <section class="v-over top" id="intro">
-  <div class="v-bg">@php($s = $intro)@include('member._bg')</div>
+  <div class="v-bg">@php($s = $intro)@include('member._bg', ['fallback' => 'images/intro-default.png'])</div>
   <div class="v-copy">
     <h2><span>{{ $intro->title }}</span></h2>
     @foreach ($p['paras'] as $para)<p>{{ $para }}</p>@endforeach
