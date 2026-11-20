@@ -13,5 +13,5 @@ return [
     'lock_minutes' => 15,
     'code_minutes' => 10,
     'country_check' => true,
-    'footer' => '[Company Name] is an independent portfolio project and is not a licensed financial institution. No deposits are accepted and no accounts are insured.',
+    'footer' => 'Deposits are held in escrow by an independent escrow agent until allocation milestones are confirmed. Specifications, timelines and delivery dates are targets and may change. [Company Name] is not a bank, and funds held in escrow are not bank deposits or insured accounts.',
 ];

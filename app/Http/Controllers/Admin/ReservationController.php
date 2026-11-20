@@ -14,7 +14,7 @@ class ReservationController extends Controller
 {
     public function index(Request $request)
     {
-        $rows = Reservation::with('user')->latest('id')->when($request->query('q'), function ($q, $s) {
+        $rows = Reservation::with('user', 'escrowEntries')->latest('id')->when($request->query('q'), function ($q, $s) {
             $q->where(fn ($w) => $w->where('reference', 'like', "%$s%")->orWhereHas('user', fn ($u) => $u->where('name', 'like', "%$s%")->orWhere('member_number', 'like', "%$s%")));
         })->paginate(25)->withQueryString();
 
@@ -23,7 +23,7 @@ class ReservationController extends Controller
 
     public function show(Reservation $reservation)
     {
-        return view('admin.reservation', ['r' => $reservation->load('user', 'invoices.payments')]);
+        return view('admin.reservation', ['r' => $reservation->load('user', 'invoices.payments', 'escrowEntries.user', 'milestoneConfirmer')]);
     }
 
     public function verify(Request $request, Payment $payment, PaymentService $svc)
@@ -50,10 +50,37 @@ class ReservationController extends Controller
         return back()->with('toast', 'Balance due date moved.');
     }
 
+    public function milestone(Request $request, Reservation $reservation, PaymentService $svc)
+    {
+        $d = $request->validate(['note' => ['nullable', 'string', 'max:200']]);
+        $svc->confirmMilestone($reservation, $request->user(), $d['note'] ?? null);
+
+        return back()->with('toast', 'Milestone confirmed. The balance invoice was issued and emailed.');
+    }
+
+    public function release(Request $request, Reservation $reservation, PaymentService $svc)
+    {
+        $d = $request->validate(['note' => ['required', 'string', 'max:200']], ['note.required' => 'Add a short note for the record, such as the settlement reference.']);
+        $svc->release($reservation, $request->user(), $d['note']);
+
+        return back()->with('toast', 'Funds marked as released to the company.');
+    }
+
+    public function update(Request $request, Reservation $reservation, PaymentService $svc)
+    {
+        $d = $request->validate(['message' => ['required', 'string', 'max:1000']], ['message.required' => 'Write the message to send.']);
+        $svc->sendUpdate($reservation, $request->user(), $d['message']);
+
+        return back()->with('toast', 'Update emailed to the member.');
+    }
+
     public function cancel(Request $request, Reservation $reservation, PaymentService $svc)
     {
-        abort_if($reservation->cancelled_at || $reservation->status === 'completed', 422);
-        $svc->cancel($reservation, $request->user());
+        $d = $request->validate(['outcome' => ['required', 'in:none,refund,release'], 'note' => ['nullable', 'string', 'max:200']]);
+        if ($d['outcome'] !== 'none' && trim((string) ($d['note'] ?? '')) === '') {
+            return back()->withErrors(['note' => 'Add a short note explaining the decision.'])->withInput();
+        }
+        $svc->cancel($reservation, $request->user(), $d['outcome'], $d['note'] ?? null);
 
         return back()->with('toast', 'Reservation cancelled.');
     }

@@ -5,13 +5,13 @@
   <h1>Reservations</h1>
   <form method="get" class="inline-form"><input name="q" class="field" placeholder="Search reference, name or member number" value="{{ request('q') }}"><button class="btn ghost" type="submit">Search</button></form>
   <table class="tbl">
-    <thead><tr><th>Reference</th><th>Member</th><th>Status</th><th class="r">Deposit</th><th>Agreed</th></tr></thead>
+    <thead><tr><th>Reference</th><th>Member</th><th>Status</th><th>Escrow</th><th class="r">Deposit</th><th>Agreed</th></tr></thead>
     <tbody>
     @forelse ($rows as $r)
       <tr><td class="mono"><a class="link" href="{{ route('admin.reservation', $r) }}">{{ $r->reference }}</a></td><td>{{ $r->user->name }} <span class="hint mono">{{ $r->user->member_number }}</span></td><td><span class="tag">{{ $r->statusLabel() }}</span></td>
-        <td class="r">@money($r->deposit_cents)</td><td>{{ $r->agreed_at->timezone('America/New_York')->format('M j, Y g:i a') }}</td></tr>
+        <td>{{ $r->escrowLabel() }}</td><td class="r">@money($r->deposit_cents)</td><td>{{ $r->agreed_at->timezone('America/New_York')->format('M j, Y g:i a') }}</td></tr>
     @empty
-      <tr><td colspan="5" class="hint">No reservations yet.</td></tr>
+      <tr><td colspan="6" class="hint">No reservations yet.</td></tr>
     @endforelse
     </tbody>
   </table>

@@ -65,10 +65,15 @@
     <label for="price">Pioneer price</label><input id="price" name="price" type="number" step="0.01" class="field" required value="{{ old('price', $price) }}">
     <label for="public_price">Projected public price</label><input id="public_price" name="public_price" type="number" step="0.01" class="field" required value="{{ old('public_price', $public_price) }}">
     <label for="deposit">Deposit</label><input id="deposit" name="deposit" type="number" step="0.01" class="field" required value="{{ old('deposit', $deposit) }}">
-    <label for="balance_days">Days to pay the balance after the deposit is verified</label><input id="balance_days" name="balance_days" type="number" class="field" required value="{{ old('balance_days', $days) }}">
+    <label for="balance_days">Days to pay the balance after the milestone is confirmed</label><input id="balance_days" name="balance_days" type="number" class="field" required value="{{ old('balance_days', $days) }}">
 
-    <h2>Wire details</h2>
-    <label for="wire_details">Shown on invoices</label><textarea id="wire_details" name="wire_details" class="field area" maxlength="2000">{{ old('wire_details', $wire) }}</textarea>
+    <h2>Escrow and wire details</h2>
+    <p class="hint">Members wire their deposit and balance here. Their reservation code is added as the reference automatically. @unless ($escrowReady)<strong>Reservations stay closed until the agent, beneficiary, bank and account number are filled in and no [bracketed placeholder] is left.</strong>@endunless</p>
+    @foreach (\App\Services\Escrow::FIELDS as $key => $label)
+      <label for="{{ $key }}">{{ $label }}</label><input id="{{ $key }}" name="{{ $key }}" class="field" maxlength="300" value="{{ old($key, $escrow[$key] ?? '') }}" autocomplete="off">
+    @endforeach
+    <label for="wire_details">Extra instructions (optional)</label><textarea id="wire_details" name="wire_details" class="field area" maxlength="2000">{{ old('wire_details', $wire) }}</textarea>
+    <p class="hint">Shown under the wire details on invoices, emails and the member dashboard. Anyone who can open Settings can change where members send money.</p>
 
     <h2>Sign-in</h2>
     <label class="check"><input type="checkbox" name="country_check" value="1" @checked(old('country_check', $country))> Email a code when a member signs in from a different country</label>

@@ -196,7 +196,7 @@ T,
             'body' => <<<'T'
 Handed over, not just shipped
 
-Your allocation is reserved with a deposit, and the balance is due within ten days after we verify the deposit. Allocations are then built in the order they were reserved. We will keep you informed at every stage, from the start of your build to final testing.
+Your allocation is reserved with a deposit that is held in escrow, and the balance is due within ten days after we confirm your allocation milestone. Allocations are then built in the order they were reserved. We will keep you informed at every stage, from the start of your build to final testing.
 
 On delivery day you collect the vehicle at our delivery centre, fly it with your instructor, and fly home. A mobile service team looks after maintenance at your location, and software updates arrive over the air.
 

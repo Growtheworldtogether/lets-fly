@@ -7,6 +7,7 @@ use App\Models\AgreementVersion;
 use App\Models\Invoice;
 use App\Models\Payment;
 use App\Models\Setting;
+use App\Services\Escrow;
 use App\Services\PaymentService;
 use App\Services\Pricing;
 use App\Services\ReservationService;
@@ -20,15 +21,16 @@ class DashboardController extends Controller
         $r = $svc->active($request->user());
 
         return view('member.dashboard', [
-            'r' => $r?->load('invoices.payments'),
-            'wire' => (string) Setting::value('wire_details', ''),
+            'r' => $r?->load('invoices.payments', 'escrowEntries'),
+            'escrowReady' => Escrow::ready(),
+            'cancelled' => $r ? null : \App\Models\Reservation::where('user_id', $request->user()->id)->whereNotNull('cancelled_at')->latest('id')->first(),
             'terms' => ['price' => Pricing::price(), 'public' => Pricing::publicPrice(), 'deposit' => Pricing::deposit(), 'balance' => Pricing::balance(), 'days' => Pricing::balanceDays()],
         ]);
     }
 
     public function agreement(Request $request, ReservationService $svc)
     {
-        if ($svc->active($request->user())) {
+        if ($svc->active($request->user()) || ! Escrow::ready()) {
             return redirect()->route('dashboard');
         }
 
@@ -38,6 +40,9 @@ class DashboardController extends Controller
     public function reserve(Request $request, ReservationService $svc)
     {
         abort_if($request->session()->has('impersonation'), 403, 'A reservation has to be accepted by the member themselves.');
+        if (! Escrow::ready()) {
+            return redirect()->route('dashboard')->with('error', 'Reservations are not open yet. Please check back soon.');
+        }
         $request->validate(['agree' => ['accepted']], ['agree.accepted' => 'Please tick the box to accept the agreement.']);
         if (! $svc->active($request->user())) {
             $svc->reserve($request->user(), (string) $request->ip());
@@ -51,7 +56,7 @@ class DashboardController extends Controller
         $r = $invoice->reservation()->with('user')->firstOrFail();
         abort_unless($r->user_id === $request->user()->id || $request->user()->can('members.manage'), 404);
 
-        return Pdf::loadView('invoices.pdf', ['invoice' => $invoice, 'r' => $r, 'user' => $r->user, 'wire' => (string) Setting::value('wire_details', '')])
+        return Pdf::loadView('invoices.pdf', ['invoice' => $invoice, 'r' => $r, 'user' => $r->user, 'lines' => Escrow::lines($r), 'notes' => Escrow::notes()])
             ->setPaper('letter')->download($invoice->number.'.pdf');
     }
 

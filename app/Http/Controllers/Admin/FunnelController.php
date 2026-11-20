@@ -9,7 +9,7 @@ class FunnelController extends Controller
 {
     public const STEPS = [
         'created' => 'Invite created', 'opened' => 'Code entered', 'claimed' => 'Account created', 'agreed' => 'Agreement accepted',
-        'invoiced' => 'Deposit invoiced', 'proof_uploaded' => 'Proof of wire uploaded', 'deposit_paid' => 'Deposit verified', 'balance_paid' => 'Balance verified',
+        'invoiced' => 'Deposit invoiced', 'proof_uploaded' => 'Proof of wire uploaded', 'deposit_paid' => 'Deposit in escrow', 'milestone_confirmed' => 'Milestone confirmed', 'balance_paid' => 'Balance received',
     ];
 
     public function __invoke()

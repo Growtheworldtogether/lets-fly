@@ -16,19 +16,21 @@ class AgreementVersion extends Model
     public const DEFAULT_BODY = <<<'TXT'
 Pioneer allocation agreement
 
-1. What you are reserving. You are reserving one pioneer allocation of the {vehicle} from {company}, at the pioneer price of {price}. The projected public price in 2028 is {public_price}. Your pioneer price is fixed once your deposit is verified.
+1. What you are reserving. You are reserving one pioneer allocation of the {vehicle} from {company}, at the pioneer price of {price}. The projected public price in 2028 is {public_price}. Your pioneer price is fixed once your deposit is received in escrow.
 
-2. How you pay. You pay in two installments by wire transfer: a deposit of {deposit} now, and the balance of {balance} within {days} days after we verify your deposit. We will tell you the exact balance date as soon as your deposit is verified.
+2. How you pay. You pay in two stages by wire transfer. First, a deposit of {deposit}. Then the balance of {balance}, which is due within {days} days after {company} confirms your allocation milestone and sends you the balance invoice. We will tell you the exact balance date when that invoice is sent.
 
-3. Proof of payment. After you send a wire, upload proof of it in your dashboard. Your payment counts only once {company} verifies it.
+3. Escrow. Your deposit is not placed in {company}'s operating funds. It is held in trust by our independent escrow agent, {escrow_agent}, until your allocation terms advance, at which point settlement is coordinated with {company}. Funds you send for the balance are held the same way. {company} confirms receipts and milestones on the escrow agent's behalf.
 
-4. If the balance is not paid. [Terms for a late or missed balance go here.]
+4. Proof of payment. After you send a wire, use your reservation code as the reference and upload proof of it in your dashboard. Your payment counts only once it is confirmed as received in escrow.
 
-5. Cancelling. [Terms for cancelling and refunds go here.]
+5. If the balance is not paid. [Terms for a late or missed balance go here, including whether {company} may extend the deadline.]
 
-6. Delivery. [Delivery timing and conditions go here.]
+6. Cancelling and refunds. [Terms for cancelling, refunds and what happens if the milestone is not reached go here.]
 
-7. About {company}. {company} is an independent portfolio project and is not a licensed financial institution. No deposits are accepted and no accounts are insured.
+7. Delivery. [Delivery timing and conditions go here.]
+
+8. About {company}. {company} reserves pioneer allocations of the {vehicle}. Funds are held in escrow as described above. Specifications, timelines and delivery dates are targets and may change.
 
 By accepting, you confirm that you have read this agreement and agree to it.
 TXT;
@@ -47,7 +49,7 @@ TXT;
         return strtr($this->body, [
             '{company}' => brand('name'), '{vehicle}' => brand('vehicle'),
             '{price}' => $f($p::price()), '{public_price}' => $f($p::publicPrice()), '{deposit}' => $f($p::deposit()),
-            '{balance}' => $f($p::balance()), '{days}' => (string) $p::balanceDays(),
+            '{balance}' => $f($p::balance()), '{days}' => (string) $p::balanceDays(), '{escrow_agent}' => \App\Services\Escrow::agent(),
         ]);
     }
 }

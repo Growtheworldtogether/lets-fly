@@ -198,7 +198,14 @@ it('refuses a video that is not MP4 or WebM and a non-https link', function () {
     $this->actingAs($mgr)->get('/admin/content')->assertOk();
 });
 
+function escrowSetup(): void {
+    foreach (['escrow_agent' => 'Cynthia Poole', 'escrow_entity' => 'Poole Escrow Trust', 'escrow_bank' => 'Example Bank', 'escrow_account' => '#0000-1111-2222', 'escrow_routing' => '021000021'] as $k => $v) {
+        \App\Models\Setting::set($k, $v);
+    }
+}
+
 function memberWithInvite(): User {
+    escrowSetup();
     [$invite] = app(InviteService::class)->create('Gus', 'gus@example.com');
     $u = User::create(['name' => 'Gus', 'email' => 'gus@example.com', 'password' => 'Sup3rsecret!!', 'role' => 'member', 'member_number' => 'PA-000010']);
     $invite->update(['user_id' => $u->id, 'status' => 'claimed']);
@@ -208,16 +215,15 @@ function memberWithInvite(): User {
 
 it('lets a member accept the agreement and get a deposit invoice with the right amounts', function () {
     Mail::fake();
-    \App\Models\Setting::set('wire_details', "Bank: Example Bank\nAccount: 12345");
     $u = memberWithInvite();
-    $this->actingAs($u)->get('/dashboard')->assertSee('Reserve my allocation')->assertSee('$500,000.00');
+    $this->actingAs($u)->get('/dashboard')->assertSee('Reserve my allocation')->assertSee('$500,000.00')->assertSee('held in escrow by Cynthia Poole');
     $this->get('/reserve')->assertOk()->assertSee('$100,000.00')->assertSee('$400,000.00')->assertSee('10 days');
     $this->post('/reserve', [])->assertSessionHasErrors('agree');
     $this->post('/reserve', ['agree' => 1])->assertRedirect('/dashboard');
     $r = \App\Models\Reservation::first();
     expect($r->deposit_cents)->toBe(10_000_000)->and($r->balance_cents)->toBe(40_000_000)->and($r->agreement_version)->toBe(1)->and($r->status)->toBe('deposit_invoiced')
         ->and($r->invoices)->toHaveCount(1)->and($r->invoices[0]->number)->toStartWith('INV-'.now()->format('Y').'-');
-    $this->get('/dashboard')->assertSee($r->reference)->assertSee('Download PDF')->assertSee('Account: 12345');
+    $this->get('/dashboard')->assertSee($r->reference)->assertSee('Download PDF')->assertSee('#0000-1111-2222')->assertSee('Poole Escrow Trust')->assertSee('Allocation #'.$r->reference)->assertSee('Where your funds are');
     $this->get('/reserve')->assertRedirect('/dashboard');
     $this->post('/reserve', ['agree' => 1]);
     expect(\App\Models\Reservation::count())->toBe(1);
@@ -229,8 +235,8 @@ it('sends the invoice email without links and downloads a PDF only for its owner
     $this->actingAs($u)->post('/reserve', ['agree' => 1]);
     $inv = \App\Models\Invoice::first();
     expect($inv->emailed_at)->not->toBeNull();
-    $html = view('mail.invoice', ['invoice' => $inv, 'r' => $inv->reservation, 'user' => $u, 'wire' => ''])->render();
-    expect($html)->toContain('$100,000.00')->toContain('PA-000010')->not->toContain('http://')->not->toContain('https://');
+    $html = view('mail.invoice', ['invoice' => $inv, 'r' => $inv->reservation, 'user' => $u, 'lines' => \App\Services\Escrow::lines($inv->reservation), 'notes' => ''])->render();
+    expect($html)->toContain('$100,000.00')->toContain('PA-000010')->toContain('Cynthia Poole')->toContain('#0000-1111-2222')->toContain('Allocation #'.$inv->reservation->reference)->not->toContain('http://')->not->toContain('https://');
     $res = $this->get("/invoices/{$inv->id}/pdf");
     $res->assertOk();
     expect($res->headers->get('content-type'))->toContain('pdf');
@@ -266,7 +272,7 @@ it('shows when the balance is due on the dashboard', function () {
     Mail::fake();
     $u = memberWithInvite();
     $this->actingAs($u)->post('/reserve', ['agree' => 1]);
-    $this->get('/dashboard')->assertSee('due 10 days after your deposit is verified');
+    $this->get('/dashboard')->assertSee('due 10 days after your milestone is confirmed');
     \App\Models\Reservation::first()->update(['balance_due_at' => now()->addDays(10)]);
     $this->get('/dashboard')->assertSee('due '.now()->addDays(10)->timezone('America/New_York')->format('M j, Y'));
 });
@@ -279,11 +285,22 @@ function reservedMember(): array {
     return [$u, \App\Models\Invoice::first()];
 }
 
+function reservationWithMilestone(): array {
+    \Illuminate\Support\Facades\Storage::fake('local');
+    [$u, $inv] = reservedMember();
+    $admin = adminSession(test());
+    test()->post("/invoices/{$inv->id}/proof", ['proof' => proofFile()]);
+    test()->actingAs($admin)->post('/admin/payments/'.\App\Models\Payment::first()->id.'/verify');
+    test()->post('/admin/reservations/'.\App\Models\Reservation::first()->id.'/milestone');
+
+    return [$u, $admin, \App\Models\Reservation::first()];
+}
+
 function proofFile() {
     return \Illuminate\Http\UploadedFile::fake()->image('wire.jpg', 600, 400);
 }
 
-it('takes proof of wire, lets staff verify it, and starts the balance clock at verification', function () {
+it('takes proof of wire, holds a verified deposit in escrow, and starts the balance clock only at the milestone', function () {
     \Illuminate\Support\Facades\Storage::fake('local');
     [$u, $inv] = reservedMember();
     $this->post("/invoices/{$inv->id}/proof", ['proof' => proofFile()])->assertSessionHasNoErrors();
@@ -295,16 +312,25 @@ it('takes proof of wire, lets staff verify it, and starts the balance clock at v
     $other = User::create(['name' => 'Ivy', 'email' => 'ivy@example.com', 'password' => 'Sup3rsecret!!', 'role' => 'member']);
     $this->actingAs($other)->get("/payments/{$pay->id}/proof")->assertNotFound();
 
-    $this->travelTo(now()->addDay());
     $mgr = adminSession($this, 'Manager');
     $this->actingAs($mgr)->post("/admin/payments/{$pay->id}/verify")->assertRedirect();
     $r = \App\Models\Reservation::first();
-    expect($r->status)->toBe('balance_invoiced')->and($r->deposit_verified_at->isSameDay(now()))->toBeTrue()
+    // verified: held in escrow, no balance invoice yet, no due date
+    expect($r->status)->toBe('in_escrow')->and($r->deposit_verified_at)->not->toBeNull()->and($r->balance_due_at)->toBeNull()
+        ->and($r->invoices)->toHaveCount(1)->and($r->heldCents())->toBe(10_000_000)->and($r->escrowEntries)->toHaveCount(1);
+    $this->actingAs($u)->get('/dashboard')->assertSee('Deposit held in escrow')->assertDontSee('data-due', false);
+
+    // the admin confirms the milestone: the balance invoice and the 10 day clock start then
+    $this->travelTo(now()->addDays(30));
+    $this->actingAs($mgr)->post("/admin/reservations/{$r->id}/milestone")->assertSessionHasNoErrors();
+    $r = $r->fresh()->load('invoices');
+    expect($r->status)->toBe('balance_invoiced')->and($r->milestone_confirmed_at->isSameDay(now()))->toBeTrue()->and($r->milestone_confirmed_by)->toBe($mgr->id)
         ->and($r->balance_due_at->isSameDay(now()->addDays(10)))->toBeTrue()
         ->and($r->invoices)->toHaveCount(2)->and($r->invoices[1]->kind)->toBe('balance')->and($r->invoices[1]->amount_cents)->toBe(40_000_000)
         ->and($r->invoices[1]->emailed_at)->not->toBeNull();
-    $this->actingAs($u)->get('/dashboard')->assertSee('data-due', false)->assertSee('Balance due');
-    expect(\App\Models\InviteEvent::whereIn('type', ['proof_uploaded', 'deposit_paid'])->count())->toBe(2);
+    $this->post("/admin/reservations/{$r->id}/milestone")->assertStatus(422);
+    $this->actingAs($u)->get('/dashboard')->assertSee('data-due', false)->assertSee('Balance due')->assertSee('Milestone confirmed');
+    expect(\App\Models\InviteEvent::whereIn('type', ['proof_uploaded', 'deposit_paid', 'milestone_confirmed'])->count())->toBe(3);
 });
 
 it('rejects a proof with a reason and lets the member send another, then completes on the balance', function () {
@@ -319,6 +345,7 @@ it('rejects a proof with a reason and lets the member send another, then complet
     $this->post("/invoices/{$inv->id}/proof", ['proof' => proofFile()])->assertSessionHasNoErrors();
     $p2 = \App\Models\Payment::latest('id')->first();
     $this->actingAs($admin)->post("/admin/payments/{$p2->id}/verify");
+    $this->post('/admin/reservations/'.\App\Models\Reservation::first()->id.'/milestone');
     $bal = \App\Models\Invoice::where('kind', 'balance')->first();
     $this->actingAs($u)->post("/invoices/{$bal->id}/proof", ['proof' => proofFile()])->assertSessionHasNoErrors();
     $p3 = \App\Models\Payment::latest('id')->first();
@@ -332,6 +359,9 @@ it('sends the day 7 and day 9 reminders once each, and again after the due date 
     $admin = adminSession($this);
     $this->post("/invoices/{$inv->id}/proof", ['proof' => proofFile()]);
     $this->actingAs($admin)->post('/admin/payments/'.\App\Models\Payment::first()->id.'/verify');
+    $this->artisan('reminders:send');
+    expect(\App\Models\Reminder::count())->toBe(0);
+    $this->post('/admin/reservations/'.\App\Models\Reservation::first()->id.'/milestone');
     $r = \App\Models\Reservation::first();
     $this->artisan('reminders:send');
     expect(\App\Models\Reminder::count())->toBe(0);
@@ -353,7 +383,7 @@ it('keeps an admin acting as a member from uploading proof, and cancels voids op
     $this->actingAs($admin)->post("/admin/members/{$u->id}/impersonate");
     $this->post("/invoices/{$inv->id}/proof", ['proof' => proofFile()])->assertForbidden();
     $this->post('/admin/exit-member');
-    $this->post('/admin/reservations/'.\App\Models\Reservation::first()->id.'/cancel')->assertRedirect();
+    $this->post('/admin/reservations/'.\App\Models\Reservation::first()->id.'/cancel', ['outcome' => 'none'])->assertRedirect();
     expect($inv->fresh()->status)->toBe('void')->and(\App\Models\Reservation::first()->status)->toBe('cancelled');
 });
 
@@ -494,4 +524,75 @@ it('lets an admin upload a site logo and a vehicle logo that replace the text na
     $this->delete('/admin/settings/logo/site');
     $this->get('/vehicle')->assertDontSee('v-logo', false)->assertDontSee('mark-img', false);
     expect(\App\Models\Media::count())->toBe(0);
+});
+
+it('keeps reservations closed until the escrow details are complete and free of placeholders', function () {
+    Mail::fake();
+    $u = memberWithInvite();
+    \App\Models\Setting::set('escrow_account', '#[0000-0000-0000]');
+    $this->actingAs($u)->get('/dashboard')->assertDontSee('Reserve my allocation')->assertSee('Reservations are not open yet');
+    $this->get('/reserve')->assertRedirect('/dashboard');
+    $this->post('/reserve', ['agree' => 1])->assertRedirect('/dashboard');
+    expect(\App\Models\Reservation::count())->toBe(0);
+    \App\Models\Setting::set('escrow_account', '#0000-1111-2222');
+    $this->get('/reserve')->assertOk()->assertSee('Cynthia Poole')->assertSee('held in trust');
+});
+
+it('lets an admin release escrowed funds to the company only after the milestone, and records it', function () {
+    [$u, $admin, $r] = reservationWithMilestone();
+    $fresh = \App\Models\Reservation::first();
+    expect($fresh->heldCents())->toBe(10_000_000);
+    $this->post("/admin/reservations/{$r->id}/release", [])->assertSessionHasErrors('note');
+    $this->post("/admin/reservations/{$r->id}/release", ['note' => 'Settlement #42'])->assertSessionHasNoErrors();
+    $r = $r->fresh()->load('escrowEntries');
+    expect($r->heldCents())->toBe(0)->and($r->escrowEntries->pluck('event')->all())->toBe(['received', 'released'])->and($r->escrowLabel())->toBe('Released to company');
+    $this->post("/admin/reservations/{$r->id}/release", ['note' => 'again'])->assertStatus(422);
+    $this->actingAs($u)->get('/dashboard')->assertSee('Settled with');
+    $this->actingAs($admin)->get("/admin/reservations/{$r->id}")->assertSee('Settlement #42')->assertSee('Escrow');
+});
+
+it('does not allow a release before the milestone is confirmed', function () {
+    \Illuminate\Support\Facades\Storage::fake('local');
+    [$u, $inv] = reservedMember();
+    $admin = adminSession($this);
+    $this->post("/invoices/{$inv->id}/proof", ['proof' => proofFile()]);
+    $this->actingAs($admin)->post('/admin/payments/'.\App\Models\Payment::first()->id.'/verify');
+    $r = \App\Models\Reservation::first();
+    $this->post("/admin/reservations/{$r->id}/release", ['note' => 'too early'])->assertStatus(422);
+    expect($r->fresh()->heldCents())->toBe(10_000_000);
+});
+
+it('lets an admin decide a cancellation: refund from escrow, release to the company, or nothing held', function () {
+    // refund
+    [$u, $admin, $r] = reservationWithMilestone();
+    $this->post("/admin/reservations/{$r->id}/cancel", ['outcome' => 'none'])->assertStatus(422);
+    $this->post("/admin/reservations/{$r->id}/cancel", ['outcome' => 'refund'])->assertSessionHasErrors('note');
+    $this->post("/admin/reservations/{$r->id}/cancel", ['outcome' => 'refund', 'note' => 'Milestone not reached'])->assertSessionHasNoErrors();
+    $r = $r->fresh()->load('escrowEntries');
+    expect($r->status)->toBe('cancelled')->and($r->outcome)->toBe('cancelled_refunded')->and($r->heldCents())->toBe(0)->and($r->escrowEntries->last()->event)->toBe('refunded')
+        ->and($r->escrowLabel())->toBe('Refunded')->and($r->invoices->where('status', 'open')->count())->toBe(0);
+    $this->actingAs($u)->get('/dashboard')->assertSee('returned to you');
+});
+
+it('can cancel and release held funds to the company, and cancel with nothing held', function () {
+    [$u, $admin, $r] = reservationWithMilestone();
+    $this->post("/admin/reservations/{$r->id}/cancel", ['outcome' => 'release', 'note' => 'Per clause 6'])->assertSessionHasNoErrors();
+    $r = $r->fresh();
+    expect($r->outcome)->toBe('cancelled_released')->and($r->heldCents())->toBe(0)->and($r->refunded_at)->toBeNull()->and($r->released_at)->not->toBeNull();
+});
+
+it('lets an admin push the balance deadline back and email the member an update', function () {
+    [$u, $admin, $r] = reservationWithMilestone();
+    $before = $r->balance_due_at;
+    $this->post("/admin/reservations/{$r->id}/extend", ['due' => now()->addDays(40)->format('Y-m-d')])->assertSessionHasNoErrors();
+    expect($r->fresh()->balance_due_at->gt($before))->toBeTrue();
+    $this->post("/admin/reservations/{$r->id}/update", ['message' => "The milestone is delayed by two weeks.\nWe will confirm a new date soon."])->assertSessionHasNoErrors();
+    expect(\App\Models\AuditLog::where('action', 'reservation.update_sent')->count())->toBe(1);
+    $this->post("/admin/reservations/{$r->id}/update", ['message' => ''])->assertSessionHasErrors('message');
+});
+
+it('carries the escrow wording into the agreement and the footer', function () {
+    $u = memberWithInvite();
+    $this->actingAs($u)->get('/reserve')->assertSee('held in trust by our independent escrow agent, Cynthia Poole')->assertSee('confirms your allocation milestone');
+    $this->get('/dashboard')->assertSee('held in escrow by an independent escrow agent')->assertDontSee('No deposits are accepted');
 });

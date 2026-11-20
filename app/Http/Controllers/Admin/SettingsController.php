@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Font;
 use App\Models\Setting;
+use App\Services\Escrow;
 use App\Services\Fonts;
 use App\Services\Logos;
 use App\Services\Audit;
@@ -33,6 +34,8 @@ class SettingsController extends Controller
             'deposit' => Setting::value('deposit_cents', config('pioneer.deposit_cents')) / 100,
             'days' => Setting::value('balance_days', config('pioneer.balance_days')),
             'wire' => Setting::find('wire_details')?->value ?? '',
+            'escrow' => collect(Escrow::FIELDS)->map(fn ($l, $k) => Escrow::get($k))->all(),
+            'escrowReady' => Escrow::ready(),
         ]);
     }
 
@@ -47,6 +50,7 @@ class SettingsController extends Controller
             'price' => ['required', 'numeric', 'min:1'], 'public_price' => ['required', 'numeric', 'min:1'],
             'deposit' => ['required', 'numeric', 'min:1', 'lte:price'], 'balance_days' => ['required', 'integer', 'between:1,60'],
             'wire_details' => ['nullable', 'string', 'max:2000'],
+            ...collect(Escrow::FIELDS)->map(fn () => ['nullable', 'string', 'max:300'])->all(),
         ]);
         foreach (self::TEXT as $k) {
             Setting::set($k, (string) ($d[$k] ?? ''));
@@ -59,6 +63,9 @@ class SettingsController extends Controller
         Setting::set('deposit_cents', (int) round($d['deposit'] * 100));
         Setting::set('balance_days', $d['balance_days']);
         Setting::set('wire_details', (string) ($d['wire_details'] ?? ''));
+        foreach (array_keys(Escrow::FIELDS) as $k) {
+            Setting::set($k, trim((string) ($d[$k] ?? '')));
+        }
         Setting::put('country_check', $request->boolean('country_check'));
         Audit::record('settings.updated', null, null, ['keys' => array_keys($d)], $request->user()->id);
 

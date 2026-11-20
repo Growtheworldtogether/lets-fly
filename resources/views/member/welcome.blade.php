@@ -11,8 +11,8 @@
   <p class="w-why"><b>Why you?</b> We kept this list small and chose each person by hand. You came to mind because we wanted the first people to see it to be people who would love it as much as we do. Thank you for being one of them.</p>
   <ol class="w-steps">
     <li><b>See the vehicle</b><span>Every detail, section by section.</span></li>
-    <li><b>Reserve yours</b><span>Review the agreement and pay the deposit by wire.</span></li>
-    <li><b>Take delivery</b><span>Your pilot training and handover, in order.</span></li>
+    <li><b>Reserve yours</b><span>Review the agreement and wire your deposit to escrow.</span></li>
+    <li><b>Pay the balance</b><span>Due {{ \App\Services\Pricing::balanceDays() }} days after your allocation milestone is confirmed.</span></li>
   </ol>
   <form method="post" action="{{ route('welcome.done') }}">@csrf
     <button class="btn solid" type="submit">View the vehicle</button>

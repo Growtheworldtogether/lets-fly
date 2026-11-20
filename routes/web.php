@@ -63,6 +63,9 @@ Route::middleware(['auth', 'staff'])->prefix('admin')->group(function () {
         Route::post('/payments/{payment}/verify', [Admin\ReservationController::class, 'verify'])->name('admin.payment.verify');
         Route::post('/payments/{payment}/reject', [Admin\ReservationController::class, 'reject'])->name('admin.payment.reject');
         Route::post('/reservations/{reservation}/extend', [Admin\ReservationController::class, 'extend'])->name('admin.reservation.extend');
+        Route::post('/reservations/{reservation}/milestone', [Admin\ReservationController::class, 'milestone'])->name('admin.reservation.milestone');
+        Route::post('/reservations/{reservation}/release', [Admin\ReservationController::class, 'release'])->name('admin.reservation.release');
+        Route::post('/reservations/{reservation}/update', [Admin\ReservationController::class, 'update'])->name('admin.reservation.update');
         Route::post('/reservations/{reservation}/cancel', [Admin\ReservationController::class, 'cancel'])->name('admin.reservation.cancel');
         Route::post('/invoices/{invoice}/resend', [Admin\ReservationController::class, 'resend'])->name('admin.invoice.resend');
     });

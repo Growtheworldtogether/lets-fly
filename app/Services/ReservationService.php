@@ -64,7 +64,7 @@ final class ReservationService
     {
         $r = $invoice->reservation()->with('user')->first();
         try {
-            Mail::send('mail.invoice', ['invoice' => $invoice, 'r' => $r, 'user' => $r->user, 'wire' => (string) \App\Models\Setting::value('wire_details', '')], function ($m) use ($r, $invoice) {
+            Mail::send('mail.invoice', ['invoice' => $invoice, 'r' => $r, 'user' => $r->user, 'lines' => Escrow::lines($r), 'notes' => Escrow::notes()], function ($m) use ($r, $invoice) {
                 $m->to($r->user->email)->subject('Your invoice '.$invoice->number);
             });
             $invoice->update(['emailed_at' => now()]);

@@ -7,19 +7,20 @@
   <h1>Welcome, {{ auth()->user()->name }}</h1>
 
   @if (! $r)
+    @if ($cancelled)@include('member._escrow', ['r' => $cancelled->load('escrowEntries', 'payments')])@endif
     <div class="panel">
       <p class="eyebrow">Pioneer allocation</p>
       <p class="big">{{ $money($terms['price']) }}</p>
-      <p class="lead">Public price in 2028 is projected at {{ $money($terms['public']) }}. Reserve with a {{ $money($terms['deposit']) }} deposit now and pay the {{ $money($terms['balance']) }} balance within {{ $terms['days'] }} days after we verify your deposit.</p>
-      <a class="btn solid" href="{{ route('reserve') }}">Reserve my allocation</a>
+      <p class="lead">Public price in 2028 is projected at {{ $money($terms['public']) }}. Reserve with a {{ $money($terms['deposit']) }} deposit, held in escrow by {{ \App\Services\Escrow::agent() }} and not placed in {{ brand('name') }}'s operating funds. The {{ $money($terms['balance']) }} balance is due within {{ $terms['days'] }} days after your allocation milestone is confirmed.</p>
+      @if ($escrowReady)<a class="btn solid" href="{{ route('reserve') }}">Reserve my allocation</a>@else<p class="hint">Reservations are not open yet. Please check back soon.</p>@endif
     </div>
   @else
     <div class="panel">
       <div class="row"><span class="eyebrow">Reservation {{ $r->reference }}</span><span class="tag">{{ $r->statusLabel() }}</span></div>
       <table class="tbl sum">
         <tr><td>Pioneer allocation</td><td class="r">{{ $money($r->price_cents) }}</td></tr>
-        <tr><td>Deposit</td><td class="r">{{ $money($r->deposit_cents) }}</td></tr>
-        <tr><td>Balance — {{ $r->balance_due_at ? 'due '.$r->balance_due_at->timezone('America/New_York')->format('M j, Y') : 'due '.$terms['days'].' days after your deposit is verified' }}</td><td class="r">{{ $money($r->balance_cents) }}</td></tr>
+        <tr><td>Deposit (held in escrow)</td><td class="r">{{ $money($r->deposit_cents) }}</td></tr>
+        <tr><td>Balance — {{ $r->balance_due_at ? 'due '.$r->balance_due_at->timezone('America/New_York')->format('M j, Y') : 'due '.$terms['days'].' days after your milestone is confirmed' }}</td><td class="r">{{ $money($r->balance_cents) }}</td></tr>
       </table>
     </div>
 
@@ -27,7 +28,7 @@
       <div class="panel countdown" data-due="{{ $r->balance_due_at->toIso8601String() }}">
         <p class="eyebrow">Balance due {{ $r->balance_due_at->timezone('America/New_York')->format('F j, Y g:i a') }} ET</p>
         <p class="big mono" data-count aria-live="off">{{ $r->balance_due_at->isPast() ? 'Past due' : $r->balance_due_at->diffForHumans(['parts' => 2, 'syntax' => \Carbon\CarbonInterface::DIFF_ABSOLUTE]) }}</p>
-        <p class="hint">Your deposit was verified {{ $r->deposit_verified_at->timezone('America/New_York')->format('M j, Y') }}. Send the balance and upload your proof before the time runs out.</p>
+        <p class="hint">Your allocation milestone was confirmed {{ $r->milestone_confirmed_at->timezone('America/New_York')->format('M j, Y') }}. Wire the balance to escrow and upload your proof before the time runs out.</p>
       </div>
     @endif
 
@@ -55,16 +56,8 @@
       </div>
     @endforeach
 
-    <h2>How to pay</h2>
-    <div class="panel">
-      <p>Send the amount by wire transfer using these details. Use <strong class="mono">{{ auth()->user()->member_number }}</strong> as the payment reference so we can match it.</p>
-      @if (trim($wire) !== '')
-        <pre class="wire">{{ $wire }}</pre>
-      @else
-        <p class="hint">Wire details will appear here once they are set up.</p>
-      @endif
-      <p class="hint">Card payment: Payment option unavailable for now.</p>
-    </div>
+    @include('member._escrow')
+    @unless ($r->cancelled_at)@include('member._wire')@endunless
   @endif
 </div>
 <script>

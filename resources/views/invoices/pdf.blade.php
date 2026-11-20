@@ -13,11 +13,12 @@ td{padding:10px 0;border-bottom:1px solid #ddd;vertical-align:top}.r{text-align:
 <table><tr><th>Item</th><th class="r">Amount (USD)</th></tr>
 <tr><td><strong>{{ $invoice->title() }}</strong><br><span class="muted">@if ($invoice->kind === 'deposit') Reserves your pioneer allocation. Due now. @else Due {{ $invoice->due_at?->timezone('America/New_York')->format('F j, Y') }}. @endif</span></td><td class="r"><strong>{{ $money($invoice->amount_cents) }}</strong></td></tr>
 @if ($invoice->kind === 'deposit')
-<tr><td><strong>Installment 2: Balance</strong><br><span class="muted">Due within {{ \App\Services\Pricing::balanceDays() }} days after your deposit is verified.</span></td><td class="r"><strong>{{ $money($r->balance_cents) }}</strong></td></tr>
+<tr><td><strong>Installment 2: Balance</strong><br><span class="muted">Due within {{ \App\Services\Pricing::balanceDays() }} days after your allocation milestone is confirmed.</span></td><td class="r"><strong>{{ $money($r->balance_cents) }}</strong></td></tr>
 <tr><td class="r" style="border:0">Pioneer allocation total</td><td class="r" style="border:0;font-size:16px"><strong>{{ $money($r->price_cents) }}</strong></td></tr>
 @endif</table>
 <p style="margin-top:20px"><strong>Status:</strong> {{ ucfirst($invoice->status) }}</p>
-<div class="muted">HOW TO PAY</div><p>Wire the amount and use <strong class="mono">{{ $user->member_number }}</strong> as the reference, then upload proof of the wire in your dashboard.</p>
-@if (trim($wire) !== '')<div class="wire mono">{!! nl2br(e($wire)) !!}</div>@endif
+<div class="muted">HOW TO PAY</div><p>Wire the amount to the escrow account below, held by {{ \App\Services\Escrow::agent() }}. Use your reservation code as the reference, then upload proof of the wire in your dashboard.</p>
+<div class="wire"><table style="width:100%">@foreach ($lines as [$label, $value])<tr><td style="border:0;padding:2px 10px 2px 0;width:32%" class="muted">{{ $label }}</td><td style="border:0;padding:2px 0" class="mono">{{ $value }}</td></tr>@endforeach</table>@if (trim($notes) !== '')<div class="mono" style="margin-top:6px">{!! nl2br(e($notes)) !!}</div>@endif</div>
+<p class="muted" style="font-size:10px">Confirm these details with {{ brand('support_email') }} before sending your first wire.</p>
 <div class="foot">{{ brand('footer') }}</div>
 </body></html>
