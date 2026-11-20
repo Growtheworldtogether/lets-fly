@@ -2,6 +2,7 @@
 @section('title', 'Welcome · '.brand('name'))
 @section('bodyclass', 'studio welcome-page')
 @section('nomenu', '1')
+@section('textsize', 'portal')
 @section('content')
 <section class="w-page">
   <p class="eyebrow">Welcome{{ $user->member_number ? ' · '.$user->member_number : '' }}</p>

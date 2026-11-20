@@ -641,4 +641,5 @@ it('offers a text size button on the vehicle page and the dashboard for signed-i
     $this->actingAs($m)->get('/vehicle')->assertSee('class="tsize"', false)->assertSee('pioneer.ts', false);
     $this->actingAs($m)->get('/dashboard')->assertSee('class="tsize"', false)->assertSee('data-ts="portal"', false);
     $this->actingAs($m)->get('/vehicle')->assertSee('data-ts="vehicle"', false);
+    $this->actingAs($m)->get('/welcome')->assertSee('class="tsize"', false);
 });

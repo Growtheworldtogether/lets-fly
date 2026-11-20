@@ -414,3 +414,14 @@ html.ts2 body[data-ts="portal"] main :is(.lead,td,th,dd,dt,label,.check,li span,
 html.ts2 body[data-ts="portal"] main :is(.eyebrow,.hint,.tag){font-size:17px;line-height:1.5;color:#d4d5d8}
 html.ts1 body[data-ts="portal"] input[type=checkbox]{width:22px;height:22px}
 html.ts2 body[data-ts="portal"] input[type=checkbox]{width:28px;height:28px}
+html.ts1 body[data-ts="portal"] .w-page .w-hello{font-size:26px;line-height:1.35;font-weight:400}
+html.ts1 body[data-ts="portal"] .w-why{font-size:18px;line-height:1.55;font-weight:400;color:#e6e7e8}
+html.ts1 body[data-ts="portal"] .w-why b,html.ts1 body[data-ts="portal"] .w-steps li::before{font-size:15px}
+html.ts1 body[data-ts="portal"] .w-steps b{font-size:19px}
+html.ts1 body[data-ts="portal"] .w-steps span{font-size:17px;line-height:1.5;color:#c4c5c8}
+html.ts2 body[data-ts="portal"] .w-page .w-hello{font-size:30px;line-height:1.3;font-weight:400}
+html.ts2 body[data-ts="portal"] .w-why{font-size:21px;line-height:1.55;font-weight:400;color:#f0f0f1}
+html.ts2 body[data-ts="portal"] .w-why b,html.ts2 body[data-ts="portal"] .w-steps li::before{font-size:17px}
+html.ts2 body[data-ts="portal"] .w-steps b{font-size:22px}
+html.ts2 body[data-ts="portal"] .w-steps span{font-size:20px;line-height:1.5;color:#d4d5d8}
+html.ts2 body[data-ts="portal"] .w-steps li{grid-template-columns:44px 1fr}
