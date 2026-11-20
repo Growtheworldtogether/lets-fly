@@ -705,3 +705,8 @@ body.studio[data-backdrop] .gate .eyebrow{color:#d6d6d9;text-shadow:0 0 10px #00
 @media(max-width:600px){.v-stack.v-tall .v-copy>*{max-width:none}}
 @media(min-width:601px){.v-stack.v-tall .v-bg{height:100vw}.v-stack.v-tall .v-copy{padding:0 36px 120px}}
 @media(min-width:1280px){.v-stack.v-tall .v-copy{padding-left:16.9vw;padding-right:16.9vw}}
+
+/* pictures fade in as they finish loading (class added by script, so nothing is hidden without JS) */
+.v-img.v-lazy{opacity:0;transition:opacity .8s ease}
+.v-img.v-lazy.in{opacity:1}
+@media(prefers-reduced-motion:reduce){.v-img.v-lazy{transition:none}}
