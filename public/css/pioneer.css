@@ -661,3 +661,10 @@ body.studio[data-backdrop] .gate .eyebrow{color:#d6d6d9;text-shadow:0 0 10px #00
 }
 @media(min-width:1280px){.v-card-body{padding:32px 40px 40px}}
 @media(min-width:1800px){.v-card{width:79vw}.v-card .v-bg{aspect-ratio:1516/704}}
+
+/* the active card sits centred with a sliver of its neighbours on both sides, as in the reference */
+@media(max-width:600px){.v-track{padding-left:3.85vw;scroll-padding-left:3.85vw}.v-track>.v-card:last-child{margin-right:3.85vw}}
+@media(min-width:601px) and (max-width:899px){.v-track{padding-left:10.95vw;scroll-padding-left:10.95vw}.v-track>.v-card:last-child{margin-right:10.95vw}}
+@media(min-width:900px) and (max-width:1279px){.v-track{padding-left:7.5vw;scroll-padding-left:7.5vw}.v-track>.v-card:last-child{margin-right:7.5vw}}
+@media(min-width:1280px){.v-track{padding-left:11.25vw;scroll-padding-left:11.25vw}.v-track>.v-card:last-child{margin-right:11.25vw}}
+@media(min-width:1800px){.v-track{padding-left:10.5vw;scroll-padding-left:10.5vw}.v-track>.v-card:last-child{margin-right:10.5vw}}
