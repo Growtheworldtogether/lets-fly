@@ -20,6 +20,18 @@ class PageSection extends Model
         return $body === null || trim($body) === '' || str_starts_with(trim($body), '[Describe this section');
     }
 
+    /** Wording corrected to match the vehicle. Applied to stored text too, so an update reaches existing sections without a migration. */
+    private const TEXT_FIXES = [
+        'You fly it with a single stick and a throttle lever.' => 'You fly it with a yoke and a throttle lever.',
+        '- Control: Single stick and throttle' => '- Control: Yoke and throttle',
+        '- Controls: Single stick, throttle and touch display' => '- Controls: Yoke, throttle and touch display',
+        '- Motors: 9, one per rotor and one for the propeller' => '- Motors: 12, one per lift rotor and one per rear ducted fan',
+        '- Propeller: 1, rear' => '- Rear ducted fans: 4',
+        '- Length: 6.1 m' => '- Length: 4.9 m',
+        '- Height: 2.1 m' => '- Height: 1.2 m',
+        '- Folded width: 2.4 m' => '- Folded width: 2.0 m',
+    ];
+
     /** Headings of earlier default texts. A section that still opens with one of them has not been rewritten, so it moves to the current default. */
     private const LEGACY_HEADINGS = [
         'exterior' => ['Shaped by the air, finished by hand'],
@@ -46,6 +58,12 @@ class PageSection extends Model
             ]);
             if (! $row->wasRecentlyCreated && (static::isPlaceholder($row->body) || static::isLegacyDefault($slug, $row->body))) {
                 $row->update(['body' => $d['body']]);
+            }
+            if (! $row->wasRecentlyCreated) {
+                $fixed = strtr((string) $row->body, self::TEXT_FIXES);
+                if ($fixed !== (string) $row->body) {
+                    $row->update(['body' => $fixed]);
+                }
             }
         }
     }

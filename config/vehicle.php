@@ -45,10 +45,10 @@ From the front, the {vehicle} is built from flat planes and sharp creases, with 
 Two slim lamps and a single light bar across the nose are the only detail on the face. In the air they double as navigation lights. Wide glass under a low roof gives the pilot a clear view forward, and the low, wide stance keeps the vehicle steady on the ground. With the wing folded in under a minute, it is narrow enough to roll into a standard two-car garage.
 
 - Construction: Carbon-fibre monocoque
-- Length: 6.1 m
+- Length: 4.9 m
 - Wingspan: 9.2 m
-- Folded width: 2.4 m
-- Height: 2.1 m
+- Folded width: 2.0 m
+- Height: 1.2 m
 - Finish: 7-layer aerospace paint, 6 colours
 - Lighting: Integrated LED navigation and landing lights
 - Doors: Two gull-wing, hands-free
@@ -62,11 +62,11 @@ Four ducts at the tail, one clean line above them
 
 Seen from above, the tail shows how the vehicle flies. Four ducted outlets sit under a carbon-fibre diffuser, with a single continuous light bar running above them. After a vertical takeoff from a pad about the size of a parking space, these rear ducts push the aircraft forward, the wing begins to carry the weight, and the lift rotors stop and fold away. From that point the vehicle flies on far less energy, which is where the range comes from.
 
-You fly it with a single stick and a throttle lever. The flight computer handles the transition between hover and cruise, holds your heading and altitude when you let go, and limits the aircraft to its safe envelope. Landing is the same sequence in reverse, and an assisted landing mode can bring you down on the marked pad on its own.
+You fly it with a yoke and a throttle lever. The flight computer handles the transition between hover and cruise, holds your heading and altitude when you let go, and limits the aircraft to its safe envelope. Landing is the same sequence in reverse, and an assisted landing mode can bring you down on the marked pad on its own.
 
 - Takeoff and landing: Vertical, 12 m pad
 - Transition: Automatic, about 25 seconds
-- Control: Single stick and throttle
+- Control: Yoke and throttle
 - Hands-off hold: Heading, altitude and speed
 - Assisted landing: Pad recognition by camera
 - Wind limit: 35 km/h gusting
@@ -131,7 +131,7 @@ Under the skin, a sprung wheel assembly on a rigid frame absorbs touchdown on th
 At home, a 22 kW charger fills the packs overnight. At a public fast charger the vehicle charges from 10 to 80 percent in about 35 minutes. The charger is included with your allocation.
 
 - Battery: 120 kWh usable, two packs
-- Motors: 9, one per rotor and one for the propeller
+- Motors: 12, one per lift rotor and one per rear ducted fan
 - Fast charge, 10 to 80%: 35 min
 - Home charge, 0 to 100%: 6 hours
 - Charger included: 22 kW home unit
@@ -156,7 +156,7 @@ Insulation and active noise cancellation keep the cabin quiet enough to talk at 
 - Climate: Dual-zone, with canopy demisting
 - Audio: Active noise cancellation, 6 speakers
 - Connectivity: Phone pairing and charging
-- Controls: Single stick, throttle and touch display
+- Controls: Yoke, throttle and touch display
 T,
         ],
         'safety' => [
@@ -230,10 +230,10 @@ Every figure for the pioneer edition. Specifications are targets and may change 
 - Doors: Two gull-wing, hands-free
 
 ## Dimensions
-- Length: 6.1 m
+- Length: 4.9 m
 - Wingspan: 9.2 m
-- Folded width: 2.4 m
-- Height: 2.1 m
+- Folded width: 2.0 m
+- Height: 1.2 m
 - Cabin width: 1.25 m
 - Luggage volume: 90 litres
 
@@ -256,7 +256,7 @@ Every figure for the pioneer edition. Specifications are targets and may change 
 ## Flight
 - Takeoff and landing: Vertical, 12 m pad
 - Transition: Automatic, about 25 seconds
-- Control: Single stick and throttle
+- Control: Yoke and throttle
 - Hands-off hold: Heading, altitude and speed
 - Assisted landing: Pad recognition by camera
 - Wind limit: 35 km/h gusting
@@ -273,9 +273,9 @@ Every figure for the pioneer edition. Specifications are targets and may change 
 
 ## Power
 - Battery: 120 kWh usable, two packs
-- Motors: 9, one per rotor and one for the propeller
+- Motors: 12, one per lift rotor and one per rear ducted fan
 - Lift rotors: 8
-- Propeller: 1, rear
+- Rear ducted fans: 4
 - Fast charge, 10 to 80%: 35 min
 - Home charge: 22 kW, 6 hours
 - Charger included: 22 kW home unit
@@ -287,7 +287,7 @@ Every figure for the pioneer edition. Specifications are targets and may change 
 - Climate: Dual-zone, with canopy demisting
 - Audio: Active noise cancellation, 6 speakers
 - Connectivity: Phone pairing and charging
-- Controls: Single stick, throttle and touch display
+- Controls: Yoke, throttle and touch display
 
 ## Safety
 - Rotor redundancy: Any 2 of 8 can fail
