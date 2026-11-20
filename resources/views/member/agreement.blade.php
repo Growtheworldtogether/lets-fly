@@ -2,7 +2,6 @@
 @section('mainclass', 'wide')
 @section('content')
 <div class="page narrow">
-  <p class="eyebrow">Version {{ $agreement->version }}</p>
   <h1>Reservation agreement</h1>
   <div class="panel prose agreement">
     @foreach (preg_split('/\n\s*\n/', trim($agreement->rendered())) as $p)<p>{!! nl2br(e($p)) !!}</p>@endforeach
