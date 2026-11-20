@@ -587,11 +587,9 @@ body.menu-open .totop{display:none}
 body .bar,body.showroom .bar,body.showroom.scrolled .bar{background:transparent}
 
 /* uploaded background picture on the code and sign-in pages, dimmed so the text stays readable */
-body.studio[data-backdrop]{background:linear-gradient(180deg,rgba(0,0,0,.35) 0,rgba(0,0,0,.15) 45%,rgba(0,0,0,.6) 100%),var(--backdrop) 0% 40%/cover no-repeat fixed,#000}
+body.studio[data-backdrop]{background:radial-gradient(ellipse 36% 34% at 50% 48%,rgba(0,0,0,.82) 0,rgba(0,0,0,0) 100%),linear-gradient(180deg,rgba(0,0,0,.3) 0,rgba(0,0,0,.1) 45%,rgba(0,0,0,.45) 100%),var(--backdrop) 50% 100%/cover no-repeat fixed,#000}
 body.studio[data-backdrop]::before{display:none}
-@media(max-width:700px){body.studio[data-backdrop]{background:linear-gradient(180deg,rgba(0,0,0,.35) 0,rgba(0,0,0,.15) 30%,rgba(0,0,0,.6) 100%),var(--backdrop) 55% 40px/auto 48vh no-repeat fixed,#000}}
 
 body.nobar main{min-height:100svh}
 @media(max-width:700px){body.nobar main{min-height:100svh}}
-@media(max-width:700px){body.nobar[data-backdrop]{background-position:0 0,55% 0,0 0}}
 body.studio[data-backdrop] .gate .eyebrow{color:#d6d6d9;text-shadow:0 0 10px #000,0 0 3px #000}
