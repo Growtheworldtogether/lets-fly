@@ -613,3 +613,13 @@ it('lets an admin upload a background picture that shows on the code page and is
     auth()->logout();
     $this->get('/')->assertSee('images/gate-default.jpg', false)->assertDontSee($url, false);
 });
+
+it('keeps the built-in vehicle pictures behind the sign-in', function () {
+    $this->get('/images/safety-default.jpg')->assertNotFound();
+    $this->get('/images/hero-default.jpg')->assertNotFound();
+    $this->get('/vehicle-art/safety-default.jpg')->assertRedirect('/');
+    $m = User::create(['name' => 'Ivy', 'email' => 'ivy@example.com', 'password' => 'Sup3rsecret!!', 'role' => 'member', 'member_number' => 'PA-000009']);
+    $this->actingAs($m)->get('/vehicle-art/safety-default.jpg')->assertOk()->assertHeader('Content-Type', 'image/jpeg');
+    $this->actingAs($m)->get('/vehicle-art/..%2F.env')->assertNotFound();
+    $this->actingAs($m)->get('/vehicle')->assertSee('/vehicle-art/safety-default.jpg', false)->assertDontSee('/images/safety-default.jpg', false);
+});

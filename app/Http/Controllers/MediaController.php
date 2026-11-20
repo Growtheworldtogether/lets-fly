@@ -22,6 +22,19 @@ class MediaController extends Controller
         ]);
     }
 
+    /** The built-in vehicle pictures live outside the public folder, so only signed-in members can fetch them. */
+    public function art(string $name)
+    {
+        $path = resource_path('vehicle-art/'.$name);
+        abort_unless(is_file($path), 404);
+
+        return response()->file($path, [
+            'Content-Type' => str_ends_with($name, '.png') ? 'image/png' : 'image/jpeg',
+            'Cache-Control' => 'private, max-age=86400',
+            'X-Content-Type-Options' => 'nosniff',
+        ]);
+    }
+
     /** The two logos load on the code page too, so they are public, but only while they are set as a logo. */
     public function logo(string $filename)
     {

@@ -2,7 +2,7 @@
 @if ($s->image)
   <img class="v-img" src="{{ $s->image->url() }}" alt="{{ $s->image->alt ?: $s->title }}" loading="{{ $eager ?? false ? 'eager' : 'lazy' }}" decoding="async">
 @elseif (! empty($fallback))
-  <img class="v-img v-fallback" src="{{ asset($fallback) }}" alt="" loading="{{ $eager ?? false ? 'eager' : 'lazy' }}" decoding="async">
+  <img class="v-img v-fallback" src="{{ route('vehicle.art', basename($fallback)) }}" alt="" loading="{{ $eager ?? false ? 'eager' : 'lazy' }}" decoding="async">
 @else
   <div class="v-ph" role="img" aria-label="Image placeholder"><span>Image placeholder: {{ $s->title }}</span></div>
 @endif
