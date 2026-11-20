@@ -7,6 +7,9 @@
  */
 
 return [
+    'reserving' => [
+        'a1e12586c7dbdb28717ecac6e02dcb01edaa761d',
+    ],
     'exterior' => [
         '013a644cc94eff7d02346bcff36b2db3e3228d8e',
         '5dfc63aede1d1101bd5c0a7a16f9dfe8ec822cb3',

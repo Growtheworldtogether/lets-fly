@@ -105,20 +105,14 @@
 @endif
 @endforeach
 
-{{-- 5b. How reserving works: the payment steps --}}
+{{-- 5b. How reserving works: plain text, like Delivery --}}
 @if ($s = $show('reserving'))
 @php($p = $s->parts())
 <section class="v-info v-how" id="{{ $s->slug }}">
   <h1>{{ $s->title }}</h1>
   <p class="v-tag">{{ $p['headline'] ?? $s->summary }}</p>
   @foreach ($p['paras'] as $para)<p class="v-lede">{{ $para }}</p>@endforeach
-  <ol class="v-steps">
-    @foreach ($p['facts'] as $i => [$k, $v])<li><span>{{ sprintf('%02d', $i + 1) }}</span><h3>{{ $k }}</h3><p>{{ $v }}</p></li>@endforeach
-  </ol>
-  @foreach ($p['groups'] as [$name, $rows])
-    <p class="v-label">{{ $name }}</p>
-    <div class="v-know">@foreach ($rows as [$k, $v])<div><h3>{{ $k }}</h3><p>{{ $v }}</p></div>@endforeach</div>
-  @endforeach
+  <div class="v-stats3-c">@include('member._stats', ['facts' => $p['facts']])</div>
 </section>
 @endif
 
