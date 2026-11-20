@@ -583,3 +583,5 @@ body.menu-open .totop{display:none}
 .escrow-panel .btn{width:auto;margin:0}
 
 @media(prefers-reduced-motion:reduce){.shake{animation:none}}
+/* header has no background of its own: the page shows through */
+body .bar,body.showroom .bar,body.showroom.scrolled .bar{background:transparent}
