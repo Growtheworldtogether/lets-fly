@@ -595,3 +595,7 @@ body.nobar main{min-height:100svh}
 @media(max-width:700px){body.nobar main{min-height:100svh}}
 @media(max-width:700px){body.nobar[data-backdrop]{background-position:0 0,55% 0,0 0}}
 body.studio[data-backdrop] .gate .eyebrow{color:#d6d6d9;text-shadow:0 0 10px #000,0 0 3px #000}
+
+/* default hero picture until one is uploaded: the car sits right of the title */
+.v-fallback{object-position:40% 40%}
+@media(max-width:700px){.v-fallback{object-position:63% 40%}}

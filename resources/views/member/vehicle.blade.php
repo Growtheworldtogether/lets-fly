@@ -13,7 +13,7 @@
 @if ($hero)
 @php($facts = $hero->parts()['facts'])
 <section class="v-hero" id="top">
-  <div class="v-bg">@php($s = $hero)@include('member._bg', ['eager' => true])</div>
+  <div class="v-bg">@php($s = $hero)@include('member._bg', ['eager' => true, 'fallback' => 'images/gate-default.jpg'])</div>
   <div class="v-hero-in">
     @include('member._vname', ['tag' => 'h1', 'text' => $hero->title])
     <div class="v-cta">
