@@ -20,6 +20,23 @@ class PageSection extends Model
         return $body === null || trim($body) === '' || str_starts_with(trim($body), '[Describe this section');
     }
 
+    /** Headings of earlier default texts. A section that still opens with one of them has not been rewritten, so it moves to the current default. */
+    private const LEGACY_HEADINGS = [
+        'exterior' => ['Shaped by the air, finished by hand'],
+        'flight' => ['Vertical takeoff, wing-borne cruise'],
+        'avionics' => ['A flight deck that looks after you'],
+        'performance' => ['Quick to climb, efficient to cruise'],
+        'power' => ['Two batteries, one purpose'],
+        'interior' => ['A cabin that feels like a quiet room'],
+    ];
+
+    private static function isLegacyDefault(string $slug, ?string $body): bool
+    {
+        $first = trim((string) strtok(str_replace(["\r\n", "\r"], "\n", trim((string) $body)), "\n"));
+
+        return in_array($first, self::LEGACY_HEADINGS[$slug] ?? [], true);
+    }
+
     /** Creates missing sections and fills placeholder text from config/vehicle.php. Text an admin has written is never touched. */
     public static function ensureDefaults(): void
     {
@@ -27,7 +44,7 @@ class PageSection extends Model
             $row = static::firstOrCreate(['slug' => $slug], [
                 'title' => $d['title'], 'summary' => $d['summary'], 'sort' => $d['sort'], 'body' => $d['body'],
             ]);
-            if (! $row->wasRecentlyCreated && static::isPlaceholder($row->body)) {
+            if (! $row->wasRecentlyCreated && (static::isPlaceholder($row->body) || static::isLegacyDefault($slug, $row->body))) {
                 $row->update(['body' => $d['body']]);
             }
         }

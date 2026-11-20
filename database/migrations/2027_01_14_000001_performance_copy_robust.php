@@ -5,8 +5,6 @@ use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
-    private const OLD_TITLE = 'Quick to climb, efficient to cruise';
-
     private const NEW_TITLE = 'Ready on the pad, quick to the sky';
 
     private const NEW_INTRO = 'Doors up, pilot in, and the vehicle lifts straight off its pad. Vertical lift is the most demanding part of any flight, so the rotors and battery are sized for it with margin to spare. Once the wing takes over, cruising needs only a fraction of that power, and the vehicle spends most of its flight in that efficient state.';
@@ -23,7 +21,7 @@ return new class extends Migration
         }
         $norm = str_replace(["\r\n", "\r"], "\n", $body);
         $parts = preg_split('/\n\s*\n/', trim($norm));
-        if (trim($parts[0] ?? '') !== self::OLD_TITLE) {
+        if (stripos($parts[0] ?? '', 'quick to climb') === false) {
             return;
         }
         $parts[0] = self::NEW_TITLE;
