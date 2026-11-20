@@ -161,11 +161,11 @@ T,
             'title' => 'Safety systems', 'sort' => 60,
             'summary' => 'The layers of protection built into every drive and flight.',
             'body' => <<<'T'
-Redundancy first, then a retracting wing
+Steady in the air, redundant everywhere
 
-The design assumes that parts can fail. All-electric actuators trim thruster output in fractions of a second, so the vehicle stays stable in the air. Power, flight computers and sensors are duplicated or tripled.
+The design assumes that parts can fail. All-electric actuators trim the thrusters in fractions of a second, so the vehicle holds level through every hop. Power, flight computers and sensors are duplicated or tripled.
 
-Predictive sensors watch the road behind you, and if a rear impact is coming the wing retracts flush into the tail before it happens. The cabin around you is a carbon-fibre safety cell designed to absorb the energy of a hard landing.
+On the road, predictive sensors watch behind you, and if a rear impact is coming the active wing retracts flush into the tail before it happens. The cabin around you is a carbon-fibre safety cell designed to absorb the energy of a hard landing.
 
 - Stabilisation: Electric actuators, trimmed in fractions of a second
 - Flight computers: Triple, with voting

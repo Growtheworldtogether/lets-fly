@@ -7,6 +7,11 @@
  */
 
 return [
+    'safety' => [
+        '6bad01fd218ba20463c4129e2694bfdfff176b92',
+        'fdb6eafb92dabb8f29d960bb4e76fcfcc3a89dfb',
+        'a790e941fd6722d674208a9c0bd3117cd8bd093c',
+    ],
     'showcase' => [
         '248b675f879aecab5bb33fe12ab0ebf5a5146094',
         '986797a2d9df6561623c78237e3d8dd643680775',
@@ -53,23 +58,18 @@ return [
         'f93fa2efac44f01fc26ab891477afc28bb6114a8',
         'cda4a088c0d1f9895936b1b8b8a32bd84cc1cc15',
     ],
-    'safety' => [
-        'fdb6eafb92dabb8f29d960bb4e76fcfcc3a89dfb',
-        'a790e941fd6722d674208a9c0bd3117cd8bd093c',
-    ],
     'training' => [
         '2157de529a1974a4a7478dbe694b37392538ea53',
         'e6d94d151050c4273ce96986128d83e65e56e6fc',
-    ],
-    'delivery' => [
-        '4dd5fcb0ad6febf5509ca4a34aada323e2bafa5a',
-        '60cdcb3ad32cc1da20cac5581e29e41d28ebbdf1',
-        '4aabbfe8b60fc625dce831007541084022bc5372',
     ],
     'specs' => [
         '448efba384f3c1e29f75c63015526848343fddb8',
         '77f559d14feeffc97ed926c4b5c741bb4da5a239',
         '25e11f2f1248f4d5ab2b44c5813881d9ab57966c',
         'afcdc5e0d6ba9691696839e2b4bf2c1c1dc24e66',
+    ],
+    'delivery' => [
+        '60cdcb3ad32cc1da20cac5581e29e41d28ebbdf1',
+        '4aabbfe8b60fc625dce831007541084022bc5372',
     ],
 ];
