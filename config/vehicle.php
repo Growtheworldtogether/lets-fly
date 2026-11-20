@@ -111,6 +111,15 @@ Typical trips are 30 to 150 km, which the vehicle covers with a comfortable rese
 - Sound in cruise: 48 dBA at 300 m
 T,
         ],
+        'gravity' => [
+            'title' => 'Gravity defying', 'sort' => 35,
+            'summary' => 'How the vehicle stays steady in the air.',
+            'body' => <<<'T'
+Gravity Defying
+
+Small electric thrusters at the rear of the vehicle make precise corrections, adjusting thrust in a fraction of a second. Together with the lift rotors, they help hold the vehicle steady in a hover and through the change-over to wing-borne flight.
+T,
+        ],
         'power' => [
             'title' => 'Power and range', 'sort' => 40,
             'summary' => 'What drives it, how far it goes and how it recharges.',

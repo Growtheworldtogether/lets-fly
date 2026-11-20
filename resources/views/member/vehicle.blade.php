@@ -75,6 +75,20 @@
 </section>
 @endif
 
+{{-- 4b. Tall picture, then a short text under it --}}
+@if ($s = $show('gravity'))
+@php($p = $s->parts())
+<section class="v-stack v-tall" id="{{ $s->slug }}">
+  <div class="v-bg">@include('member._bg', ['fallback' => 'images/gravity-default.jpg'])</div>
+  <div class="v-copy">
+    <h2><span>{{ $p['headline'] ?? $s->title }}</span></h2>
+    @foreach ($p['paras'] as $para)<p>{{ $para }}</p>@endforeach
+    @include('member._stats', ['facts' => $p['facts']])
+    @include('member._video')
+  </div>
+</section>
+@endif
+
 {{-- 5. Picture, then the text under it --}}
 @foreach (['safety', 'training'] as $slug)
 @if ($s = $show($slug))

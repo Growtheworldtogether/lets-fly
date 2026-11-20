@@ -696,3 +696,12 @@ body.studio[data-backdrop] .gate .eyebrow{color:#d6d6d9;text-shadow:0 0 10px #00
 .v-end .v-bg::after{background:linear-gradient(180deg,#000 0,rgba(0,0,0,0) 22%,rgba(0,0,0,0) 78%,#000 100%)}
 .v-end a.btn,.v-end a.btn.solid{height:40px;min-width:180px;padding:0 24px;font-size:14px;letter-spacing:1.5px}
 @media(min-width:861px){.v-end a.btn,.v-end a.btn.solid{height:64px;min-width:320px;padding:12px 24px;font-size:24px;letter-spacing:1.26px}}
+
+/* "gravity" section: a tall picture, as tall as it is wide on tablet and desktop, with the short text right under it */
+.v-stack.v-tall .v-bg{height:max(100vw,100svh)}
+.v-stack.v-tall .v-bg .v-img{object-position:50% 50%}
+.v-stack.v-tall .v-copy{max-width:none;padding:0 24px 96px}
+.v-stack.v-tall .v-copy>*{max-width:66vw}
+@media(max-width:600px){.v-stack.v-tall .v-copy>*{max-width:none}}
+@media(min-width:601px){.v-stack.v-tall .v-bg{height:100vw}.v-stack.v-tall .v-copy{padding:0 36px 120px}}
+@media(min-width:1280px){.v-stack.v-tall .v-copy{padding-left:16.9vw;padding-right:16.9vw}}
