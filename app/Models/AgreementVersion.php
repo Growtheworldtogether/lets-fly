@@ -28,7 +28,7 @@ Pioneer allocation agreement
 
 6. Cancelling and refunds. You may cancel your reservation. If you cancel, everything you have sent is refunded to you in full.
 
-7. Delivery. [Delivery timing and conditions go here.]
+7. Delivery. {company} plans to deliver your {vehicle} by the end of 2028. If this date changes, we will tell you by email and on your dashboard.
 
 8. About {company}. {company} reserves pioneer allocations of the {vehicle}. Funds are held in escrow as described above. Specifications, timelines and delivery dates are targets and may change.
 
