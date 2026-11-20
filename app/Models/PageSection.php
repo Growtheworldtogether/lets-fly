@@ -54,7 +54,7 @@ class PageSection extends Model
     public function parts(): array
     {
         $vehicle = brand('vehicle');
-        $text = str_replace('{vehicle}', $vehicle, (string) $this->body);
+        $text = str_replace(['{vehicle}', '{agent}', '{days}'], [$vehicle, \App\Services\Escrow::agent(), (string) \App\Services\Pricing::balanceDays()], (string) $this->body);
         $out = ['headline' => null, 'paras' => [], 'facts' => [], 'groups' => []];
         $group = null;
         foreach (preg_split('/\R\s*\R/', trim($text)) as $i => $block) {

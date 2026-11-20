@@ -196,6 +196,29 @@ Pilot certification rules differ by country and change over time. Your instructo
 - Included: Pioneer owners only, at no extra charge
 T,
         ],
+        'reserving' => [
+            'title' => 'How reserving works', 'sort' => 75,
+            'summary' => 'How the deposit, escrow and balance work, step by step.',
+            'body' => <<<'T'
+Two payments, both held in escrow
+
+You reserve in five steps. Both payments are made by wire transfer to an escrow account run by {agent}, so your money is not placed in the company's operating funds. Nothing is charged to a card and nothing is paid on this website.
+
+Once your deposit is verified, your pioneer price is fixed and your place in the delivery order is set by the date you reserved.
+
+- Reserve: Read and accept the allocation agreement. Your deposit invoice is then emailed to you.
+- Wire the deposit: Send the wire to the escrow account shown on your dashboard, with your reservation code as the reference, then upload your proof of payment.
+- Held in escrow: When we verify your wire, your deposit is held in escrow by {agent}.
+- Milestone confirmed: When your allocation milestone is confirmed, your balance invoice is issued and emailed to you.
+- Pay the balance: Wire the balance to escrow within {days} days. We send reminders before the due date.
+
+## Good to know
+- What escrow means: An independent agent holds the money and releases it only as your agreement allows. The company cannot spend it in the meantime.
+- Where to send money: Only to the account shown on your dashboard. We will never ask you to send money anywhere else, so confirm the details with us before your first wire.
+- If you cancel: The cancelling clause of your agreement sets out what happens to the money held in escrow. Please read it before you reserve.
+- If you need more time: Tell us before the balance due date. If it is agreed, we move the date and email you the new one.
+T,
+        ],
         'delivery' => [
             'title' => 'Delivery and ownership', 'sort' => 80,
             'summary' => 'From your allocation to the day it arrives, and what ownership includes.',

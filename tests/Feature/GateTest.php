@@ -138,7 +138,7 @@ it('logs an admin in as a member and back out, and records it', function () {
 it('shows members the vehicle pages with placeholders, hides inactive sections, and keeps outsiders out', function () {
     $this->get('/vehicle')->assertRedirect();
     $m = User::create(['name' => 'Fay', 'email' => 'fay@example.com', 'password' => 'Sup3rsecret!!', 'role' => 'member', 'member_number' => 'PA-000002']);
-    $this->actingAs($m)->get('/vehicle')->assertOk()->assertSee('From first lesson to first solo')->assertSee('Video placeholder')->assertSee('Reserve now')->assertSee('Gravity Defying');
+    $this->actingAs($m)->get('/vehicle')->assertOk()->assertSee('From first lesson to first solo')->assertSee('Video placeholder')->assertSee('Reserve now')->assertSee('Gravity Defying')->assertSee('How reserving works')->assertSee('Two payments, both held in escrow');
     $this->get('/vehicle')->assertSee('Four ducts at the tail')->assertSee('Stabilisation')->assertSee('Specifications')->assertSee('Built around the pilot');
     $this->get('/vehicle/flight')->assertRedirect('/vehicle#flight');
     \App\Models\PageSection::where('slug', 'flight')->update(['active' => false]);
