@@ -431,7 +431,7 @@ it('sends signed-out visitors to the code page, and has no /login page at all', 
 it('shows every section fact somewhere in the specifications, and upgrades an unedited older specs text', function () {
     \App\Models\PageSection::ensureDefaults();
     $m = User::create(['name' => 'Hal', 'email' => 'hal@example.com', 'password' => 'Sup3rsecret!!', 'role' => 'member', 'member_number' => 'PA-000004']);
-    $this->actingAs($m)->get('/vehicle')->assertSee('Central touchscreen, two forward screens, windshield display')->assertSee('Two-element, retracts flush into the tail')->assertSee('Gold-glazed, infrared-rejecting')->assertSee('About 8 weeks, part-time')->assertSee('Mobile team, at your location')->assertSee('7-layer aerospace paint, 6 colours');
+    $this->actingAs($m)->get('/vehicle')->assertSee('Central touchscreen, two forward screens, windshield display')->assertSee('Two-element, retracts flush into the tail')->assertSee('Gold-glazed, infrared-rejecting')->assertSee('About 8 weeks, part-time')->assertSee('Mobile team, at your location')->assertSee('Ano White, one colour, with exposed titanium accents');
     \App\Models\PageSection::where('slug', 'specs')->update(['body' => 'Written by an admin.']);
     (require database_path('migrations/2027_01_02_000001_upgrade_specs_groups.php'))->up();
     expect(\App\Models\PageSection::where('slug', 'specs')->value('body'))->toBe('Written by an admin.');
