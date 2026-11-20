@@ -22,6 +22,16 @@ class MediaController extends Controller
         ]);
     }
 
+    /** The styles for everything behind the sign-in; the public stylesheet only covers the code page. */
+    public function memberCss()
+    {
+        return response()->file(resource_path('css/member.css'), [
+            'Content-Type' => 'text/css; charset=utf-8',
+            'Cache-Control' => 'private, max-age=86400',
+            'X-Content-Type-Options' => 'nosniff',
+        ]);
+    }
+
     /** The built-in vehicle pictures live outside the public folder, so only signed-in members can fetch them. */
     public function art(string $name)
     {

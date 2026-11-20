@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Michroma&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{{ asset('css/pioneer.css') }}">
+@auth<link rel="stylesheet" href="{{ route('member.css', ['v' => filemtime(resource_path('css/member.css'))]) }}">@endauth
 @if (($fontCss = \App\Services\Fonts::css()) !== '')<style>{!! $fontCss !!}</style>@endif
 </head>
 <body class="@yield('bodyclass')" @if (View::hasSection('bodyclass') && ($backdrop = brand_logo('backdrop') ?: asset('images/gate-default.jpg'))) style="--backdrop:url('{{ $backdrop }}')" data-backdrop @endif>

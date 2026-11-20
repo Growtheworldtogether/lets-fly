@@ -623,3 +623,14 @@ it('keeps the built-in vehicle pictures behind the sign-in', function () {
     $this->actingAs($m)->get('/vehicle-art/..%2F.env')->assertNotFound();
     $this->actingAs($m)->get('/vehicle')->assertSee('/vehicle-art/safety-default.jpg', false)->assertDontSee('/images/safety-default.jpg', false);
 });
+
+it('serves the vehicle and portal styles only to signed-in members', function () {
+    $public = file_get_contents(public_path('css/pioneer.css'));
+    expect($public)->not->toContain('v-hero')->not->toContain('#safety')->not->toContain('infocard');
+    $this->get('/')->assertDontSee('member.css', false);
+    $this->get('/member.css')->assertRedirect('/');
+    $m = User::create(['name' => 'Kai', 'email' => 'kai@example.com', 'password' => 'Sup3rsecret!!', 'role' => 'member', 'member_number' => 'PA-000010']);
+    $this->actingAs($m)->get('/member.css')->assertOk()->assertHeader('Content-Type', 'text/css; charset=utf-8');
+    expect($this->actingAs($m)->get('/member.css')->baseResponse->getFile()->getContent())->toContain('.v-hero');
+    $this->actingAs($m)->get('/vehicle')->assertSee('member.css', false);
+});

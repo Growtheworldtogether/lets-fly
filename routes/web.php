@@ -40,6 +40,7 @@ Route::middleware(['auth', 'throttle:portal'])->group(function () {
     Route::get('/vehicle', [VehicleController::class, 'index'])->name('vehicle');
     Route::get('/vehicle/{slug}', [VehicleController::class, 'show'])->where('slug', '[a-z-]+')->name('vehicle.show');
     Route::get('/vehicle/{slug}/video', [MediaController::class, 'video'])->where('slug', '[a-z-]+')->name('vehicle.video');
+    Route::get('/member.css', [MediaController::class, 'memberCss'])->name('member.css');
     Route::get('/vehicle-art/{name}', [MediaController::class, 'art'])->where('name', '[a-z]+-default\.(png|jpg)')->name('vehicle.art');
     Route::get('/media/{filename}', [MediaController::class, 'show'])->where('filename', '[A-Za-z0-9]{40}\.(png|jpg|webp)')->name('media.show');
     Route::post('/sign-out', [SignInController::class, 'logout'])->name('logout');
