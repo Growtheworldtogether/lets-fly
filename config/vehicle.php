@@ -83,7 +83,7 @@ Doors up, flight deck ready
 
 Two gull-wing doors lift clear of the cabin and stay open on their own, and the wide canopy lets daylight fall across the whole flight deck. A central touchscreen shows your route, speed, battery state and gas pressure, two small screens ahead of the yoke repeat the essentials, and a small red display on the windshield shows speed and lap times without taking your eyes off the road.
 
-Three independent flight computers vote on every control command. If one disagrees with the other two it is shut out and the drive or flight continues. All controls, steering, braking and throttle, are electronic, so the computer can trim them in a fraction of a second.
+Three independent flight computers vote on every control command. If one disagrees with the other two it is shut out and the drive or flight continues. All controls, steering, braking and throttle, are electronic, so the computer can trim them in a fraction of a second, and the steer-by-wire system gives clear feedback on every surface.
 - Displays: Central touchscreen, two forward screens, windshield display
 - Controls: Steer-by-wire, brake-by-wire and throttle-by-wire
 - Flight computers: 3, voting
@@ -99,9 +99,9 @@ T,
             'body' => <<<'T'
 Ready on the pad, quick to the sky
 
-Doors up, driver in, and the vehicle rolls out like any hypercar. Two rear motors deliver more than a megawatt, enough to reach 100 km/h in under 0.6 seconds, and the active aero keeps the car flat and stable at speed. Flight mode adds the thrusters for short, controlled hops, and the suction system holds the vehicle firmly to the surface at both ends of every flight.
+Doors up, driver in, and the vehicle rolls out like any hypercar. Two rear motors deliver more than a megawatt, enough to reach 100 km/h in under 0.6 seconds, and the active aero keeps the car flat and stable at speed. Flight mode adds the thrusters for short, controlled hops, and the suction system pulls air out from under the car to hold it firmly to the surface at both ends of every flight.
 
-Typical trips are 30 to 150 km, which the vehicle covers with a comfortable reserve, and a single charge is targeted at up to 480 km. Track sessions use wing modes for low drag or high downforce.
+Typical trips are 30 to 150 km, which the vehicle covers with a comfortable reserve, and a single charge is targeted at up to 480 km. Select Track mode and the car lowers and its suspension changes, then choose high downforce or low drag as the track needs. The fans and sealing skirts keep working at any speed, so downforce is there even at zero speed.
 
 - 0 to 100 km/h: Under 0.6 s
 - Top speed: 370+ km/h
@@ -276,9 +276,10 @@ Every figure for the pioneer edition. Specifications are targets and may change 
 - Rear wing: Two-element, retracts flush into the tail
 - Skirts: 4, drop-down, seal the underbody
 - Wing modes: Road, low drag, high downforce
+- Track mode: Lowers the car and changes the suspension
 - Suction fans: 4 electric, about 20 kW each
 - Downforce at standstill: Up to 2 G
-- Inverted hold: On smooth, continuous surfaces
+- Inverted hold: Yes, even when stationary
 
 ## Avionics
 - Displays: Central touchscreen, two forward screens, windshield display

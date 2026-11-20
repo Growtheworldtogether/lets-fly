@@ -7,6 +7,26 @@
  */
 
 return [
+    'avionics' => [
+        '7e130c61bc15d02850afa5ca648faabae83b78b2',
+        'a4df537850114d77c79bca5bd356a382283ee56e',
+        '9f35b49683832aff16c2f1162583f9d6360cdaed',
+        '1b6c85d055b2cd07f329db725244e67862531a46',
+    ],
+    'performance' => [
+        '26224c1905af67ea521681ef2f76912bc8c9c44e',
+        'b1230d56cb966542cebd4f95ce6c6a02c59653f0',
+        '6cd9d7e08f7f78538c8a5b61693e39c166fb08b9',
+        'b0a11ccb11845029a437200b512f8344712e5f95',
+    ],
+    'specs' => [
+        '7193426ced9f1381ececdb902bfdf2d77b0baad6',
+        '3cfb2ebdc5f1cc2b4a6ce5311881632b27eff244',
+        '448efba384f3c1e29f75c63015526848343fddb8',
+        '77f559d14feeffc97ed926c4b5c741bb4da5a239',
+        '25e11f2f1248f4d5ab2b44c5813881d9ab57966c',
+        'afcdc5e0d6ba9691696839e2b4bf2c1c1dc24e66',
+    ],
     'reserving' => [
         'a1e12586c7dbdb28717ecac6e02dcb01edaa761d',
     ],
@@ -22,13 +42,6 @@ return [
         '1f59c83fd892d865522da80d9a1529c0c2391b09',
         'f93fa2efac44f01fc26ab891477afc28bb6114a8',
         'cda4a088c0d1f9895936b1b8b8a32bd84cc1cc15',
-    ],
-    'specs' => [
-        '3cfb2ebdc5f1cc2b4a6ce5311881632b27eff244',
-        '448efba384f3c1e29f75c63015526848343fddb8',
-        '77f559d14feeffc97ed926c4b5c741bb4da5a239',
-        '25e11f2f1248f4d5ab2b44c5813881d9ab57966c',
-        'afcdc5e0d6ba9691696839e2b4bf2c1c1dc24e66',
     ],
     'safety' => [
         '6bad01fd218ba20463c4129e2694bfdfff176b92',
@@ -48,16 +61,6 @@ return [
         '0153e828c6f7477b043c7e66189e352fb734660d',
         '7b6eae5cf814433e0aeac49027595b486370185f',
         '63bfa6021289a8c446cfe967e42524c3ccd2087d',
-    ],
-    'avionics' => [
-        'a4df537850114d77c79bca5bd356a382283ee56e',
-        '9f35b49683832aff16c2f1162583f9d6360cdaed',
-        '1b6c85d055b2cd07f329db725244e67862531a46',
-    ],
-    'performance' => [
-        'b1230d56cb966542cebd4f95ce6c6a02c59653f0',
-        '6cd9d7e08f7f78538c8a5b61693e39c166fb08b9',
-        'b0a11ccb11845029a437200b512f8344712e5f95',
     ],
     'gravity' => [
         '10c09aa2096278241f01ba53abd570c3c188f194',
