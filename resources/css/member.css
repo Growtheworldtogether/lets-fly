@@ -386,3 +386,4 @@ body.showroom .bar,body.showroom.scrolled .bar{background:transparent}
 
 /* How reserving works: same look as Delivery, with less space between the two */
 .v-how{padding-bottom:24px}
+@media(min-width:900px){.v-card:nth-child(even){flex-direction:column-reverse}}
