@@ -127,7 +127,7 @@
 
 {{-- 8. End --}}
 <section class="v-end">
-  @if ($hero)<div class="v-bg">@php($s = $hero)@include('member._bg')</div>@endif
+  @if ($hero)<div class="v-bg">@php($s = $hero)@include('member._bg', ['fallback' => 'images/end-default.png'])</div>@endif
   <div class="v-end-in">
     @include('member._vname', ['tag' => 'p', 'class' => 'v-name', 'text' => $hero?->title])
     <a class="btn solid" href="{{ route('dashboard') }}">Reserve now</a>

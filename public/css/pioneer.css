@@ -683,3 +683,16 @@ body.studio[data-backdrop] .gate .eyebrow{color:#d6d6d9;text-shadow:0 0 10px #00
 /* wide pictures in the stacked sections: show most of the picture instead of a square crop */
 @media(min-width:601px){.v-stack .v-bg{height:min(56vw,1100px)}}
 @media(max-width:600px){#training .v-fallback{object-position:28% 50%}#safety .v-fallback{object-position:55% 50%}}
+
+/* closing section laid out like the reference: full-bleed picture with the name near its top, the button right under the picture, the note below */
+.v-end{display:block;min-height:0;overflow:hidden}
+.v-end .v-bg{position:relative;inset:auto;height:100vw}
+.v-end-in{position:static;margin:0;padding:0}
+.v-end .v-name{position:absolute;top:80px;left:0;right:0;margin:0;z-index:2;text-align:center}
+.v-end .btn,.v-end a.btn.solid{display:inline-flex;width:auto;min-width:180px;max-width:none}
+.v-end .v-note{margin-top:100px}
+@media(min-width:861px){.v-end .v-bg{height:100svh}.v-end .v-name{top:128px}}
+@media(min-width:1280px){.v-end .v-bg{height:1280px}}
+.v-end .v-bg::after{background:linear-gradient(180deg,#000 0,rgba(0,0,0,0) 22%,rgba(0,0,0,0) 78%,#000 100%)}
+.v-end a.btn,.v-end a.btn.solid{height:40px;min-width:180px;padding:0 24px;font-size:14px;letter-spacing:1.5px}
+@media(min-width:861px){.v-end a.btn,.v-end a.btn.solid{height:64px;min-width:320px;padding:12px 24px;font-size:24px;letter-spacing:1.26px}}
