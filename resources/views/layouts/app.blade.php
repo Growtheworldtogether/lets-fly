@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Michroma&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{{ asset('css/pioneer.css') }}">
-@auth<link rel="stylesheet" href="{{ route('member.css', ['v' => filemtime(resource_path('css/member.css'))]) }}">@endauth
+@auth<link rel="stylesheet" href="{{ route('member.css', ['v' => filemtime(resource_path('css/member.css'))]) }}"><script>try{var ts=localStorage.getItem('pioneer.ts');if(ts==='1'||ts==='2')document.documentElement.className+=' ts'+ts}catch(e){}</script>@endauth
 @if (($fontCss = \App\Services\Fonts::css()) !== '')<style>{!! $fontCss !!}</style>@endif
 </head>
 <body class="@yield('bodyclass')" @if (View::hasSection('bodyclass') && ($backdrop = brand_logo('backdrop') ?: asset('images/gate-default.jpg'))) style="--backdrop:url('{{ $backdrop }}')" data-backdrop @endif>
@@ -23,11 +23,13 @@
 @endunless
 @endauth
 <main class="@yield('mainclass')">@yield('content')</main>
+@auth @if (View::hasSection('textsize'))<button class="tsize" type="button" aria-label="Text size: normal. Press to make the text larger."><span aria-hidden="true">A<b>A</b></span></button>@endif @endauth
 <button class="totop" type="button" aria-label="Back to top" hidden><svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M4 12l6-6 6 6" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button>
 @unless (View::hasSection('nobar'))<footer class="foot">{{ brand('footer') }}</footer>@endunless
 @foreach (['status', 'sent', 'error', 'toast'] as $k)@if (session($k))<div class="toast {{ $k === 'error' ? 'bad' : '' }}" role="status">{{ session($k) }}</div>@endif @endforeach
 @if ($errors->any())<div class="toast bad" role="alert">{{ $errors->first() }}</div>@endif
 <script>document.querySelectorAll('table.tbl').forEach(function(t){var th=[].map.call(t.querySelectorAll('thead th'),function(h){return h.textContent.trim()});if(!th.length)return;t.classList.add('stack-rows');t.querySelectorAll('tbody tr').forEach(function(r){[].forEach.call(r.children,function(c,i){if(th[i])c.setAttribute('data-label',th[i])})})});</script>
 <script>(function(){var t=document.querySelector('.totop');if(!t)return;function v(){t.hidden=scrollY<500}addEventListener('scroll',v,{passive:true});v();t.addEventListener('click',function(){scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'})})})();(function(){var h=document.querySelector('.bar');function sc(){document.body.classList.toggle('scrolled',scrollY>40)}addEventListener('scroll',sc,{passive:true});sc()})();(function(){var b=document.body,d=document.getElementById('drawer'),s=document.querySelector('.scrim'),t=document.querySelector('.burger');if(!d||!t)return;function set(o){d.hidden=s.hidden=!o;b.classList.toggle('menu-open',o);t.setAttribute('aria-expanded',o?'true':'false');if(o)d.querySelector('a,button').focus();else t.focus()}t.addEventListener('click',function(){set(true)});s.addEventListener('click',function(){set(false)});d.querySelector('.drawer-x').addEventListener('click',function(){set(false)});document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!d.hidden)set(false)});d.addEventListener('click',function(e){if(e.target.closest('a'))set(false)});window.addEventListener('resize',function(){if(innerWidth>860&&!d.hidden)set(false)})})();document.querySelectorAll('.toast').forEach(function(t,i){setTimeout(function(){t.remove()},5000+i*500)});</script>
+@auth<script>(function(){var b=document.querySelector('.tsize');if(!b)return;var names=['normal','large','largest'];function cur(){var c=document.documentElement.className;return /\bts2\b/.test(c)?2:/\bts1\b/.test(c)?1:0}function show(){var n=cur();b.setAttribute('aria-label','Text size: '+names[n]+'. Press to change it.');b.dataset.level=n}function set(n){var h=document.documentElement;h.className=h.className.replace(/\s*\bts[12]\b/g,'')+(n?' ts'+n:'');try{if(n)localStorage.setItem('pioneer.ts',n);else localStorage.removeItem('pioneer.ts')}catch(e){}show()}b.addEventListener('click',function(){set((cur()+1)%3)});show()})();</script>@endauth
 </body>
 </html>

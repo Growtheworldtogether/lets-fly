@@ -2,6 +2,7 @@
 @section('title', brand('vehicle'))
 @section('mainclass', 'bleed')
 @section('bodyclass', 'showroom')
+@section('textsize', '1')
 @section('content')
 @php
   $by = $sections->keyBy('slug');

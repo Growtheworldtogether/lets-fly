@@ -387,3 +387,22 @@ body.showroom .bar,body.showroom.scrolled .bar{background:transparent}
 /* How reserving works: same look as Delivery, with less space between the two */
 .v-how{padding-bottom:24px}
 @media(min-width:900px){.v-card:nth-child(even){flex-direction:column-reverse}}
+
+/* Text size button: fixed at the bottom left, opposite the back-to-top button. The choice is kept in this browser only. */
+.tsize{position:fixed;left:20px;bottom:20px;z-index:35;width:44px;height:44px;display:flex;align-items:baseline;justify-content:center;gap:1px;padding:0;background:#111;color:#fff;border:1px solid #222;border-radius:0;font-family:inherit;line-height:42px;cursor:pointer}
+.tsize span{font-size:14px;line-height:42px}.tsize b{font-size:21px;font-weight:400;line-height:42px}
+.tsize:hover{background:#1a1a1a}
+.tsize:focus-visible{outline:1px solid #d7a970;outline-offset:2px}
+.tsize[data-level="1"],.tsize[data-level="2"]{border-color:var(--gold);color:var(--gold)}
+body.menu-open .tsize{display:none}
+html.ts1 .v-card-body p,html.ts1 .v-copy p,html.ts1 .v-lede,html.ts1 .v-watch p,html.ts1 .v-badges dt{font-size:19px;line-height:1.65;font-weight:400;color:#e6e7e8}
+html.ts1 .v-tag,html.ts1 .v-stats3 dt,html.ts1 .v-note,html.ts1 .foot,html.ts1 .v-headnums dt,html.ts1 .v-label{font-size:15px;line-height:1.5;color:#c4c5c8}
+html.ts1 .v-infocard dt,html.ts1 .v-infocard dd{font-size:16px;line-height:1.55}
+html.ts1 .btn,html.ts1 .v-cta .btn,html.ts1 .bar-out .btn.ghost{font-size:15px}
+html.ts2 .v-card-body p,html.ts2 .v-copy p,html.ts2 .v-lede,html.ts2 .v-watch p,html.ts2 .v-badges dt{font-size:22px;line-height:1.6;font-weight:400;color:#f0f0f1}
+html.ts2 .v-tag,html.ts2 .v-stats3 dt,html.ts2 .v-note,html.ts2 .foot,html.ts2 .v-headnums dt,html.ts2 .v-label{font-size:17px;line-height:1.5;color:#d4d5d8}
+html.ts2 .v-infocard dt,html.ts2 .v-infocard dd{font-size:19px;line-height:1.5}
+html.ts2 .btn,html.ts2 .v-cta .btn,html.ts2 .bar-out .btn.ghost{font-size:16px}
+html.ts2 .topnav a{font-size:15px}
+html.ts1 #intro .v-copy p,html.ts1 .v-over.top .v-copy p{font-size:19px;line-height:1.65}
+html.ts2 #intro .v-copy p,html.ts2 .v-over.top .v-copy p{font-size:22px;line-height:1.6}
