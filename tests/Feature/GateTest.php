@@ -139,7 +139,7 @@ it('shows members the vehicle pages with placeholders, hides inactive sections, 
     $this->get('/vehicle')->assertRedirect();
     $m = User::create(['name' => 'Fay', 'email' => 'fay@example.com', 'password' => 'Sup3rsecret!!', 'role' => 'member', 'member_number' => 'PA-000002']);
     $this->actingAs($m)->get('/vehicle')->assertOk()->assertSee('Pilot training')->assertSee('Image placeholder')->assertSee('Reserve now');
-    $this->get('/vehicle')->assertSee('Flight and handling')->assertSee('Vertical takeoff, wing-borne cruise')->assertSee('Rotor redundancy')->assertSee('Specifications')->assertSee('Built around the pilot');
+    $this->get('/vehicle')->assertSee('Four ducts at the tail')->assertSee('Rotor redundancy')->assertSee('Specifications')->assertSee('Built around the pilot');
     $this->get('/vehicle/flight')->assertRedirect('/vehicle#flight');
     \App\Models\PageSection::where('slug', 'flight')->update(['active' => false]);
     $this->get('/vehicle/flight')->assertNotFound();
@@ -152,7 +152,7 @@ it('keeps text an admin wrote and only replaces the old placeholder text', funct
     \App\Models\PageSection::where('slug', 'flight')->update(['body' => '[Describe this section here: Admin, Vehicle pages.]']);
     \App\Models\PageSection::where('slug', 'power')->update(['body' => 'My own words about power.']);
     \App\Models\PageSection::ensureDefaults();
-    expect(\App\Models\PageSection::where('slug', 'flight')->value('body'))->toContain('Eight lift rotors')
+    expect(\App\Models\PageSection::where('slug', 'flight')->value('body'))->toContain('Four ducts at the tail')
         ->and(\App\Models\PageSection::where('slug', 'power')->value('body'))->toBe('My own words about power.');
 });
 

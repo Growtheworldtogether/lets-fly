@@ -58,9 +58,9 @@ T,
             'title' => 'Flight and handling', 'sort' => 20,
             'summary' => 'How it takes off, cruises and lands.',
             'body' => <<<'T'
-Vertical takeoff, wing-borne cruise
+Four ducts at the tail, one clean line above them
 
-Eight lift rotors raise the vehicle straight up from a pad about the size of a parking space. At a safe height the rear propeller takes over, the aircraft accelerates, and the wing begins to carry the weight. The lift rotors then stop and fold away, and from that point the vehicle flies on far less energy, which is where the range comes from.
+Seen from above, the tail shows how the vehicle flies. Four ducted outlets sit under a carbon-fibre diffuser, with a single continuous light bar running above them. After a vertical takeoff from a pad about the size of a parking space, these rear ducts push the aircraft forward, the wing begins to carry the weight, and the lift rotors stop and fold away. From that point the vehicle flies on far less energy, which is where the range comes from.
 
 You fly it with a single stick and a throttle lever. The flight computer handles the transition between hover and cruise, holds your heading and altitude when you let go, and limits the aircraft to its safe envelope. Landing is the same sequence in reverse, and an assisted landing mode can bring you down on the marked pad on its own.
 

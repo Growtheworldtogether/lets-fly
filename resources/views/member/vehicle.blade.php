@@ -47,7 +47,7 @@
     @foreach ($cards as $s)
     @php($p = $s->parts())
     <article class="v-card" id="{{ $s->slug }}">
-      <div class="v-bg">@include('member._bg', ['fallback' => $s->slug === 'exterior' ? 'images/exterior-default.png' : null])</div>
+      <div class="v-bg">@include('member._bg', ['fallback' => ['exterior' => 'images/exterior-default.png', 'flight' => 'images/flight-default.jpg'][$s->slug] ?? null])</div>
       <div class="v-card-body">
         <h2><span>{{ $p['headline'] ?? $s->title }}</span></h2>
         @foreach ($p['paras'] as $para)<p>{{ $para }}</p>@endforeach
