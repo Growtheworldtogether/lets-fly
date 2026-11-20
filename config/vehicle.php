@@ -44,13 +44,15 @@ From the front, the {vehicle} is built from flat planes and sharp creases, with 
 
 Two slim lamps and a single light bar across the nose are the only detail on the face. Wide glass under a low roof gives the driver a clear view forward, and the low, wide stance keeps the vehicle steady on the ground. At the tail, a two-element wing rises for braking and cornering and retracts flush into the bodywork when parked, while skirts drop around the floor and vents open in the fenders and hood.
 
+There is one colour, Ano White: an aerospace-inspired finish engineered for UV and cryogenic protection, electrostatic dissipation and corrosion resistance, set off by exposed titanium accents and gold-glazed tinted glass.
+
 - Length: 4.5 m
 - Width: 2.0 m
 - Wheelbase: 2.83 m
 - Height: 1.2 m
 - Construction: Carbon-fibre monocoque
 - Aerodynamics: Active wing, drop-down skirts, fender and hood vents
-- Finish: 7-layer aerospace paint, 6 colours
+- Finish: Ano White, one colour, with exposed titanium accents
 - Lighting: Integrated LED lights
 - Doors: Two gull-wing, hands-free
 T,
@@ -145,12 +147,13 @@ T,
             'body' => <<<'T'
 A dark, quiet cabin with two pale seats
 
-Two seats sit side by side under a wide, curved canopy, facing a single central display. The seats are pale against a dark cabin, with a soft red glow running along each door. They are heated and moulded into the chassis, and the seatback angle and pedals adjust to fit the driver. Wide doors open upward and stay open on their own, so getting in is easy even in tight spaces.
+Two seats sit side by side under a wide, curved canopy, facing a single central display. The seats are Ultrawhite with grey microsuede accents, set against exposed carbon fibre, magnesium and titanium trim and a soft red glow along each door. They are heated and moulded into the chassis, and the seatback angle and pedals adjust to fit the driver. Wide doors open upward and stay open on their own, so getting in is easy even in tight spaces.
 
 A next-generation heat pump heats and cools the cabin, and gold-glazed glass rejects infrared heat from the sun. A wireless charger keeps your phone powered.
 
 - Seats: 2, fixed, heated, backrest and pedals adjust
 - Cabin width: 1.4 m
+- Colour: Ultrawhite, grey microsuede accents
 - Glass: Gold-glazed, infrared-rejecting
 - Climate: Heat pump
 - Connectivity: Wireless phone charger
@@ -221,7 +224,7 @@ Every figure for the pioneer edition. Specifications are targets and may change 
 ## Exterior
 - Construction: Carbon-fibre monocoque
 - Aerodynamics: Active wing, drop-down skirts, fender and hood vents
-- Finish: 7-layer aerospace paint, 6 colours
+- Finish: Ano White, one colour, with exposed titanium accents
 - Lighting: Integrated LED lights
 - Doors: Two gull-wing, hands-free
 
