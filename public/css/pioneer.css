@@ -682,7 +682,7 @@ body.studio[data-backdrop] .gate .eyebrow{color:#d6d6d9;text-shadow:0 0 10px #00
 
 /* wide pictures in the stacked sections: show most of the picture instead of a square crop */
 @media(min-width:601px){.v-stack .v-bg{height:min(56vw,1100px)}}
-@media(max-width:600px){#training .v-fallback{object-position:28% 50%}#safety .v-fallback{object-position:69% 50%}}
+@media(max-width:600px){#training .v-fallback{object-position:28% 50%}#safety .v-fallback{object-position:74% 50%}}
 
 /* closing section laid out like the reference: full-bleed picture with the name near its top, the button right under the picture, the note below */
 .v-end{display:block;min-height:0;overflow:hidden}
