@@ -95,9 +95,9 @@ T,
             'title' => 'Performance', 'sort' => 30,
             'summary' => 'Speed, climb and the numbers behind them.',
             'body' => <<<'T'
-Quick to climb, efficient to cruise
+Ready on the pad, quick to the sky
 
-Vertical lift is the most demanding part of any flight, so the rotors and battery are sized for it with margin to spare. Once the wing takes over, cruising needs only a fraction of that power. The vehicle is tuned to spend most of its flight in that efficient state.
+Doors up, pilot in, and the vehicle lifts straight off its pad. Vertical lift is the most demanding part of any flight, so the rotors and battery are sized for it with margin to spare. Once the wing takes over, cruising needs only a fraction of that power, and the vehicle spends most of its flight in that efficient state.
 
 Typical trips are 30 to 150 km, which the vehicle covers with a comfortable reserve. A full 320 km is possible at cruise speed with the reserve intact.
 
