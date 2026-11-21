@@ -615,13 +615,13 @@ it('lets an admin upload a background picture that shows on the code page and is
 });
 
 it('keeps the built-in vehicle pictures behind the sign-in', function () {
-    $this->get('/images/safety-default.jpg')->assertNotFound();
-    $this->get('/images/hero-default.jpg')->assertNotFound();
-    $this->get('/vehicle-art/safety-default.jpg')->assertRedirect('/');
+    $this->get('/images/safety-default.webp')->assertNotFound();
+    $this->get('/images/hero-default.webp')->assertNotFound();
+    $this->get('/vehicle-art/safety-default.webp')->assertRedirect('/');
     $m = User::create(['name' => 'Ivy', 'email' => 'ivy@example.com', 'password' => 'Sup3rsecret!!', 'role' => 'member', 'member_number' => 'PA-000009']);
-    $this->actingAs($m)->get('/vehicle-art/safety-default.jpg')->assertOk()->assertHeader('Content-Type', 'image/jpeg');
+    $this->actingAs($m)->get('/vehicle-art/safety-default.webp')->assertOk()->assertHeader('Content-Type', 'image/webp');
     $this->actingAs($m)->get('/vehicle-art/..%2F.env')->assertNotFound();
-    $this->actingAs($m)->get('/vehicle')->assertSee('/vehicle-art/safety-default.jpg', false)->assertDontSee('/images/safety-default.jpg', false);
+    $this->actingAs($m)->get('/vehicle')->assertSee('/vehicle-art/safety-default.webp', false)->assertDontSee('/images/safety-default.webp', false);
 });
 
 it('serves the vehicle and portal styles only to signed-in members', function () {
@@ -642,6 +642,6 @@ it('offers a text size button on the vehicle page and the dashboard for signed-i
     $this->actingAs($m)->get('/dashboard')->assertSee('class="tsize"', false)->assertSee('data-ts="portal"', false);
     $this->actingAs($m)->get('/vehicle')->assertSee('data-ts="vehicle"', false);
     $this->actingAs($m)->get('/welcome')->assertSee('class="tsize"', false);
-    $this->actingAs($m)->get('/welcome')->assertSee('/vehicle-art/training-default.jpg', false);
+    $this->actingAs($m)->get('/welcome')->assertSee('/vehicle-art/training-default.webp', false);
     $this->get('/')->assertDontSee('training-default', false);
 });

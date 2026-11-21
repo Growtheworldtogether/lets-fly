@@ -3,7 +3,7 @@
 @section('bodyclass', 'studio welcome-page')
 @section('nomenu', '1')
 @section('textsize', 'portal')
-@section('backdrop', route('vehicle.art', 'training-default.jpg'))
+@section('backdrop', route('vehicle.art', 'training-default.webp'))
 @section('content')
 <section class="w-page">
   <p class="eyebrow">Welcome{{ $user->member_number ? ' · '.$user->member_number : '' }}</p>

@@ -39,7 +39,7 @@ class MediaController extends Controller
         abort_unless(is_file($path), 404);
 
         return response()->file($path, [
-            'Content-Type' => str_ends_with($name, '.png') ? 'image/png' : 'image/jpeg',
+            'Content-Type' => 'image/webp',
             'Cache-Control' => 'private, max-age=86400',
             'X-Content-Type-Options' => 'nosniff',
         ]);

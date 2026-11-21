@@ -14,7 +14,7 @@
 @if ($hero)
 @php($facts = $hero->parts()['facts'])
 <section class="v-hero" id="top">
-  <div class="v-bg">@php($s = $hero)@include('member._bg', ['eager' => true, 'fallback' => 'images/hero-default.jpg'])</div>
+  <div class="v-bg">@php($s = $hero)@include('member._bg', ['eager' => true, 'fallback' => 'images/hero-default.webp'])</div>
   <div class="v-hero-in">
     @include('member._vname', ['tag' => 'h1', 'text' => $hero->title])
     <div class="v-cta">
@@ -32,7 +32,7 @@
 @if ($intro = $show('intro'))
 @php($p = $intro->parts())
 <section class="v-over top" id="intro">
-  <div class="v-bg">@php($s = $intro)@include('member._bg', ['fallback' => 'images/intro-default.png'])</div>
+  <div class="v-bg">@php($s = $intro)@include('member._bg', ['fallback' => 'images/intro-default.webp'])</div>
   <div class="v-copy">
     <h2><span>{{ $intro->title }}</span></h2>
     @foreach ($p['paras'] as $para)<p>{{ $para }}</p>@endforeach
@@ -48,7 +48,7 @@
     @foreach ($cards as $s)
     @php($p = $s->parts())
     <article class="v-card" id="{{ $s->slug }}">
-      <div class="v-bg">@include('member._bg', ['fallback' => ['exterior' => 'images/exterior-default.png', 'flight' => 'images/flight-default.jpg', 'avionics' => 'images/avionics-default.png', 'interior' => 'images/interior-default.png', 'power' => 'images/power-default.png'][$s->slug] ?? null])</div>
+      <div class="v-bg">@include('member._bg', ['fallback' => ['exterior' => 'images/exterior-default.webp', 'flight' => 'images/flight-default.webp', 'avionics' => 'images/avionics-default.webp', 'interior' => 'images/interior-default.webp', 'power' => 'images/power-default.webp'][$s->slug] ?? null])</div>
       <div class="v-card-body">
         <h2><span>{{ $p['headline'] ?? $s->title }}</span></h2>
         @foreach ($p['paras'] as $para)<p>{{ $para }}</p>@endforeach
@@ -66,7 +66,7 @@
 @if ($s = $show('performance'))
 @php($p = $s->parts())
 <section class="v-over bottom" id="{{ $s->slug }}">
-  <div class="v-bg">@include('member._bg', ['fallback' => 'images/performance-default.jpg'])</div>
+  <div class="v-bg">@include('member._bg', ['fallback' => 'images/performance-default.webp'])</div>
   <div class="v-copy">
     <h2><span>{{ $p['headline'] ?? $s->title }}</span></h2>
     @foreach ($p['paras'] as $para)<p>{{ $para }}</p>@endforeach
@@ -80,7 +80,7 @@
 @if ($s = $show('gravity'))
 @php($p = $s->parts())
 <section class="v-stack v-tall" id="{{ $s->slug }}">
-  <div class="v-bg">@include('member._bg', ['fallback' => 'images/gravity-default.jpg'])</div>
+  <div class="v-bg">@include('member._bg', ['fallback' => 'images/gravity-default.webp'])</div>
   <div class="v-copy">
     <h2><span>{{ $p['headline'] ?? $s->title }}</span></h2>
     @foreach ($p['paras'] as $para)<p>{{ $para }}</p>@endforeach
@@ -95,7 +95,7 @@
 @if ($s = $show($slug))
 @php($p = $s->parts())
 <section class="v-stack" id="{{ $s->slug }}">
-  <div class="v-bg">@include('member._bg', ['fallback' => 'images/'.$slug.'-default.jpg'])</div>
+  <div class="v-bg">@include('member._bg', ['fallback' => 'images/'.$slug.'-default.webp'])</div>
   <div class="v-copy">
     <h2><span>{{ $p['headline'] ?? $s->title }}</span></h2>
     @foreach ($p['paras'] as $para)<p>{{ $para }}</p>@endforeach
@@ -153,7 +153,7 @@
 
 {{-- 8. End --}}
 <section class="v-end">
-  @if ($hero)<div class="v-bg">@php($s = $hero)@include('member._bg', ['fallback' => 'images/end-default.png'])</div>@endif
+  @if ($hero)<div class="v-bg">@php($s = $hero)@include('member._bg', ['fallback' => 'images/end-default.webp'])</div>@endif
   <div class="v-end-in">
     @include('member._vname', ['tag' => 'p', 'class' => 'v-name', 'text' => $hero?->title])
     <a class="btn solid" href="{{ route('dashboard') }}">Reserve now</a>
