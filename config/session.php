@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Support\Str;
 
 return [
 
@@ -127,10 +126,8 @@ return [
     |
     */
 
-    'cookie' => env(
-        'SESSION_COOKIE',
-        Str::slug((string) env('APP_NAME', 'laravel')).'-session'
-    ),
+    // A neutral name: the default is built from APP_NAME, which would show the site's name to anyone who opens the code page.
+    'cookie' => env('SESSION_COOKIE', 'sid'),
 
     /*
     |--------------------------------------------------------------------------

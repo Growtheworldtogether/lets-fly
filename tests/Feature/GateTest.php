@@ -13,7 +13,7 @@ it('shows only the code page and hides everything else', function () {
     $this->get('/')->assertOk()->assertSee('Enter your invite code')->assertDontSee('Sign in</button>', false);
     $this->get('/sign-in')->assertNotFound();
     $this->post('/sign-in', ['password' => 'x'])->assertNotFound();
-    $this->get('/dashboard')->assertRedirect();
+    $this->get('/dashboard')->assertNotFound();
 });
 
 it('rejects a wrong code', function () {
@@ -55,7 +55,7 @@ it('needs an emailed code after three wrong passwords and locks after five', fun
     }
     $this->post('/sign-in', ['password' => 'Sup3rsecret!!'])->assertRedirect('/sign-in');
     $this->get('/sign-in')->assertSee('emailed');
-    $this->get('/dashboard')->assertRedirect();
+    $this->get('/dashboard')->assertNotFound();
 });
 
 it('does not ask admins for an emailed code and keeps the member number off staff', function () {
@@ -136,7 +136,7 @@ it('logs an admin in as a member and back out, and records it', function () {
 });
 
 it('shows members the vehicle pages with placeholders, hides inactive sections, and keeps outsiders out', function () {
-    $this->get('/vehicle')->assertRedirect();
+    $this->get('/vehicle')->assertNotFound();
     $m = User::create(['name' => 'Fay', 'email' => 'fay@example.com', 'password' => 'Sup3rsecret!!', 'role' => 'member', 'member_number' => 'PA-000002']);
     $this->actingAs($m)->get('/vehicle')->assertOk()->assertSee('From first lesson to first solo')->assertSee('Video placeholder')->assertSee('Reserve now')->assertSee('Gravity Defying')->assertSee('How reserving works')->assertSee('Two payments, both held in escrow')->assertDontSee('v-steps', false);
     $this->get('/vehicle')->assertSee('Four ducts at the tail')->assertSee('Stabilisation')->assertSee('Specifications')->assertSee('Built around the pilot');
@@ -423,7 +423,7 @@ it('does not offer email reset to admin accounts', function () {
 });
 
 it('sends signed-out visitors to the code page, and has no /login page at all', function () {
-    $this->get('/dashboard')->assertRedirect('/');
+    $this->get('/dashboard')->assertNotFound();
     $this->get('/login')->assertNotFound();
     $this->get('/forgot-password')->assertNotFound();
 });
@@ -439,7 +439,7 @@ it('shows every section fact somewhere in the specifications, and upgrades an un
 
 it('shows the welcome page only until it has been seen, and an admin looking in does not mark it', function () {
     $m = User::create(['name' => 'Gus', 'email' => 'gus@example.com', 'password' => 'Sup3rsecret!!', 'role' => 'member', 'member_number' => 'PA-000003']);
-    $this->get('/welcome')->assertRedirect();
+    $this->get('/welcome')->assertNotFound();
     $admin = adminSession($this);
     $this->actingAs($admin)->post("/admin/members/{$m->id}/impersonate");
     $this->post('/welcome')->assertRedirect('/vehicle');
@@ -617,7 +617,7 @@ it('lets an admin upload a background picture that shows on the code page and is
 it('keeps the built-in vehicle pictures behind the sign-in', function () {
     $this->get('/images/safety-default.webp')->assertNotFound();
     $this->get('/images/hero-default.webp')->assertNotFound();
-    $this->get('/vehicle-art/safety-default.webp')->assertRedirect('/');
+    $this->get('/vehicle-art/safety-default.webp')->assertNotFound();
     $m = User::create(['name' => 'Ivy', 'email' => 'ivy@example.com', 'password' => 'Sup3rsecret!!', 'role' => 'member', 'member_number' => 'PA-000009']);
     $this->actingAs($m)->get('/vehicle-art/safety-default.webp')->assertOk()->assertHeader('Content-Type', 'image/webp');
     $this->actingAs($m)->get('/vehicle-art/..%2F.env')->assertNotFound();
@@ -628,7 +628,7 @@ it('serves the vehicle and portal styles only to signed-in members', function ()
     $public = file_get_contents(public_path('css/pioneer.css'));
     expect($public)->not->toContain('v-hero')->not->toContain('#safety')->not->toContain('infocard');
     $this->get('/')->assertDontSee('member.css', false);
-    $this->get('/member.css')->assertRedirect('/');
+    $this->get('/member.css')->assertNotFound();
     $m = User::create(['name' => 'Kai', 'email' => 'kai@example.com', 'password' => 'Sup3rsecret!!', 'role' => 'member', 'member_number' => 'PA-000010']);
     $this->actingAs($m)->get('/member.css')->assertOk()->assertHeader('Content-Type', 'text/css; charset=utf-8');
     expect($this->actingAs($m)->get('/member.css')->baseResponse->getFile()->getContent())->toContain('.v-hero');
