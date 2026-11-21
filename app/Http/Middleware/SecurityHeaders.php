@@ -42,7 +42,9 @@ class SecurityHeaders
             $h->set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
         }
         // Signed-in pages hold account details: never keep a copy in the browser or a shared cache.
-        if ($request->user() && ! str_contains((string) $h->get('Cache-Control'), 'no-store')) {
+        // The vehicle video is the exception: iPhones and iPads will not play a video sent with no-store, and a copy that
+        // only the signed-in browser may keep (private) is what it needs to fetch the video in parts.
+        if ($request->user() && ! $request->routeIs('vehicle.video') && ! str_contains((string) $h->get('Cache-Control'), 'no-store')) {
             $h->set('Cache-Control', 'no-store, private');
         }
 

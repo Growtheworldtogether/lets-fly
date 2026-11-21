@@ -109,3 +109,47 @@ it('shows staff the real cause when the server fails, instead of a bare Server E
     $r->assertStatus(500)->assertJson(['code' => 'server']);
     expect($r->json('error'))->toStartWith('The server could not handle the upload (');
 });
+
+function box(string $type, string $body = ''): string
+{
+    return pack('N', 8 + strlen($body)).$type.$body;
+}
+
+it('warns about videos that phones cannot play: HEVC, and an index at the end of the file', function () {
+    $dir = sys_get_temp_dir();
+    $write = function (string $bytes) use ($dir) {
+        $f = tempnam($dir, 'mp4');
+        file_put_contents($f, $bytes);
+
+        return $f;
+    };
+    $ftyp = box('ftyp', 'isom'.str_repeat("\0", 8));
+    $good = $write($ftyp.box('moov', 'xxxxavc1xxxx').box('mdat', str_repeat('d', 500)));
+    expect(\App\Services\Mp4Check::issues($good))->toBe([]);
+
+    $late = $write($ftyp.box('mdat', str_repeat('d', 500)).box('moov', 'xxxxavc1xxxx'));
+    expect(\App\Services\Mp4Check::issues($late))->toHaveCount(1)->and(\App\Services\Mp4Check::issues($late)[0])->toContain('not set up for streaming');
+
+    $hevc = $write($ftyp.box('moov', 'xxxxhvc1xxxx').box('mdat', str_repeat('d', 500)));
+    expect(\App\Services\Mp4Check::issues($hevc)[0])->toContain('H.265');
+
+    // padded with zeros at the end, as the test videos were, and not an MP4 at all: no false alarms
+    expect(\App\Services\Mp4Check::issues($write($ftyp.box('moov', 'avc1').box('mdat', 'dd').str_repeat("\0", 100))))->toBe([]);
+    expect(\App\Services\Mp4Check::issues($write('this is not a video at all')))->toBe([]);
+});
+
+it('serves the video to a signed-in member in parts, without the no-store header that iPhones cannot play', function () {
+    $m = User::create(['name' => 'Fay', 'email' => 'fay@example.com', 'password' => 'Sup3rsecret!!', 'role' => 'member', 'member_number' => 'PA-000009']);
+    Storage::disk('local')->put('private/videos/x.mp4', fakeMp4(5000));
+    $this->section->update(['video_path' => 'private/videos/x.mp4']);
+
+    $r = $this->actingAs($m)->get('/vehicle/showcase/video', ['Range' => 'bytes=0-99']);
+    $r->assertStatus(206)->assertHeader('Content-Range', 'bytes 0-99/5000')->assertHeader('Accept-Ranges', 'bytes');
+    expect($r->headers->get('Cache-Control'))->not->toContain('no-store')->and($r->headers->get('Content-Type'))->toBe('video/mp4');
+
+    // everything else a signed-in person sees is still never kept
+    $this->get('/dashboard')->assertHeader('Cache-Control');
+    expect($this->get('/dashboard')->headers->get('Cache-Control'))->toContain('no-store');
+    auth()->logout();
+    $this->get('/vehicle/showcase/video')->assertNotFound();
+});

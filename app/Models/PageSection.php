@@ -131,6 +131,17 @@ class PageSection extends Model
         return null;
     }
 
+    /** @return list<string> reasons an uploaded MP4 may not play on phones (see Mp4Check) */
+    public function videoIssues(): array
+    {
+        if (! $this->video_path || ! str_ends_with($this->video_path, '.mp4')) {
+            return [];
+        }
+        $path = \Illuminate\Support\Facades\Storage::disk('local')->path($this->video_path);
+
+        return is_file($path) ? \App\Services\Mp4Check::issues($path) : [];
+    }
+
     public function hasVideo(): bool
     {
         $k = $this->videoKind();

@@ -16,6 +16,7 @@
     <input name="image" type="file" accept="image/png,image/jpeg,image/webp" class="field file"><p class="hint">PNG, JPG or WebP, up to 4 MB.</p>
 
     <h2>Video</h2>
+    @foreach ($s->videoIssues() as $issue)<p class="hint" role="alert" style="color:#e8b04a">&#9888; {{ $issue }}</p>@endforeach
     @if ($s->video_path)<p class="hint">An uploaded video is in place. <label class="check inl"><input type="checkbox" name="remove_video" value="1"> Remove it</label></p>@endif
     <input name="video" type="file" accept="video/mp4,video/webm" class="field file"><p class="hint">MP4 or WebM, up to 250 MB. Big videos are sent in small pieces, so keep this page open until the bar reaches 100%. A smaller file (compressed to about 20 to 60 MB) also plays faster for members.</p>
     <div id="vup" hidden role="status" aria-live="polite" style="margin:4px 0 8px"><div style="height:10px;background:#1d1d1f;border-radius:4px;overflow:hidden"><i id="vup-bar" style="display:block;height:100%;width:0;background:#d7a970"></i></div><p class="hint" id="vup-text" style="margin-top:6px"></p></div>
