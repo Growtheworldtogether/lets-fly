@@ -12,6 +12,8 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // First: until setup has run, every page leads to /setup (and files stand in for the database).
+        $middleware->web(prepend: [\App\Http\Middleware\RequireSetup::class]);
         $middleware->redirectGuestsTo('/');
         $middleware->alias([
             'staff' => \App\Http\Middleware\EnsureStaff::class,

@@ -9,6 +9,10 @@ use App\Http\Controllers\MediaController;
 use App\Http\Controllers\VehicleController;
 use Illuminate\Support\Facades\Route;
 
+// First-run setup wizard. Gone (404) once setup has finished; until then every page leads here.
+Route::get('/setup/{step?}', [\App\Http\Controllers\SetupController::class, 'show'])->name('setup');
+Route::post('/setup/{step}', [\App\Http\Controllers\SetupController::class, 'save'])->name('setup.save');
+
 // The code page is the only public page. Every other URL answers 404 until a valid code has been entered.
 Route::get('/', [GateController::class, 'show'])->name('gate');
 Route::post('/enter', [GateController::class, 'enter'])->middleware('throttle:gate')->name('gate.enter');
