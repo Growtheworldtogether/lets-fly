@@ -54,7 +54,7 @@
 
   async function upload(file) {
     var b = await post(urls.begin, form1({ size: file.size, name: file.name }));
-    if (b.status !== 200) throw new Error(b.body.error || (b.body.message) || 'The upload could not start.');
+    if (b.status !== 200) throw new Error(b.body.error || b.body.message || ('The upload could not start (the server answered ' + b.status + ').'));
     var id = b.body.id, size = 2 * 1024 * 1024, offset = 0, tries = 0, rounds = 0;
     show(0, file.size);
     while (true) {
@@ -68,13 +68,14 @@
         if (r.status === 429) { await wait(6000); continue; }
         if (r.status === 419 || r.status === 401 || r.status === 404) throw new Error('Your session timed out. Reload the page and sign in again.');
         if (r.status === 422 && r.body.error && r.body.code !== 'too_big') throw new Error(r.body.error);
-        if (++tries > 5) throw new Error('The connection kept failing. Check your internet and try again.');
+        if (r.body && r.body.code === 'server' && tries >= 1) throw new Error(r.body.error);
+        if (++tries > 5) throw new Error(r.body && r.body.error ? r.body.error : 'The connection kept failing. Check your internet and try again.');
         await wait(Math.min(15000, 1000 * Math.pow(2, tries)));
       }
       var f = await post(urls.finish, form1({ id: id }));
       if (f.status === 200) return;
       if (f.status === 409 && ++rounds < 4) { offset = f.body.next || 0; show(offset, file.size); continue; }
-      throw new Error(f.body.error || 'The video could not be finished.');
+      throw new Error(f.body.error || f.body.message || ('The video could not be finished (the server answered ' + f.status + ').'));
     }
   }
 

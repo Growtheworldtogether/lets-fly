@@ -111,6 +111,11 @@ class ContentController extends Controller
             }
 
             return response()->json(['error' => $msg], 422);
+        } catch (\Throwable $e) {
+            // Only staff reach these addresses, so the real cause is shown instead of a bare "Server Error".
+            report($e);
+
+            return response()->json(['error' => 'The server could not handle the upload ('.class_basename($e).': '.\Illuminate\Support\Str::limit($e->getMessage(), 200).').', 'code' => 'server'], 500);
         }
     }
 }

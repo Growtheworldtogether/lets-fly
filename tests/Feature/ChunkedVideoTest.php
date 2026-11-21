@@ -101,3 +101,11 @@ it('keeps the video upload away from members and visitors', function () {
     $this->postJson('/admin/nothing-here')->assertNotFound();
     $this->actingAs($m)->postJson('/admin/content/showcase/video/begin', ['size' => 100, 'name' => 'a.mp4'])->assertForbidden();
 });
+
+it('shows staff the real cause when the server fails, instead of a bare Server Error', function () {
+    // a plain file where the upload folder should be makes the folder impossible to create
+    Storage::disk('local')->put('private/video-uploads', 'in the way');
+    $r = $this->actingAs($this->admin)->postJson('/admin/content/showcase/video/begin', ['size' => 100, 'name' => 'a.mp4']);
+    $r->assertStatus(500)->assertJson(['code' => 'server']);
+    expect($r->json('error'))->toStartWith('The server could not handle the upload (');
+});

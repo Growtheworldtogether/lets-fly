@@ -34,8 +34,9 @@ final class ChunkedVideo
         }
         $disk = Storage::disk('local');
         File::ensureDirectoryExists($disk->path(self::ROOT));
-        $free = @disk_free_space($disk->path(self::ROOT));
-        if ($free !== false && $free < $size * 1.2 + 20 * 1024 * 1024) {
+        // Some hosts switch disk_free_space off; then the space is simply not checked.
+        $free = function_exists('disk_free_space') ? @disk_free_space($disk->path(self::ROOT)) : null;
+        if (is_numeric($free) && $free > 0 && $free < $size * 1.2 + 20 * 1024 * 1024) {
             throw ValidationException::withMessages(['video' => 'The server does not have enough free disk space for this video.']);
         }
         $id = bin2hex(random_bytes(16));
