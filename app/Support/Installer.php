@@ -214,6 +214,14 @@ final class Installer
         $a = $d['admin'];
         [, $code] = app(InviteService::class)->create($a['name'], strtolower($a['email']), 'admin');
 
+        try {
+            if (! file_exists(public_path('storage'))) {
+                Artisan::call('storage:link');
+            }
+        } catch (\Throwable) {
+            // Some hosts forbid symbolic links; the admin pages say so if uploads cannot be shown.
+        }
+
         foreach (['config:clear', 'route:clear', 'view:clear', 'cache:clear'] as $c) {
             try {
                 Artisan::call($c);

@@ -80,3 +80,55 @@ it('writes settings into an env file, quoting values that need it', function () 
     unlink($path);
     expect($env)->toContain('APP_NAME="My Company #1"')->toContain('APP_URL=https://example.com')->toContain('KEEP=1')->toContain('NEW_KEY="a\\$b"')->not->toContain('#APP_URL');
 });
+
+it('keeps admin recovery switched off unless the recovery file exists', function () {
+    $file = sys_get_temp_dir().'/pioneer-recovery-'.uniqid();
+    config(['setup.recovery_file' => $file, 'setup.check_in_tests' => false]);
+    $this->get('/recover')->assertNotFound();
+    $this->post('/recover', ['secret' => 'whatever-long-secret'])->assertNotFound();
+    file_put_contents($file, 'short');
+    $this->get('/recover')->assertNotFound();
+    file_put_contents($file, 'a-long-secret-text');
+    touch($file, time() - 7200);
+    $this->get('/recover')->assertNotFound();
+    unlink($file);
+});
+
+it('issues a new admin invite or password with the recovery file, once', function () {
+    config(['setup.check_in_tests' => false]);
+    $file = sys_get_temp_dir().'/pioneer-recovery-'.uniqid();
+    config(['setup.recovery_file' => $file]);
+    $admin = User::create(['name' => 'Root', 'email' => 'root@example.com', 'password' => 'Sup3rsecret!!', 'role' => 'admin', 'email_verified_at' => now()]);
+    $admin->forceFill(['failed_logins' => 5, 'locked_until' => now()->addHour()])->save();
+    file_put_contents($file, 'a-long-secret-text');
+
+    $this->get('/recover')->assertOk()->assertSee('Administrator recovery');
+    $this->post('/recover', ['secret' => 'wrong-secret-text', 'action' => 'invite', 'email' => 'root@example.com'])->assertSessionHasErrors('secret');
+    expect(is_file($file))->toBeTrue();
+
+    $this->post('/recover', ['secret' => 'a-long-secret-text', 'action' => 'password', 'email' => 'nobody@example.com', 'password' => 'Newpass12345'])->assertSessionHasErrors('email');
+    $this->post('/recover', ['secret' => 'a-long-secret-text', 'action' => 'password', 'email' => 'root@example.com', 'password' => 'weak'])->assertSessionHasErrors('password');
+    $this->post('/recover', ['secret' => 'a-long-secret-text', 'action' => 'password', 'email' => 'root@example.com', 'password' => 'Newpass12345'])->assertOk()->assertSee('Password changed');
+    expect(\Illuminate\Support\Facades\Hash::check('Newpass12345', $admin->fresh()->password))->toBeTrue();
+    expect($admin->fresh()->locked_until)->toBeNull();
+    expect(is_file($file))->toBeFalse();
+    $this->get('/recover')->assertNotFound();
+
+    file_put_contents($file, 'a-long-secret-text');
+    $res = $this->post('/recover', ['secret' => 'a-long-secret-text', 'action' => 'invite', 'email' => 'root@example.com', 'name' => 'Root'])->assertOk()->assertSee('New invite code');
+    expect(\App\Models\Invite::where('kind', 'admin')->where('email', 'root@example.com')->exists())->toBeTrue();
+    expect(is_file($file))->toBeFalse();
+    expect(\App\Models\AuditLog::whereIn('action', ['recovery.password', 'recovery.invite'])->count())->toBe(2);
+});
+
+it('switches recovery off after five wrong tries', function () {
+    config(['setup.check_in_tests' => false]);
+    $file = sys_get_temp_dir().'/pioneer-recovery-'.uniqid();
+    config(['setup.recovery_file' => $file]);
+    file_put_contents($file, 'a-long-secret-text');
+    foreach (range(1, 5) as $i) {
+        $this->post('/recover', ['secret' => 'wrong-secret-text', 'action' => 'invite', 'email' => 'a@example.com'])->assertSessionHasErrors('secret');
+    }
+    $this->post('/recover', ['secret' => 'a-long-secret-text', 'action' => 'invite', 'email' => 'a@example.com'])->assertSessionHasErrors('secret');
+    expect(is_file($file))->toBeFalse();
+});

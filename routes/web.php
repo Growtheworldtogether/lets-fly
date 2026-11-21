@@ -13,6 +13,10 @@ use Illuminate\Support\Facades\Route;
 Route::get('/setup/{step?}', [\App\Http\Controllers\SetupController::class, 'show'])->name('setup');
 Route::post('/setup/{step}', [\App\Http\Controllers\SetupController::class, 'save'])->name('setup.save');
 
+// Administrator recovery for hosts without a command line. A 404 unless the recovery file is on the server.
+Route::get('/recover', [\App\Http\Controllers\RecoveryController::class, 'show'])->name('recover');
+Route::post('/recover', [\App\Http\Controllers\RecoveryController::class, 'save'])->middleware('throttle:10,1')->name('recover.save');
+
 // The code page is the only public page. Every other URL answers 404 until a valid code has been entered.
 Route::get('/', [GateController::class, 'show'])->name('gate');
 Route::post('/enter', [GateController::class, 'enter'])->middleware('throttle:gate')->name('gate.enter');
