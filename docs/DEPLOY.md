@@ -19,9 +19,10 @@ Open your domain in a browser. A fresh copy opens the setup wizard by itself (no
 2. **Server check**: PHP version, extensions and writable folders. Fix anything marked Missing in cPanel, then Check again.
 3. **Site address** (`https://your-domain`) and time zone.
 4. **Database**: choose MySQL and enter the host, database, user and password from cPanel (MySQL Databases). The connection is tested.
-5. **Email**: your SMTP2GO details (tested), or choose later.
-6. **First administrator**: your name and email.
-7. **Install**: tick "This is a live site" and press Install now.
+5. **Email**: the sender name members see in the From line, then your SMTP2GO details (tested), or choose later.
+6. **Updates**: the GitHub repository the site updates from. If it is private, paste a read-only token (fine-grained, this repository only, Contents: Read-only, with an expiry); it is tested and saved in `.env`. Leave it empty for a public repository.
+7. **First administrator**: your name and email.
+8. **Install**: tick "This is a live site" and press Install now.
 
 The wizard writes `.env`, creates the tables and shows your admin invite code once. Copy it, open the front page, enter the code and choose your password. After that, `/setup` answers 404.
 
@@ -33,7 +34,7 @@ Add one cron job that runs every minute:
 It sends the day 7 and day 9 balance reminders. Check the PHP path with your host if that one is wrong.
 
 ## 5. Updates later
-Build a new release on GitHub, then open Admin, System, and press Check for updates and Install update. Settings, uploads and the database are kept.
+If the repository is private, the site needs the token from the Updates step (`UPDATE_TOKEN` in `.env`). Build a new release on GitHub, then open Admin, System, and press Check for updates and Install update. Settings, uploads and the database are kept.
 
 ## Upload limits
 Videos can be up to 250 MB in the app, but PHP limits uploads on its own. In cPanel (Select PHP Version, Options) raise `upload_max_filesize` and `post_max_size`.

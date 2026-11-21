@@ -4,4 +4,4 @@
     <label>Full name<input name="name" value="{{ old('name', $d['admin']['name'] ?? '') }}" required>@error('name')<span class="err">{{ $message }}</span>@enderror</label>
     <label>Email<input type="email" name="email" value="{{ old('email', $d['admin']['email'] ?? '') }}" required>@error('email')<span class="err">{{ $message }}</span>@enderror</label>
 </div>
-<div class="actions"><button class="btn">Continue</button><a class="btn ghost" href="{{ route('setup', 'email') }}">Back</a></div>
+<div class="actions"><button class="btn">Continue</button><a class="btn ghost" href="{{ route('setup', 'updates') }}">Back</a></div>

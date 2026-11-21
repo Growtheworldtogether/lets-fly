@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Schema;
 
 /** First-run setup: the checks, the settings file, the tables and the first administrator's invite code. */
@@ -134,6 +135,24 @@ final class Installer
         return null;
     }
 
+    /** Checks that a GitHub token can read the repository the updates come from. Returns an error sentence, or null. */
+    public static function testUpdates(string $repo, string $token): ?string
+    {
+        try {
+            $r = Http::withHeaders(['User-Agent' => 'LetsFly-setup', 'Accept' => 'application/vnd.github+json'])->withToken($token)->timeout(10)->get("https://api.github.com/repos/{$repo}");
+        } catch (\Throwable) {
+            return 'Could not reach GitHub from this server. Check the connection, or leave the token empty and add UPDATE_TOKEN to .env later.';
+        }
+        if ($r->status() === 401) {
+            return 'GitHub did not accept that token. Check that you copied all of it and that it has not expired.';
+        }
+        if ($r->status() === 404) {
+            return "That token cannot see {$repo}. When you make the token, choose that repository and give it Contents: Read-only.";
+        }
+
+        return $r->successful() ? null : 'GitHub answered with an error ('.$r->status().'). Try again in a moment.';
+    }
+
     /** Sets or adds KEY=value lines in the settings file, creating it from .env.example when there is none. */
     public static function writeEnv(array $values, ?string $path = null): void
     {
@@ -181,6 +200,13 @@ final class Installer
         if ($db['driver'] === 'mysql') {
             $env += ['DB_HOST' => $db['host'], 'DB_PORT' => $db['port'], 'DB_DATABASE' => $db['name'], 'DB_USERNAME' => $db['user'], 'DB_PASSWORD' => $db['pass'] ?? ''];
         }
+        $env['MAIL_FROM_NAME'] = $mail['sender'];
+        if (! empty($d['updates']['token'])) {
+            $env['UPDATE_TOKEN'] = $d['updates']['token'];
+        }
+        if (! empty($d['updates']['repo'])) {
+            $env['UPDATE_REPO'] = $d['updates']['repo'];
+        }
         if ($mail['mode'] === 'smtp') {
             $env += ['MAIL_MAILER' => 'smtp', 'MAIL_HOST' => $mail['host'], 'MAIL_PORT' => $mail['port'], 'MAIL_USERNAME' => $mail['user'], 'MAIL_PASSWORD' => $mail['pass'], 'MAIL_FROM_ADDRESS' => $mail['from']];
         } else {
@@ -210,6 +236,7 @@ final class Installer
         }
         Artisan::call('migrate', ['--force' => true]);
         StaffDirectory::sync();
+        \App\Models\Setting::set('sender_name', $mail['sender']);
 
         $a = $d['admin'];
         [, $code] = app(InviteService::class)->create($a['name'], strtolower($a['email']), 'admin');

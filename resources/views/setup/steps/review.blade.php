@@ -6,6 +6,8 @@
     <li><span>Time zone</span><strong>{{ $d['tz'] }}</strong></li>
     <li><span>Database</span><strong>{{ $db['driver'] === 'sqlite' ? 'SQLite file' : $db['name'].' on '.$db['host'] }}</strong></li>
     <li><span>Email</span><strong>{{ $mail['mode'] === 'smtp' ? $mail['user'].' via '.$mail['host'] : 'Later (written to a log)' }}</strong></li>
+    <li><span>Email sender name</span><strong>{{ $mail['sender'] }}</strong></li>
+    <li><span>Updates from</span><strong>{{ $d['updates']['repo'] }} &middot; {{ $d['updates']['token'] !== '' ? 'token saved' : 'no token (public repository)' }}</strong></li>
     <li><span>Administrator</span><strong>{{ $d['admin']['name'] }} &middot; {{ $d['admin']['email'] }}</strong></li>
 </ul>
 <label class="choice" style="margin-top:1.25rem"><input type="checkbox" name="live" value="1" @checked(str_starts_with($d['url'], 'https://'))><span><b>This is a live site</b>Turns off debug pages and detailed errors. Leave unticked on your own computer.</span></label>

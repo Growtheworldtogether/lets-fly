@@ -66,10 +66,15 @@ it('validates the site address and admin details', function () {
     $this->post('/setup/site', ['url' => 'not a url', 'tz' => 'Mars/Base'])->assertSessionHasErrors(['url', 'tz']);
     $this->post('/setup/site', ['url' => 'https://example.com/', 'tz' => 'America/Chicago'])->assertRedirect('/setup/database');
     $this->post('/setup/database', ['driver' => 'sqlite'])->assertRedirect('/setup/email');
-    $this->post('/setup/email', ['mode' => 'later'])->assertRedirect('/setup/admin');
+    $this->post('/setup/email', ['mode' => 'later'])->assertSessionHasErrors('sender');
+    $this->post('/setup/email', ['mode' => 'later', 'sender' => 'Bad <name>'])->assertSessionHasErrors('sender');
+    $this->post('/setup/email', ['mode' => 'later', 'sender' => 'Falcon Reservations'])->assertRedirect('/setup/updates');
+    $this->post('/setup/updates', ['repo' => 'not a repo'])->assertSessionHasErrors('repo');
+    $this->post('/setup/updates', ['repo' => 'Acme/app', 'token' => 'has spaces'])->assertSessionHasErrors('token');
+    $this->post('/setup/updates', ['repo' => 'Acme/app', 'token' => ''])->assertRedirect('/setup/admin');
     $this->post('/setup/admin', ['name' => 'Al', 'email' => 'nope'])->assertSessionHasErrors(['name', 'email']);
     $this->post('/setup/admin', ['name' => 'Ada Admin', 'email' => 'ada@example.com'])->assertRedirect('/setup/review');
-    $this->get('/setup/review')->assertOk()->assertSee('ada@example.com')->assertSee('America/Chicago');
+    $this->get('/setup/review')->assertOk()->assertSee('ada@example.com')->assertSee('America/Chicago')->assertSee('Falcon Reservations')->assertSee('Acme/app')->assertSee('no token');
 });
 
 it('writes settings into an env file, quoting values that need it', function () {
@@ -147,4 +152,26 @@ it('starts the wrong-try count again when the recovery file is made again', func
 
     file_put_contents($file, 'a-new-long-secret');
     $this->post('/recover', ['secret' => 'a-new-long-secret', 'action' => 'invite', 'email' => 'a@example.com', 'name' => 'A'])->assertOk()->assertSee('New invite code');
+});
+
+
+it('tests the GitHub token before accepting it', function (int $status, ?string $needle) {
+    \Illuminate\Support\Facades\Http::fake(['api.github.com/*' => \Illuminate\Support\Facades\Http::response([], $status)]);
+    $this->post('/setup/key')->assertRedirect('/setup/check');
+    $this->post('/setup/check');
+    $this->post('/setup/site', ['url' => 'https://example.com', 'tz' => 'America/New_York']);
+    $this->post('/setup/database', ['driver' => 'sqlite']);
+    $this->post('/setup/email', ['mode' => 'later', 'sender' => 'Falcon']);
+    $r = $this->post('/setup/updates', ['repo' => 'Acme/app', 'token' => 'github_pat_abc123']);
+    if ($needle === null) {
+        $r->assertRedirect('/setup/admin');
+    } else {
+        $r->assertSessionHasErrors('token');
+        expect(session('errors')->first('token'))->toContain($needle);
+    }
+})->with([[200, null], [401, 'did not accept'], [404, 'cannot see Acme/app'], [500, 'error (500)']]);
+
+it('says plainly when GitHub cannot be reached', function () {
+    \Illuminate\Support\Facades\Http::fake(fn () => throw new \Illuminate\Http\Client\ConnectionException('no route'));
+    expect(Installer::testUpdates('Acme/app', 'github_pat_abc'))->toContain('Could not reach GitHub');
 });

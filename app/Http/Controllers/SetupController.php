@@ -11,7 +11,7 @@ use Illuminate\Validation\ValidationException;
 class SetupController extends Controller
 {
     /** Step id => label, in order. */
-    public const STEPS = ['key' => 'Owner key', 'check' => 'Server check', 'site' => 'Site address', 'database' => 'Database', 'email' => 'Email', 'admin' => 'First administrator', 'review' => 'Install'];
+    public const STEPS = ['key' => 'Owner key', 'check' => 'Server check', 'site' => 'Site address', 'database' => 'Database', 'email' => 'Email', 'updates' => 'Updates', 'admin' => 'First administrator', 'review' => 'Install'];
 
     public function show(Request $request, ?string $step = null)
     {
@@ -121,8 +121,12 @@ class SetupController extends Controller
 
     private function saveEmail(Request $request)
     {
-        $mode = $request->validate(['mode' => ['required', 'in:smtp,later']])['mode'];
-        $mail = ['mode' => $mode];
+        $v = $request->validate([
+            'mode' => ['required', 'in:smtp,later'],
+            'sender' => ['required', 'string', 'max:80', 'regex:/^[^\r\n<>"]+$/'],
+        ], ['sender.regex' => 'Use plain text: no quotes, angle brackets or line breaks.', 'sender.required' => 'Enter the name members should see as the sender.']);
+        $mode = $v['mode'];
+        $mail = ['mode' => $mode, 'sender' => trim($v['sender'])];
         if ($mode === 'smtp') {
             $mail += $request->validate([
                 'host' => ['required', 'string', 'max:160'], 'port' => ['required', 'integer', 'between:1,65535'],
@@ -133,6 +137,21 @@ class SetupController extends Controller
             }
         }
         $request->session()->put('setup.mail', $mail);
+
+        return null;
+    }
+
+    private function saveUpdates(Request $request)
+    {
+        $v = $request->validate([
+            'repo' => ['required', 'regex:/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/', 'max:120'],
+            'token' => ['nullable', 'string', 'max:300', 'regex:/^[A-Za-z0-9_\-]+$/'],
+        ], ['repo.regex' => 'Write it as owner/name, for example Growtheworldtogether/lets-fly.', 'token.regex' => 'Paste the token exactly as GitHub shows it, with no spaces.']);
+        $token = trim((string) ($v['token'] ?? ''));
+        if ($token !== '' && ($error = Installer::testUpdates($v['repo'], $token))) {
+            throw ValidationException::withMessages(['token' => $error]);
+        }
+        $request->session()->put('setup.updates', ['repo' => $v['repo'], 'token' => $token]);
 
         return null;
     }
@@ -148,7 +167,7 @@ class SetupController extends Controller
     private function saveReview(Request $request)
     {
         $d = $request->session()->get('setup', []);
-        foreach (['url', 'tz', 'db', 'mail', 'admin'] as $k) {
+        foreach (['url', 'tz', 'db', 'mail', 'updates', 'admin'] as $k) {
             if (empty($d[$k])) {
                 return redirect()->route('setup', 'site')->withErrors(['setup' => 'Some answers are missing. Go through the steps again.']);
             }
