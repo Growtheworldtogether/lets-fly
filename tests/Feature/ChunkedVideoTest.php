@@ -145,7 +145,9 @@ it('serves the video to a signed-in member in parts, without the no-store header
 
     $r = $this->actingAs($m)->get('/vehicle/showcase/video', ['Range' => 'bytes=0-99']);
     $r->assertStatus(206)->assertHeader('Content-Range', 'bytes 0-99/5000')->assertHeader('Accept-Ranges', 'bytes');
-    expect($r->headers->get('Cache-Control'))->not->toContain('no-store')->and($r->headers->get('Content-Type'))->toBe('video/mp4');
+    // private: a shared cache (a host's page cache, a proxy) must never keep a members-only video and show it to outsiders
+    expect($r->headers->get('Cache-Control'))->not->toContain('no-store')->not->toContain('public')->toContain('private')->toContain('max-age=3600')
+        ->and($r->headers->get('Content-Type'))->toBe('video/mp4')->and($r->headers->get('Vary'))->toContain('Cookie');
 
     // everything else a signed-in person sees is still never kept
     $this->get('/dashboard')->assertHeader('Cache-Control');
@@ -177,4 +179,10 @@ it('puts the file summary and the server test on the content edit page', functio
     $this->section->update(['video_path' => 'private/videos/x.mp4']);
     $this->actingAs($this->admin)->get('/admin/content/showcase')->assertOk()
         ->assertSee('H.265 (HEVC)')->assertSee('Test how the server sends the video')->assertSee('In the file:');
+});
+
+it('tells staff that a WebM video will not play on many iPhones', function () {
+    Storage::disk('local')->put('private/videos/x.webm', 'not really a video');
+    $this->section->update(['video_path' => 'private/videos/x.webm']);
+    $this->actingAs($this->admin)->get('/admin/content/showcase')->assertOk()->assertSee('This is a WebM video')->assertSee('iOS 17.4');
 });

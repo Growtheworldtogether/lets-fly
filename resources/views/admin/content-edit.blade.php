@@ -21,7 +21,7 @@
     @if ($check['summary'])<p class="hint">In the file: {{ $check['summary'] }}.</p>@endif
     @if ($s->video_path)<p class="hint"><button type="button" class="btn ghost" id="vtest">Test how the server sends the video</button> <span id="vtest-out"></span></p>@endif
     @if ($s->video_path)<p class="hint">An uploaded video is in place. <label class="check inl"><input type="checkbox" name="remove_video" value="1"> Remove it</label></p>@endif
-    <input name="video" type="file" accept="video/mp4,video/webm" class="field file"><p class="hint">MP4 or WebM, up to 250 MB. Big videos are sent in small pieces, so keep this page open until the bar reaches 100%. A smaller file (compressed to about 20 to 60 MB) also plays faster for members.</p>
+    <input name="video" type="file" accept="video/mp4,video/webm" class="field file"><p class="hint">MP4 (H.264 video with AAC sound) plays everywhere, including iPhones; WebM does not. Up to 250 MB. Big videos are sent in small pieces, so keep this page open until the bar reaches 100%. A smaller file (compressed to about 20 to 60 MB) also plays faster for members.</p>
     <div id="vup" hidden role="status" aria-live="polite" style="margin:4px 0 8px"><div style="height:10px;background:#1d1d1f;border-radius:4px;overflow:hidden"><i id="vup-bar" style="display:block;height:100%;width:0;background:#d7a970"></i></div><p class="hint" id="vup-text" style="margin-top:6px"></p></div>
     <label for="video_url">Or a link to a hosted video</label><input id="video_url" name="video_url" type="url" class="field" placeholder="https://" value="{{ old('video_url', $s->video_url) }}">
     <p class="hint">YouTube and Vimeo links play in the page. Any other https link must point straight at an MP4 or WebM file.</p>

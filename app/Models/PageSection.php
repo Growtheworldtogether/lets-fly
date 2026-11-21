@@ -136,6 +136,10 @@ class PageSection extends Model
     {
         $path = $this->video_path ? \Illuminate\Support\Facades\Storage::disk('local')->path($this->video_path) : null;
 
+        if ($path && str_ends_with($path, '.webm') && is_file($path)) {
+            return ['summary' => 'WebM video', 'issues' => ['This is a WebM video. iPhones and iPads older than iOS 17.4 cannot play WebM at all, and newer ones often cannot either. Convert it to MP4 (H.264 video, AAC audio, "Web optimized") in HandBrake and upload that instead.']];
+        }
+
         return $path && str_ends_with($path, '.mp4') && is_file($path) ? \App\Services\Mp4Check::inspect($path) : ['issues' => [], 'summary' => null];
     }
 

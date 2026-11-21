@@ -79,10 +79,16 @@ class MediaController extends Controller
         abort_unless($s->video_path && Storage::disk('local')->exists($s->video_path), 404);
         $path = Storage::disk('local')->path($s->video_path);
 
-        return response()->file($path, [
+        $response = response()->file($path, [
             'Content-Type' => str_ends_with($path, '.webm') ? 'video/webm' : 'video/mp4',
-            'Cache-Control' => 'private, max-age=3600',
             'X-Content-Type-Options' => 'nosniff',
+            'Vary' => 'Cookie',
         ]);
+        // Only the signed-in browser may keep this: a file response is "public" unless told otherwise, and a shared cache
+        // (a host's page cache, a proxy) must never hand a members-only video to someone who is not signed in.
+        $response->setPrivate();
+        $response->setMaxAge(3600);
+
+        return $response;
     }
 }
