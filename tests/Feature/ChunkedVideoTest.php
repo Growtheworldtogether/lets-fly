@@ -153,3 +153,28 @@ it('serves the video to a signed-in member in parts, without the no-store header
     auth()->logout();
     $this->get('/vehicle/showcase/video')->assertNotFound();
 });
+
+it('reads the codec, profile, size and sound of an MP4 and flags what iPhones cannot play', function () {
+    $mk = function (int $profile, string $audio) {
+        $f = tempnam(sys_get_temp_dir(), 'mp4');
+        $moov = 'xxxx'.'avc1'.str_repeat("\0", 24).pack('nn', 1920, 1080).str_repeat("\0", 50).'avcC'.chr(1).chr($profile).chr(0).chr(41).str_repeat("\0", 20).$audio.'smhd';
+        file_put_contents($f, box('ftyp', 'isom'.str_repeat("\0", 8)).box('moov', $moov).box('mdat', str_repeat('d', 300)));
+
+        return \App\Services\Mp4Check::inspect($f);
+    };
+    $ok = $mk(100, 'mp4a');
+    expect($ok['issues'])->toBe([])->and($ok['summary'])->toBe('H.264 High, level 4.1, 1920×1080, AAC audio, ready for streaming');
+
+    $ten = $mk(110, 'mp4a');
+    expect($ten['issues'])->toHaveCount(1)->and($ten['issues'][0])->toContain('10-bit')->and($ten['summary'])->toContain('High 10-bit');
+
+    $opus = $mk(77, 'Opus');
+    expect($opus['issues'])->toHaveCount(1)->and($opus['issues'][0])->toContain('Opus audio');
+});
+
+it('puts the file summary and the server test on the content edit page', function () {
+    Storage::disk('local')->put('private/videos/x.mp4', box('ftyp', 'isom').box('moov', 'xxxxhvc1xxxx').box('mdat', 'dd'));
+    $this->section->update(['video_path' => 'private/videos/x.mp4']);
+    $this->actingAs($this->admin)->get('/admin/content/showcase')->assertOk()
+        ->assertSee('H.265 (HEVC)')->assertSee('Test how the server sends the video')->assertSee('In the file:');
+});

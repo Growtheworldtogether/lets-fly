@@ -131,15 +131,18 @@ class PageSection extends Model
         return null;
     }
 
-    /** @return list<string> reasons an uploaded MP4 may not play on phones (see Mp4Check) */
+    /** @return array{issues: list<string>, summary: ?string} what is in an uploaded MP4 and why it may not play on phones */
+    public function videoCheck(): array
+    {
+        $path = $this->video_path ? \Illuminate\Support\Facades\Storage::disk('local')->path($this->video_path) : null;
+
+        return $path && str_ends_with($path, '.mp4') && is_file($path) ? \App\Services\Mp4Check::inspect($path) : ['issues' => [], 'summary' => null];
+    }
+
+    /** @return list<string> */
     public function videoIssues(): array
     {
-        if (! $this->video_path || ! str_ends_with($this->video_path, '.mp4')) {
-            return [];
-        }
-        $path = \Illuminate\Support\Facades\Storage::disk('local')->path($this->video_path);
-
-        return is_file($path) ? \App\Services\Mp4Check::issues($path) : [];
+        return $this->videoCheck()['issues'];
     }
 
     public function hasVideo(): bool

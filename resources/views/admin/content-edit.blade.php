@@ -16,7 +16,10 @@
     <input name="image" type="file" accept="image/png,image/jpeg,image/webp" class="field file"><p class="hint">PNG, JPG or WebP, up to 4 MB.</p>
 
     <h2>Video</h2>
-    @foreach ($s->videoIssues() as $issue)<p class="hint" role="alert" style="color:#e8b04a">&#9888; {{ $issue }}</p>@endforeach
+    @php($check = $s->videoCheck())
+    @foreach ($check['issues'] as $issue)<p class="hint" role="alert" style="color:#e8b04a">&#9888; {{ $issue }}</p>@endforeach
+    @if ($check['summary'])<p class="hint">In the file: {{ $check['summary'] }}.</p>@endif
+    @if ($s->video_path)<p class="hint"><button type="button" class="btn ghost" id="vtest">Test how the server sends the video</button> <span id="vtest-out"></span></p>@endif
     @if ($s->video_path)<p class="hint">An uploaded video is in place. <label class="check inl"><input type="checkbox" name="remove_video" value="1"> Remove it</label></p>@endif
     <input name="video" type="file" accept="video/mp4,video/webm" class="field file"><p class="hint">MP4 or WebM, up to 250 MB. Big videos are sent in small pieces, so keep this page open until the bar reaches 100%. A smaller file (compressed to about 20 to 60 MB) also plays faster for members.</p>
     <div id="vup" hidden role="status" aria-live="polite" style="margin:4px 0 8px"><div style="height:10px;background:#1d1d1f;border-radius:4px;overflow:hidden"><i id="vup-bar" style="display:block;height:100%;width:0;background:#d7a970"></i></div><p class="hint" id="vup-text" style="margin-top:6px"></p></div>
@@ -100,6 +103,21 @@
       bar.style.width = '0'; text.textContent = (err && err.message ? err.message : 'The upload failed.') + ' Choose the video and press Save to try again.';
     });
     window.onbeforeunload = function () { return 'The video is still uploading.'; };
+  });
+})();
+
+(function () {
+  var b = document.getElementById('vtest'), out = document.getElementById('vtest-out');
+  if (!b || !window.fetch) return;
+  b.addEventListener('click', function () {
+    out.textContent = 'Checking…';
+    fetch(@json(route('vehicle.video', $s->slug)), { headers: { Range: 'bytes=0-1' }, credentials: 'same-origin', cache: 'no-store' }).then(function (r) {
+      var h = function (n) { return r.headers.get(n) || '—'; };
+      var ok = r.status === 206 && /^bytes 0-1\/\d+$/.test(h('content-range')) && /^video\//.test(h('content-type')) && h('content-encoding') === '—';
+      out.style.color = ok ? '#7bd88f' : '#e8b04a';
+      out.textContent = (ok ? 'Good: the server sends the video in parts. ' : 'Problem: iPhones need the server to answer with status 206 and a Content-Range, a video type and no compression. ') +
+        'Answer: ' + r.status + ' | Content-Range: ' + h('content-range') + ' | Content-Type: ' + h('content-type') + ' | Accept-Ranges: ' + h('accept-ranges') + ' | Content-Encoding: ' + h('content-encoding') + ' | Cache-Control: ' + h('cache-control');
+    }).catch(function () { out.style.color = '#e8b04a'; out.textContent = 'The check could not reach the server.'; });
   });
 })();
 </script>
