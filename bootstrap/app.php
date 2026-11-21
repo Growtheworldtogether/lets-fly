@@ -32,7 +32,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // For a stranger, a rejected form post (419) or a wrong method on a real address (405) would show which addresses
         // exist, because a missing address is a 404. Outside the code page's own form they get the same 404 page.
         $exceptions->render(function (\Symfony\Component\HttpKernel\Exception\HttpException $e, Request $request) {
-            if (! in_array($e->getStatusCode(), [405, 419], true) || $request->expectsJson()) {
+            if (! in_array($e->getStatusCode(), [405, 419], true)) {
                 return null;
             }
             $known = $request->user() || ($request->hasSession() && $request->session()->has('gate.invite'));
@@ -41,6 +41,10 @@ return Application::configure(basePath: dirname(__DIR__))
             }
 
             return null;
+        });
+        // A request that asks for JSON must not get a "please sign in" (401) that a missing address would not give.
+        $exceptions->render(function (\Illuminate\Auth\AuthenticationException $e, Request $request) {
+            return \App\Http\Middleware\MarkMember::present($request) ? null : response()->view('errors.404', [], 404);
         });
         $exceptions->shouldRenderJsonWhen(
             fn (Request $request) => $request->is('api/*') || $request->expectsJson(),

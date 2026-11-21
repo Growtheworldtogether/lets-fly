@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\PageSection;
 use App\Services\Audit;
 use App\Services\MediaStore;
+use App\Services\ChunkedVideo;
 use App\Services\VideoStore;
 use Illuminate\Http\Request;
 
@@ -63,5 +64,53 @@ class ContentController extends Controller
         Audit::record('content.updated', $section, null, ['slug' => $section->slug], $u->id);
 
         return redirect()->route('admin.content')->with('toast', $section->title.' saved.');
+    }
+
+    /** Big videos arrive in small pieces: begin, then every piece, then finish. Answers are JSON for the edit page. */
+    public function videoBegin(Request $request, PageSection $section, ChunkedVideo $chunks)
+    {
+        return $this->json(function () use ($request, $section, $chunks) {
+            $d = $request->validate(['size' => ['required', 'integer', 'min:1'], 'name' => ['required', 'string', 'max:200']]);
+
+            return ['id' => $chunks->begin($request->user(), $section, (int) $d['size'], $d['name'])];
+        });
+    }
+
+    public function videoChunk(Request $request, PageSection $section, ChunkedVideo $chunks)
+    {
+        return $this->json(function () use ($request, $section, $chunks) {
+            $chunks->receive((string) $request->input('id'), $request->user(), $section, (int) $request->input('offset'), $request->file('chunk'));
+
+            return ['ok' => true];
+        });
+    }
+
+    public function videoFinish(Request $request, PageSection $section, ChunkedVideo $chunks, VideoStore $videos)
+    {
+        return $this->json(function () use ($request, $section, $chunks, $videos) {
+            $path = $chunks->finish((string) $request->input('id'), $request->user(), $section);
+            $videos->delete($section->video_path);
+            $section->update(['video_path' => $path, 'video_url' => null]);
+            Audit::record('content.updated', $section, null, ['slug' => $section->slug, 'video' => 'uploaded in pieces'], $request->user()->id);
+
+            return ['ok' => true];
+        });
+    }
+
+    private function json(\Closure $work)
+    {
+        try {
+            return response()->json($work());
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            $msg = (string) collect($e->errors())->flatten()->first();
+            if ($msg === 'too_big') {
+                return response()->json(['error' => 'The server refused a piece that large.', 'code' => 'too_big'], 422);
+            }
+            if (str_starts_with($msg, 'incomplete:')) {
+                return response()->json(['error' => 'Some pieces did not arrive.', 'code' => 'incomplete', 'next' => (int) substr($msg, 11)], 409);
+            }
+
+            return response()->json(['error' => $msg], 422);
+        }
     }
 }

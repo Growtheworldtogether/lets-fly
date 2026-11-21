@@ -84,6 +84,9 @@ Route::middleware(['auth', 'staff'])->prefix('admin')->group(function () {
         Route::get('/content', [Admin\ContentController::class, 'index'])->name('admin.content');
         Route::get('/content/{section:slug}', [Admin\ContentController::class, 'edit'])->name('admin.content.edit');
         Route::post('/content/{section:slug}', [Admin\ContentController::class, 'update'])->name('admin.content.update');
+        Route::post('/content/{section:slug}/video/begin', [Admin\ContentController::class, 'videoBegin'])->name('admin.content.video.begin');
+        Route::post('/content/{section:slug}/video/chunk', [Admin\ContentController::class, 'videoChunk'])->name('admin.content.video.chunk');
+        Route::post('/content/{section:slug}/video/finish', [Admin\ContentController::class, 'videoFinish'])->name('admin.content.video.finish');
     });
     Route::middleware('can:admin.manage')->group(function () {
         Route::get('/agreement', [Admin\AgreementController::class, 'edit'])->name('admin.agreement');
