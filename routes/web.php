@@ -62,6 +62,11 @@ Route::middleware(['auth', 'staff'])->prefix('admin')->group(function () {
         Route::get('/invites', [Admin\InviteController::class, 'index'])->name('admin.invites');
         Route::post('/invites', [Admin\InviteController::class, 'store'])->name('admin.invites.store');
         Route::get('/invites/export', [Admin\InviteController::class, 'export'])->name('admin.invites.export');
+        Route::post('/invites/bulk/review', [Admin\InviteController::class, 'bulkReview'])->name('admin.invites.bulk.review');
+        Route::post('/invites/bulk', [Admin\InviteController::class, 'bulkStore'])->name('admin.invites.bulk.store');
+        Route::get('/invites/bulk/done', [Admin\InviteController::class, 'bulkDone'])->name('admin.invites.bulk.done');
+        Route::get('/invites/bulk/done.csv', [Admin\InviteController::class, 'bulkCsv'])->name('admin.invites.bulk.csv');
+        Route::post('/invites/bulk/clear', [Admin\InviteController::class, 'bulkClear'])->name('admin.invites.bulk.clear');
         Route::post('/invites/{invite}/regenerate', [Admin\InviteController::class, 'regenerate'])->name('admin.invites.regenerate');
         Route::post('/invites/{invite}/revoke', [Admin\InviteController::class, 'revoke'])->name('admin.invites.revoke');
         Route::get('/members', [Admin\MemberController::class, 'index'])->name('admin.members');

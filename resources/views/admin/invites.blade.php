@@ -17,6 +17,17 @@
     <div><label for="kind">Type</label><select id="kind" name="kind" class="field"><option value="member">Member</option>@can('admin.manage')<option value="admin">Admin</option>@endcan</select></div>
     <button class="btn solid" type="submit">Create invite</button>
   </form>
+  <details class="panel" @if ($errors->has('names')) open @endif>
+    <summary>Add many people at once</summary>
+    <form method="post" action="{{ route('admin.invites.bulk.review') }}" class="stack">@csrf
+      <div><label for="names">One name per line</label>
+        <textarea id="names" name="names" class="field" rows="8" required maxlength="30000" placeholder="Jane Doe&#10;John Smith, john@example.com">{{ old('names') }}</textarea>
+        @error('names')<p class="hint" role="alert" style="color:#e8b04a">{{ $message }}</p>@enderror
+        <p class="hint">Up to {{ \App\Services\BulkInvites::MAX }} people. To add an email, put it after a comma, like "John Smith, john@example.com". These are member invites.</p></div>
+      <div><label for="bulk-label">Note for this batch (optional)</label><input id="bulk-label" name="label" class="field" maxlength="120" value="{{ old('label') }}" placeholder="Example: November launch"></div>
+      <button class="btn solid" type="submit">Review</button>
+    </form>
+  </details>
   <form method="get" class="inline-form"><input name="q" class="field" placeholder="Search name, email or note" value="{{ request('q') }}"><button class="btn ghost" type="submit">Search</button><a class="btn ghost" href="{{ route('admin.invites.export') }}">Export CSV</a></form>
   <table class="tbl">
     <thead><tr><th>Name</th><th>Email</th><th>Type</th><th>Status</th><th>Code ends</th><th></th></tr></thead>
