@@ -13,6 +13,5 @@
     <div style="font-size:15px;line-height:1.6;color:#333333;margin-top:18px;">It works for {{ $minutes }} minutes.</div>
     <div style="font-size:14px;line-height:1.6;color:#777777;margin-top:10px;">{{ $reset ? 'If you did not ask to reset your password, you can ignore this email: nothing has changed.' : 'If you did not try to sign in, you can ignore this email.' }}</div>
   </td></tr>
-  <tr><td style="padding:18px 32px 26px;font-family:Arial,sans-serif;font-size:12px;line-height:1.5;color:#888888;border-top:1px solid #eeeeee;">{{ brand('footer') }}</td></tr>
 </table></td></tr></table>
 </body></html>

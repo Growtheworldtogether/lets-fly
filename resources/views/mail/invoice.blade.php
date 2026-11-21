@@ -47,7 +47,7 @@
       @endif
     </table>
   </td></tr>
-  <tr><td style="padding:24px 36px 8px;font-family:Arial,sans-serif;">
+  <tr><td style="padding:24px 36px 32px;font-family:Arial,sans-serif;">
     <div style="font-size:12px;letter-spacing:1px;text-transform:uppercase;color:#777777;font-weight:700;">How to pay</div>
     <div style="font-size:15px;color:#333333;line-height:1.5;margin-top:6px;">Send a wire transfer to the escrow account and use your reservation code as the reference, exactly as shown. For your security, the bank and account details are not in this email: sign in with your invite code to see them on your dashboard, where you can also upload proof of the wire.</div>
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:12px;background:#f5f5f5;border-radius:4px;"><tr><td style="padding:12px 16px;">
@@ -59,6 +59,5 @@
     </td></tr></table>
     <div style="margin-top:12px;font-size:13px;color:#777777;line-height:1.5;">Before sending your first wire, confirm the details on your dashboard with us at {{ brand('support_email') }}. We will never ask you to send money anywhere else.</div>
   </td></tr>
-  <tr><td style="padding:24px 36px 32px;font-family:Arial,sans-serif;font-size:12px;line-height:1.5;color:#888888;border-top:1px solid #eeeeee;margin-top:16px;">{{ brand('footer') }}</td></tr>
 </table></td></tr></table>
 </body></html>

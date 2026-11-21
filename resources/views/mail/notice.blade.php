@@ -9,6 +9,5 @@
     <div style="font-size:15px;line-height:1.6;color:#333333;">Hello {{ $name }},</div>
     @foreach ($lines as $l)<div style="font-size:15px;line-height:1.6;color:#333333;margin-top:10px;">{{ $l }}</div>@endforeach
   </td></tr>
-  <tr><td style="padding:18px 32px 26px;font-family:Arial,sans-serif;font-size:12px;line-height:1.5;color:#888888;border-top:1px solid #eeeeee;">{{ brand('footer') }}</td></tr>
 </table></td></tr></table>
 </body></html>
