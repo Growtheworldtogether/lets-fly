@@ -151,8 +151,10 @@ Two seats sit side by side under a wide, curved canopy, facing a single central 
 
 A next-generation heat pump heats and cools the cabin, and gold-glazed glass rejects infrared heat from the sun. A wireless charger keeps your phone powered.
 
-- Seats: 2, fixed, heated, backrest and pedals adjust
+- Seats: 2
 - Cabin width: 1.4 m
+- Display: 1 central
+- Seat features: Fixed and heated, backrest and pedals adjust
 - Colour: Ultrawhite, grey microsuede accents
 - Glass: Gold-glazed, infrared-rejecting
 - Climate: Heat pump

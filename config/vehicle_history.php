@@ -7,6 +7,13 @@
  */
 
 return [
+    'interior' => [
+        '28484b724049e5664725a63a1b80721d9344264f',
+        'ef78732b5ec83b67998d8a5780cea9b03f1c4bf7',
+        '1f59c83fd892d865522da80d9a1529c0c2391b09',
+        'f93fa2efac44f01fc26ab891477afc28bb6114a8',
+        'cda4a088c0d1f9895936b1b8b8a32bd84cc1cc15',
+    ],
     'avionics' => [
         '7e130c61bc15d02850afa5ca648faabae83b78b2',
         'a4df537850114d77c79bca5bd356a382283ee56e',
@@ -36,12 +43,6 @@ return [
         '1ab9ab9771f9a4277a317da988f45ba47d80dc3b',
         '7ab834950214069be081be2a70b77e287ff76a31',
         '1881765b92fc4a96a5d17a9e6953f34b1c6d3a78',
-    ],
-    'interior' => [
-        'ef78732b5ec83b67998d8a5780cea9b03f1c4bf7',
-        '1f59c83fd892d865522da80d9a1529c0c2391b09',
-        'f93fa2efac44f01fc26ab891477afc28bb6114a8',
-        'cda4a088c0d1f9895936b1b8b8a32bd84cc1cc15',
     ],
     'safety' => [
         '6bad01fd218ba20463c4129e2694bfdfff176b92',
