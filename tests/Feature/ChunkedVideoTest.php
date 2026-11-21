@@ -186,3 +186,7 @@ it('tells staff that a WebM video will not play on many iPhones', function () {
     $this->section->update(['video_path' => 'private/videos/x.webm']);
     $this->actingAs($this->admin)->get('/admin/content/showcase')->assertOk()->assertSee('This is a WebM video')->assertSee('iOS 17.4');
 });
+
+it('points the PDF tool at the real public folder, which is public_html on shared hosting', function () {
+    expect(config('dompdf.public_path'))->toBe(public_path())->and(realpath(config('dompdf.public_path')))->not->toBeFalse();
+});
