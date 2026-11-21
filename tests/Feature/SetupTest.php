@@ -132,3 +132,19 @@ it('switches recovery off after five wrong tries', function () {
     $this->post('/recover', ['secret' => 'a-long-secret-text', 'action' => 'invite', 'email' => 'a@example.com'])->assertSessionHasErrors('secret');
     expect(is_file($file))->toBeFalse();
 });
+
+it('starts the wrong-try count again when the recovery file is made again', function () {
+    config(['setup.check_in_tests' => false]);
+    $file = sys_get_temp_dir().'/pioneer-recovery-'.uniqid();
+    config(['setup.recovery_file' => $file]);
+    file_put_contents($file, 'a-long-secret-text');
+    touch($file, time() - 100);
+    foreach (range(1, 5) as $i) {
+        $this->post('/recover', ['secret' => 'wrong-secret-text', 'action' => 'invite', 'email' => 'a@example.com'])->assertSessionHasErrors('secret');
+    }
+    $this->post('/recover', ['secret' => 'a-long-secret-text', 'action' => 'invite', 'email' => 'a@example.com'])->assertSessionHasErrors('secret');
+    expect(is_file($file))->toBeFalse();
+
+    file_put_contents($file, 'a-new-long-secret');
+    $this->post('/recover', ['secret' => 'a-new-long-secret', 'action' => 'invite', 'email' => 'a@example.com', 'name' => 'A'])->assertOk()->assertSee('New invite code');
+});

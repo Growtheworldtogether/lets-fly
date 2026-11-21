@@ -41,7 +41,8 @@ final class AdminRecovery
     /** Checks the secret. Five wrong tries from one address switch recovery off until the file is made again. */
     public static function check(string $given, string $ip): void
     {
-        $key = 'recover:'.sha1($ip);
+        // The count belongs to this copy of the file: making the file again starts a fresh count.
+        $key = 'recover:'.sha1($ip.'|'.(int) @filemtime(self::file()));
         $tries = (int) Cache::get($key, 0);
         $secret = self::secret();
         if ($secret === null || $tries >= 5) {

@@ -38,7 +38,7 @@ class ResetController extends Controller
         $code = str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT);
         $request->session()->put(['reset.code' => hash('sha256', $code), 'reset.expires' => time() + config('pioneer.code_minutes') * 60, 'reset.sent_at' => time(), 'reset.tries' => 0]);
         try {
-            Mail::send('mail.signin-code', ['code' => $code, 'name' => $user->name, 'minutes' => config('pioneer.code_minutes')], fn ($m) => $m->to($user->email)->subject('Your password reset code'));
+            Mail::send('mail.signin-code', ['purpose' => 'reset', 'code' => $code, 'name' => $user->name, 'minutes' => config('pioneer.code_minutes')], fn ($m) => $m->to($user->email)->subject('Your password reset code'));
         } catch (\Throwable $e) {
             report($e);
         }

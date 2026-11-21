@@ -73,3 +73,10 @@ it('answers a stranger\'s wrong-method request with the plain 404', function () 
 it('has no public storage route', function () {
     $this->get('/storage/anything')->assertNotFound();
 });
+
+it('words the reset email as a reset, and the sign-in email as a sign-in', function () {
+    $reset = view('mail.signin-code', ['purpose' => 'reset', 'code' => '123456', 'name' => 'Ada', 'minutes' => 10])->render();
+    $signin = view('mail.signin-code', ['code' => '123456', 'name' => 'Ada', 'minutes' => 10])->render();
+    expect($reset)->toContain('password reset code')->toContain('nothing has changed')->not->toContain('sign-in code');
+    expect($signin)->toContain('sign-in code')->not->toContain('reset');
+});
