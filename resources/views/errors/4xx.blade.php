@@ -1,0 +1,6 @@
+@extends('errors.layout')
+@section('title', 'Request problem')
+@section('code', (string) ($exception->getStatusCode() ?? 400))
+@section('eyebrow', 'Request problem')
+@section('heading', 'That did not work.')
+@section('message', 'The request could not be completed. Go back and try again.')

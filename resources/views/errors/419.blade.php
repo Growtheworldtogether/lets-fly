@@ -1,0 +1,6 @@
+@extends('errors.layout')
+@section('title', 'Page expired')
+@section('code', '419')
+@section('eyebrow', 'Page expired')
+@section('heading', 'That page timed out.')
+@section('message', 'Your session ran out before the form was sent. Go back, reload the page and try again.')

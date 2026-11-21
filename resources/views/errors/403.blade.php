@@ -1,0 +1,6 @@
+@extends('errors.layout')
+@section('title', 'No access')
+@section('code', '403')
+@section('eyebrow', 'No access')
+@section('heading', 'This page is not open to you.')
+@section('message', 'You do not have permission to view it. If you think that is a mistake, ask the person who invited you.')

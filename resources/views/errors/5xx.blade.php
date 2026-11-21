@@ -1,0 +1,6 @@
+@extends('errors.layout')
+@section('title', 'Something went wrong')
+@section('code', (string) ($exception->getStatusCode() ?? 500))
+@section('eyebrow', 'Something went wrong')
+@section('heading', 'We hit a problem.')
+@section('message', 'It is on our side, not yours. Please try again in a moment.')
