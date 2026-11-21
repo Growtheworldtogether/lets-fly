@@ -52,3 +52,24 @@ it('names the session cookie neutrally, without the site name', function () {
         expect(strtolower($n))->not->toContain('pioneer')->not->toContain('golden');
     }
 });
+
+it('answers a stranger\'s rejected form post with the plain 404, but keeps the 419 for the code page', function () {
+    \Illuminate\Support\Facades\Route::middleware('web')->post('/_csrf-probe', fn () => throw new \Illuminate\Session\TokenMismatchException);
+    \Illuminate\Support\Facades\Route::middleware('web')->post('/enter-probe', fn () => throw new \Illuminate\Session\TokenMismatchException);
+    $missing = $this->get('/no-such-page')->getContent();
+    $r = $this->post('/_csrf-probe')->assertNotFound();
+    expect($r->getContent())->toBe($missing);
+    // Someone who passed the gate or is signed in still sees "page expired".
+    $this->withSession(['gate.invite' => 1])->post('/_csrf-probe')->assertStatus(419);
+});
+
+it('answers a stranger\'s wrong-method request with the plain 404', function () {
+    $missing = $this->get('/no-such-page')->getContent();
+    $r = $this->post('/admin/members')->assertNotFound();
+    expect($r->getContent())->toBe($missing);
+    $this->post('/dashboard')->assertNotFound();
+});
+
+it('has no public storage route', function () {
+    $this->get('/storage/anything')->assertNotFound();
+});

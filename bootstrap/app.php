@@ -29,6 +29,19 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->redirectUsersTo(fn () => auth()->user()?->isAdmin() ? '/admin' : '/dashboard');
     })
     ->withExceptions(function (Exceptions $exceptions): void {
+        // For a stranger, a rejected form post (419) or a wrong method on a real address (405) would show which addresses
+        // exist, because a missing address is a 404. Outside the code page's own form they get the same 404 page.
+        $exceptions->render(function (\Symfony\Component\HttpKernel\Exception\HttpException $e, Request $request) {
+            if (! in_array($e->getStatusCode(), [405, 419], true) || $request->expectsJson()) {
+                return null;
+            }
+            $known = $request->user() || ($request->hasSession() && $request->session()->has('gate.invite'));
+            if (! $known && ! $request->is('enter')) {
+                return response()->view('errors.404', [], 404);
+            }
+
+            return null;
+        });
         $exceptions->shouldRenderJsonWhen(
             fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
         );
