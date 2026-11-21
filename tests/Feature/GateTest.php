@@ -645,3 +645,9 @@ it('offers a text size button on the vehicle page and the dashboard for signed-i
     $this->actingAs($m)->get('/welcome')->assertSee('/vehicle-art/training-default.webp', false);
     $this->get('/')->assertDontSee('training-default', false);
 });
+
+it('uses the vehicle name from settings in the hero, the video section and the end of the vehicle page', function () {
+    \App\Models\Setting::set('vehicle_name', 'Skylark One');
+    $m = User::create(['name' => 'Fay', 'email' => 'fay2@example.com', 'password' => 'Sup3rsecret!!', 'role' => 'member', 'member_number' => 'PA-000003']);
+    $this->actingAs($m)->get('/vehicle')->assertOk()->assertSee('Watch Skylark One in flight.')->assertDontSee('[Vehicle Name]', false);
+});

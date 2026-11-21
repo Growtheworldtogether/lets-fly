@@ -16,7 +16,7 @@
 <section class="v-hero" id="top">
   <div class="v-bg">@php($s = $hero)@include('member._bg', ['eager' => true, 'fallback' => 'images/hero-default.webp'])</div>
   <div class="v-hero-in">
-    @include('member._vname', ['tag' => 'h1', 'text' => $hero->title])
+    @include('member._vname', ['tag' => 'h1', 'text' => brand('vehicle')])
     <div class="v-cta">
       <a class="btn solid" href="{{ route('dashboard') }}">Reserve now</a>
       <a class="btn" href="#specs">Specifications</a>
@@ -147,7 +147,7 @@
   @php($s = $hero)
   @if ($hero->hasVideo())@include('member._video')@else<div class="v-video v-vph" role="img" aria-label="Video placeholder"><span>Video placeholder</span></div>@endif
   <h2><span>See it for yourself</span></h2>
-  <p>Watch {{ $hero->title }} in flight.</p>
+  <p>Watch {{ brand('vehicle') }} in flight.</p>
 </section>
 @endif
 
@@ -155,7 +155,7 @@
 <section class="v-end">
   @if ($hero)<div class="v-bg">@php($s = $hero)@include('member._bg', ['fallback' => 'images/end-default.webp'])</div>@endif
   <div class="v-end-in">
-    @include('member._vname', ['tag' => 'p', 'class' => 'v-name', 'text' => $hero?->title])
+    @include('member._vname', ['tag' => 'p', 'class' => 'v-name', 'text' => brand('vehicle')])
     <a class="btn solid" href="{{ route('dashboard') }}">Reserve now</a>
   </div>
   <p class="v-note">Specifications are targets for the pioneer edition and may change before delivery. Where and how you may fly depends on the aviation rules of your country.</p>
