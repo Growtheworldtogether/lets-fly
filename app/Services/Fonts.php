@@ -70,6 +70,25 @@ final class Fonts
         return $out;
     }
 
+    /** <link rel="preload"> tags for the fonts the site uses, so the browser fetches them with the page instead of after it. */
+    public static function preloads(): string
+    {
+        try {
+            if (! Schema::hasTable('fonts')) {
+                return '';
+            }
+            $ids = array_filter(array_unique(array_values(self::assignments())));
+            $out = '';
+            foreach (Font::whereIn('id', $ids)->get() as $f) {
+                $out .= '<link rel="preload" href="'.e(route('font', $f->filename, false)).'" as="font" type="font/woff2" crossorigin>';
+            }
+
+            return $out;
+        } catch (\Throwable) {
+            return '';
+        }
+    }
+
     /** The <style> content for every page: @font-face for each uploaded font and the role rules. Empty when nothing is uploaded. */
     public static function css(bool $all = false): string
     {
@@ -85,7 +104,7 @@ final class Fonts
             $css = '';
             foreach ($fonts as $f) {
                 if ($all || in_array($f->id, $assigned, true)) {
-                    $css .= '@font-face{font-family:"'.$f->family().'";src:url("'.route('font', $f->filename, false).'") format("woff2");font-weight:100 900;font-style:normal;font-display:swap}';
+                    $css .= '@font-face{font-family:"'.$f->family().'";src:url("'.route('font', $f->filename, false).'") format("woff2");font-weight:100 900;font-style:normal;font-display:block}';
                 }
             }
             foreach (self::ROLES as $role => [, $selectors]) {

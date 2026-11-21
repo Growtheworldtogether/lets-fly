@@ -475,7 +475,8 @@ it('lets an admin upload woff2 fonts, assign them to parts of the site, and refu
     // nothing is assigned yet, so pages carry no custom font rules
     $this->get('/vehicle')->assertDontSee('cf-'.$font->id, false);
     $this->post('/admin/settings/fonts/assign', ['font_vehicle' => (string) $font->id, 'font_body' => '999'])->assertSessionHasNoErrors();
-    $this->get('/vehicle')->assertSee('font-family:"cf-'.$font->id.'"', false)->assertSee('/fonts/'.$font->filename, false);
+    $this->get('/vehicle')->assertSee('font-family:"cf-'.$font->id.'"', false)->assertSee('/fonts/'.$font->filename, false)
+        ->assertSee('<link rel="preload" href="/fonts/'.$font->filename.'" as="font" type="font/woff2" crossorigin>', false)->assertSee('font-display:block', false);
     expect(\App\Models\Setting::find('font_body')->value)->toBe('');
 
     // the file is served to anyone (the code page needs it), but only under its exact random name
