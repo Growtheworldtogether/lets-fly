@@ -80,3 +80,10 @@ it('words the reset email as a reset, and the sign-in email as a sign-in', funct
     expect($reset)->toContain('password reset code')->toContain('nothing has changed')->not->toContain('sign-in code');
     expect($signin)->toContain('sign-in code')->not->toContain('reset');
 });
+
+it('titles the code page neutrally, without the company name', function () {
+    \App\Models\Setting::set('company_name', 'Secret Aero Co');
+    \App\Models\Setting::set('vehicle_name', 'Secret Falcon');
+    $html = $this->get('/')->assertOk()->getContent();
+    expect($html)->toContain('<title>Invitation only</title>')->not->toContain('Secret Aero Co')->not->toContain('Secret Falcon');
+});
