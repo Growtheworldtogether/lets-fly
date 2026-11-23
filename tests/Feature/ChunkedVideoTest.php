@@ -190,3 +190,8 @@ it('tells staff that a WebM video will not play on many iPhones', function () {
 it('points the PDF tool at the real public folder, which is public_html on shared hosting', function () {
     expect(config('dompdf.public_path'))->toBe(public_path())->and(realpath(config('dompdf.public_path')))->not->toBeFalse();
 });
+
+it('describes the vehicle as a single-seater everywhere in the default copy', function () {
+    $all = json_encode(config('vehicle.sections'));
+    expect($all)->not->toMatch('/two[- ]seat|two seats|Seats: 2/i')->and($all)->toContain('Seats: 1');
+});

@@ -7,12 +7,32 @@
  */
 
 return [
+    'showcase' => [
+        'c343286e4c4c9e2c74b0fb9cd3dd5bdaea254705',
+        '248b675f879aecab5bb33fe12ab0ebf5a5146094',
+        '986797a2d9df6561623c78237e3d8dd643680775',
+    ],
+    'intro' => [
+        '8acc803e627ecfe043f4f0f1c9d8fc1847dd94c4',
+        '681fb919cdb4924f44048b48fd05a0ffcbcb52b6',
+        '9461c3c3e4bfb49291e79b90da359ee11efe11e3',
+    ],
     'interior' => [
+        '9474370e61b7aea1910b12d66a5737489f267ccb',
         '28484b724049e5664725a63a1b80721d9344264f',
         'ef78732b5ec83b67998d8a5780cea9b03f1c4bf7',
         '1f59c83fd892d865522da80d9a1529c0c2391b09',
         'f93fa2efac44f01fc26ab891477afc28bb6114a8',
         'cda4a088c0d1f9895936b1b8b8a32bd84cc1cc15',
+    ],
+    'specs' => [
+        'ef4a92e1522b41f6f7b93258bf655292024fd6b0',
+        '7193426ced9f1381ececdb902bfdf2d77b0baad6',
+        '3cfb2ebdc5f1cc2b4a6ce5311881632b27eff244',
+        '448efba384f3c1e29f75c63015526848343fddb8',
+        '77f559d14feeffc97ed926c4b5c741bb4da5a239',
+        '25e11f2f1248f4d5ab2b44c5813881d9ab57966c',
+        'afcdc5e0d6ba9691696839e2b4bf2c1c1dc24e66',
     ],
     'avionics' => [
         '7e130c61bc15d02850afa5ca648faabae83b78b2',
@@ -25,14 +45,6 @@ return [
         'b1230d56cb966542cebd4f95ce6c6a02c59653f0',
         '6cd9d7e08f7f78538c8a5b61693e39c166fb08b9',
         'b0a11ccb11845029a437200b512f8344712e5f95',
-    ],
-    'specs' => [
-        '7193426ced9f1381ececdb902bfdf2d77b0baad6',
-        '3cfb2ebdc5f1cc2b4a6ce5311881632b27eff244',
-        '448efba384f3c1e29f75c63015526848343fddb8',
-        '77f559d14feeffc97ed926c4b5c741bb4da5a239',
-        '25e11f2f1248f4d5ab2b44c5813881d9ab57966c',
-        'afcdc5e0d6ba9691696839e2b4bf2c1c1dc24e66',
     ],
     'reserving' => [
         'a1e12586c7dbdb28717ecac6e02dcb01edaa761d',
@@ -48,14 +60,6 @@ return [
         '6bad01fd218ba20463c4129e2694bfdfff176b92',
         'fdb6eafb92dabb8f29d960bb4e76fcfcc3a89dfb',
         'a790e941fd6722d674208a9c0bd3117cd8bd093c',
-    ],
-    'showcase' => [
-        '248b675f879aecab5bb33fe12ab0ebf5a5146094',
-        '986797a2d9df6561623c78237e3d8dd643680775',
-    ],
-    'intro' => [
-        '681fb919cdb4924f44048b48fd05a0ffcbcb52b6',
-        '9461c3c3e4bfb49291e79b90da359ee11efe11e3',
     ],
     'flight' => [
         'b38eaacd123a946b4f7ba9f1c328a128f5c748c0',

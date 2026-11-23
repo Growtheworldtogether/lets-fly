@@ -21,15 +21,15 @@ return [
             'body' => <<<'T'
 - Range: 480 km
 - Top speed: 370+ km/h
-- Seats: 2
+- Seats: 1
 - Fast charge: 10 min
 T,
         ],
         'intro' => [
             'title' => 'Built around the pilot', 'sort' => 5,
-            'summary' => 'A two-seat electric vehicle that drives on the road and lifts off for short thruster flights.',
+            'summary' => 'A single-seat electric vehicle that drives on the road and lifts off for short thruster flights.',
             'body' => <<<'T'
-{vehicle} is a two-seat electric vehicle that drives like a hypercar, then lifts off the ground on cold-gas thrusters for short, controlled hops. Active aerodynamics shape the air around it, and a multi-mode suction system pulls it onto the road. It needs no runway and is designed to be owned and driven by one person.
+{vehicle} is a single-seat electric vehicle that drives like a hypercar, then lifts off the ground on cold-gas thrusters for short, controlled hops. Active aerodynamics shape the air around it, and a multi-mode suction system pulls it onto the road. It needs no runway and is designed to be owned and driven by one person.
 
 Pioneer allocations are limited, invite-only and delivered in the order they are reserved. Everything on this page describes the pioneer edition.
 T,
@@ -143,15 +143,15 @@ T,
         ],
         'interior' => [
             'title' => 'Interior and comfort', 'sort' => 50,
-            'summary' => 'The cabin, the seats and the controls.',
+            'summary' => 'The cabin, the seat and the controls.',
             'body' => <<<'T'
-A dark, quiet cabin with two pale seats
+A dark, quiet cabin built around one pale seat
 
-Two seats sit side by side under a wide, curved canopy, facing a single central display. The seats are Ultrawhite with grey microsuede accents, set against exposed carbon fibre, magnesium and titanium trim and a soft red glow along each door. They are heated and moulded into the chassis, and the seatback angle and pedals adjust to fit the driver. Wide doors open upward and stay open on their own, so getting in is easy even in tight spaces.
+One seat sits under a wide, curved canopy, facing a single central display. The seat is Ultrawhite with grey microsuede accents, set against exposed carbon fibre, magnesium and titanium trim and a soft red glow along each door. It is heated and moulded into the chassis, and the seatback angle and pedals adjust to fit the driver. Wide doors open upward and stay open on their own, so getting in is easy even in tight spaces.
 
 A next-generation heat pump heats and cools the cabin, and gold-glazed glass rejects infrared heat from the sun. A wireless charger keeps your phone powered.
 
-- Seats: 2
+- Seats: 1
 - Cabin width: 1.4 m
 - Display: 1 central
 - Seat features: Fixed and heated, backrest and pedals adjust
@@ -256,7 +256,7 @@ Every figure for the pioneer edition. Specifications are targets and may change 
 
 ## Weights
 - Empty weight: Under 1,700 kg
-- Seats: 2
+- Seats: 1
 
 ## Performance
 - 0 to 100 km/h: Under 0.6 s
@@ -304,7 +304,7 @@ Every figure for the pioneer edition. Specifications are targets and may change 
 - Battery monitoring: Cell by cell, live in the app
 
 ## Cabin
-- Seats: 2, fixed, heated, backrest and pedals adjust
+- Seats: 1, fixed, heated, backrest and pedals adjust
 - Glass: Gold-glazed, infrared-rejecting
 - Climate: Heat pump
 - Connectivity: Wireless phone charger
